@@ -3,6 +3,8 @@ import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Admin from './Admin';
 import GroupEdit from './GroupEdit';
+import GroupAdd from './GroupAdd';
+import Header from './Header';
 
 const groups = [
   {
@@ -21,7 +23,7 @@ const campers = [
     id: 1,
     first_name: 'camper a'
   },
-  { 
+  {
     id: 2,
     first_name: 'camper b'
   }
@@ -31,6 +33,7 @@ class App extends Component {
   render() {
     const App = () => (
       <div>
+        <Header />
         <Switch>
           <Route
             exact
@@ -38,8 +41,12 @@ class App extends Component {
             render={props => <Admin {...props} groups={groups} />}
           />
           <Route
-          path='/GroupEdit'
-          render={props => <GroupEdit {...props} campers={campers} group={group} />}
+            path='/groupEdit'
+            render={props => <GroupEdit {...props} campers={campers} group={group} />}
+          />
+          <Route
+            path='/groupAdd'
+            render={props => <GroupAdd {...props} />}
           />
         </Switch>
       </div>

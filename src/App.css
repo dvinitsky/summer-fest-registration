@@ -1,33 +1,154 @@
-.App {
+/* BOOTSTRAP */
+.jumbotron {
+  background: rgb(158, 153, 230);
+  color: white;
+  padding-bottom: 80px; 
+}
+
+.jumbotron .btn-primary {
+  background: #ac93d4;
+  border-color: #845ac7; 
+}
+
+.jumbotron .btn-primary:hover {
+  background: #7646c1; 
+}
+  
+.jumbotron p {
+  color: #d9ccee;
+  max-width: 75%;
+  margin: 1em auto 2em; 
+}
+
+.navbar + .jumbotron {
+  margin-top: -20px; 
+}
+
+.jumbotron .lang-logo {
+  display: block;
+  background: #B01302;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 100px;
+  height: 100px;
+  margin: auto;
+  border: 2px solid white; 
+}
+
+.jumbotron .lang-logo img {
+  max-width: 100%; 
+}
+
+/* HOME TABLE */
+.home-table-container {
+  margin: 0 auto;
+  border: 2px solid black;
+  width: 50%;
+  font-size: 18px;
+}
+.table-header-row {
+  background-color: rgb(179, 173, 173);
+}
+.table-row:nth-of-type(odd){
+  background-color: rgb(212, 193, 193);
+}
+.groups-table-row:nth-of-type(odd) {
+  background-color: rgb(135, 175, 159);
+}
+
+.table-score, .header-score, .header-group-holder, .table-group-holder {
+  text-align: right;
+}
+th, td {
+  padding: 8px;
+}
+.home-table-title{
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+.second-home-table {
+  margin: 40px 0;
+}
+
+
+
+
+/* editing routes */
+.camper-edit, .group-edit {
+  margin: 30px;
+}
+.error-message {
+  color: red;
+  text-align: center;
+}
+.camper-input, .score-input {
+  min-width: 200px;
+}
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+input[type="number"] {
+    -moz-appearance: textfield;
+}
+
+
+/* admin.ejs styling */
+.groupContainer {
+  position: relative;
+  float: left;
+  left: 80px;
+}
+.camperContainer {
+  position: relative;
+  float: right;
+  right: 80px;
+}
+
+.title {
+  text-align: center;
+  text-decoration-line: underline;
+}
+
+.add-delete-link {
   text-align: center;
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 40vmin;
-  pointer-events: none;
+.admin-logged-message {
+  text-align: center;
+  font-size: 24px;
+  color: maroon;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.score-input {
+  max-width: 50px;
+  display: inline;
+}
+
+.signup-error-container {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  text-align: center;
+}
+.signup-header{
+  font-size: 25px;
+}
+.camper-input {
+  margin-top: 30px;
 }
 
-.App-link {
-  color: #61dafb;
+.do-not-show {
+  display: none;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#delete-camper-modal, #delete-group-modal {
+  display: none;
+}
+
+/* ERROR STYLING */
+.hit-back-button {
+  text-align: center;
 }
