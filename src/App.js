@@ -9,24 +9,36 @@ import Header from './Header';
 class App extends Component {
   constructor() {
     super();
-
     this.state = {
       groups: [],
-      campers: []
+      campers: [],
     }
+    this.setActiveGroup = this.setActiveGroup.bind(this);
+    this.setActiveCamper = this.setActiveCamper.bind(this);
   }
 
-  componentWillMount () {
+  componentWillMount() {
     fetch('/groupsAndCampers')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({
-        groups: data.groups || [],
-        campers: data.campers || [],
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+          groups: data.groups || [],
+          campers: data.campers || [],
+        });
+      })
+      .catch(error => {
+        console.log(error);
       });
-    })
-    .catch(error => {
-      console.log(error);
+  }
+
+  setActiveGroup(activeGroupId) {
+    this.setState({
+      activeGroupId
+    });
+  }
+  setActiveCamper(activeCamperId) {
+    this.setState({
+      activeCamperId
     });
   }
 
@@ -38,11 +50,15 @@ class App extends Component {
           <Route
             exact
             path='/admin'
-            render={props => <Admin {...props} groups={this.state.groups} />}
+            render={props =>
+              <Admin
+                {...props}
+                groups={this.state.groups}
+              />}
           />
           <Route
             path='/groupEdit'
-            render={props => <GroupEdit {...props} campers={this.state.campers} group={this.group} />}
+            render={props => <GroupEdit {...props} campers={this.state.campers} group={this.state.activeGroupId} />}
           />
           <Route
             path='/groupAdd'

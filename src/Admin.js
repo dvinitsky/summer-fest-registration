@@ -25,9 +25,14 @@ class Admin extends React.Component {
               return (
                 <tr key={group.id} className="table-row">
                   <td className="table-edit">
-                    <Link to={'/groupEdit'}>
+                    <Link
+                      to={{
+                        pathname: "/groupEdit",
+                        state: { group }
+                      }}
+                    >
                       Edit
-                  </Link>
+                    </Link>
                   </td>
                   <td className="table-name">
                     {group.group_name}
