@@ -13,7 +13,6 @@ class CamperEdit extends React.Component {
   };
 
   deleteCamper = (id, size, group_id) => {
-    console.log(id, group_id, size)
     const options = {
       method: 'POST',
       headers: {
@@ -47,7 +46,6 @@ class CamperEdit extends React.Component {
     const { location } = this.props;
 
     if (this.state.deleteSuccessful) {
-      console.log('camperss:', this.state.campers)
       return (
         <Redirect
           to={{

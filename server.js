@@ -174,9 +174,7 @@ con.connect(err => {
           }
         });
 
-        console.log(index);
         campers.splice(index, 1);
-        console.log(campers)
         res.status(200).send(JSON.stringify({campers}));
       });
     });
