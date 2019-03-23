@@ -1,4 +1,5 @@
 const express = require('express');
+const router = express.Router();
 const path = require('path');
 const PORT = process.env.PORT || 5000;
 const mysql = require('mysql');
@@ -75,9 +76,11 @@ con.connect(err => {
     next();
   });
 
-  app.get('*', (req,res) =>{
-    res.sendFile(path.join(__dirname+'/build/index.html'));
-});
+  app.get('/groupsAndCampers', (req, res) => {
+    console.log(req.groups, req.campers)
+    res.send(JSON.stringify({ groups: req.groups, campers: req.campers }));
+  });
+
 
   app.get('/ppp', (req, res) => {
     // res.render('pages/index', { groups: req.groups, campers: req.campers });
