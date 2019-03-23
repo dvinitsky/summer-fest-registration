@@ -16,10 +16,10 @@ class GroupEdit extends Component {
           <h3>
             Group Name:
         </h3>
-          <input value={group.group_name} name="group_name" />
+          <input defaultValue={group.group_name} name="group_name" />
           <br />
           Leader Name:
-        <input value={group.leader_name} name="leader_name" />
+        <input defaultValue={group.leader_name} name="leader_name" />
           <br />
           Campers:
 
@@ -56,7 +56,7 @@ class GroupEdit extends Component {
             </tbody>
           </table>
 
-          <input className="do-not-show" value={group.id} name="id" />
+          <input className="do-not-show" defaultValue={group.id} name="id" />
 
           <button type="submit">Save</button>
 

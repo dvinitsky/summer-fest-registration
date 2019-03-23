@@ -9,7 +9,7 @@ class CamperAdd extends React.Component {
       const group_id = location.state.group_id;
 
       return (
-        <form class="container" method="post">
+        <form className="container" method="post">
           <h3>
             First Name:
         </h3>
@@ -19,10 +19,10 @@ class CamperAdd extends React.Component {
         </h3>
           <input name="last_name" />
 
-          <input class="do-not-show" value="<%- group_id %>" name="group_id" />
+          <input className="do-not-show" defaultValue={group_id} name="group_id" />
           {groups.map(group => {
             if (group.id === group_id) {
-              return <input class="do-not-show" value={group.size} name="size" />;
+              return <input key={group.id} className="do-not-show" defaultValue={group.size} name="size" />;
             } return null;
           })}
           <button type="submit">Save</button>

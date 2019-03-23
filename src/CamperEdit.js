@@ -10,16 +10,16 @@ class CamperEdit extends React.Component {
       const camper = location.state.camper;
 
       return (
-        <form class="camper-edit" method="post">
+        <form className="camper-edit" method="post">
           <h3>
             First Name:
       </h3>
-          <input class="camper-input" value={camper.first_name} name="first_name" />
+          <input className="camper-input" defaultValue={camper.first_name} name="first_name" />
           <br />
           <h3>
             Last Name:
       </h3>
-          <input class="camper-input" value={camper.last_name} name="last_name" />
+          <input className="camper-input" defaultValue={camper.last_name} name="last_name" />
           <br />
           <br />
 
@@ -28,17 +28,17 @@ class CamperEdit extends React.Component {
           <br />
           <br />
 
-          <button type="button" onclick={showDeleteModal}>Delete</button>
+          <button type="button" onClick={showDeleteModal}>Delete</button>
 
           <div id="delete-camper-modal">
             <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?
         </h1>
-            <button type="button" onclick={cancelDelete}>No</button>
+            <button type="button" onClick={cancelDelete}>No</button>
             <button type="button"
-              onclick={() => { deleteCamper(camper.id, camper.group_id, group.size) }}>Yes</button>
+              onClick={() => { deleteCamper(camper.id, camper.group_id, group.size) }}>Yes</button>
           </div>
 
-          <input class="do-not-show" name="id" value="<%- camper.id %>" />
+          <input className="do-not-show" name="id" defaultValue={camper.id} />
         </form>
       );
     }
