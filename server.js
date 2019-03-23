@@ -82,7 +82,7 @@ con.connect(err => {
   });
 
 
-  app.get('/ppp', (req, res) => {
+  app.get('/', (req, res) => {
     // res.render('pages/index', { groups: req.groups, campers: req.campers });
     res.render('index');
   })
@@ -124,20 +124,11 @@ con.connect(err => {
         });
       }
     })
-
-    // Group Routes
-    .get('/groupEdit', (req, res) => {
-      let group = req.groups.find(group => group.id == req.query.id);
-      res.render('pages/groupEdit', { group: group, campers: req.campers });
-    })
     .post('/groupEdit', (req, res) => {
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
         res.redirect('/admin');
       });
-    })
-    .get('/groupAdd', (req, res) => {
-      res.render('pages/groupAdd', { campers: req.campers });
     })
     .post('/groupAdd', (req, res) => {
       con.query(`INSERT INTO groups (leader_name, group_name) VALUES('${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
@@ -153,21 +144,11 @@ con.connect(err => {
         res.redirect('/admin');
       });
     })
-
-    // Camper Routes
-    .get('/camperEdit', (req, res) => {
-      let camper = req.campers.find(camper => camper.id == req.query.id);
-      let group = req.groups.find(group => group.id === camper.group_id);
-      res.render('pages/camperEdit', { camper, groups: req.groups, group });
-    })
     .post('/camperEdit', (req, res) => {
       con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
         if (err) throw err;
         res.redirect('/admin');
       });
-    })
-    .get('/camperAdd', (req, res) => {
-      res.render('pages/camperAdd', { group_id: Number(req.query.group_id), groups: req.groups });
     })
     .post('/camperAdd', (req, res) => {
       con.query(`INSERT INTO campers (first_name, last_name, group_id) VALUES('${req.body.first_name}', '${req.body.last_name}', '${req.body.group_id}')`, (err) => {

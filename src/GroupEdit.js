@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Error from './Error';
+import { Link } from 'react-router-dom';
 
 class GroupEdit extends Component {
   render() {
@@ -21,7 +22,7 @@ class GroupEdit extends Component {
         <input value={group.leader_name} name="leader_name" />
           <br />
           Campers:
-  
+
         <table name="camperId">
             <tbody>
               <tr className="table-header-row">
@@ -34,7 +35,14 @@ class GroupEdit extends Component {
                 return (
                   <tr key={camper.id} className="table-row">
                     <td className="table-edit">
-                      <a href={`/camperEdit?id=${camper.id}`}>Edit</a>
+                      <Link
+                        to={{
+                          pathname: "/camperEdit",
+                          state: { group, camper }
+                        }}
+                      >
+                        Edit
+                    </Link>
                     </td>
                     <td className="table-name">
                       {camper.first_name}
@@ -52,7 +60,14 @@ class GroupEdit extends Component {
 
           <button type="submit">Save</button>
 
-          <a id="edit" href={`/camperAdd?group_id=${group.id}`}>Add a Camper</a>
+          <Link
+            to={{
+              pathname: "/camperAdd",
+              state: { group_id: group.id }
+            }}
+          >
+            Add a Camper
+          </Link>
 
           <button type="button" onClick={showDeleteModal}>Delete</button>
 
@@ -72,11 +87,11 @@ class GroupEdit extends Component {
 export default GroupEdit;
 
 const cancelDelete = () => {
-
+  document.getElementById('delete-group-modal').style.display = 'none';
 };
-const deleteGroup = () => {
-
+const deleteGroup = (id) => {
+  window.location.assign(`/groupDelete?id=${id}`);
 };
 const showDeleteModal = () => {
-
+  document.getElementById('delete-group-modal').style.display = 'block';
 };

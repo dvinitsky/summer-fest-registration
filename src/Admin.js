@@ -50,9 +50,11 @@ class Admin extends React.Component {
         </table>
 
         <h4 className="add-delete-link">
-          <a href="/groupAdd">
-            <u>Add a group</u>
-          </a>
+          <Link
+            to={"/groupAdd"}
+          >
+            Add a Group
+          </Link>
         </h4>
       </div>
     );

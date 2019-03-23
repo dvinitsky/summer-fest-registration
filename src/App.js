@@ -5,6 +5,8 @@ import Admin from './Admin';
 import GroupEdit from './GroupEdit';
 import GroupAdd from './GroupAdd';
 import Header from './Header';
+import CamperEdit from './CamperEdit';
+import CamperAdd from './CamperAdd';
 
 class App extends Component {
   constructor() {
@@ -13,8 +15,6 @@ class App extends Component {
       groups: [],
       campers: [],
     }
-    this.setActiveGroup = this.setActiveGroup.bind(this);
-    this.setActiveCamper = this.setActiveCamper.bind(this);
   }
 
   componentWillMount() {
@@ -31,17 +31,6 @@ class App extends Component {
       });
   }
 
-  setActiveGroup(activeGroupId) {
-    this.setState({
-      activeGroupId
-    });
-  }
-  setActiveCamper(activeCamperId) {
-    this.setState({
-      activeCamperId
-    });
-  }
-
   render() {
     return (
       <div>
@@ -50,19 +39,24 @@ class App extends Component {
           <Route
             exact
             path='/admin'
-            render={props =>
-              <Admin
-                {...props}
-                groups={this.state.groups}
+            render={props => <Admin {...props} groups={this.state.groups}
               />}
-          />
-          <Route
-            path='/groupEdit'
-            render={props => <GroupEdit {...props} campers={this.state.campers} group={this.state.activeGroupId} />}
           />
           <Route
             path='/groupAdd'
             render={props => <GroupAdd {...props} />}
+          />
+          <Route
+            path='/groupEdit'
+            render={props => <GroupEdit {...props} campers={this.state.campers} />}
+          />
+          <Route
+            path='/camperAdd'
+            render={props => <CamperAdd {...props} groups={this.state.groups} />}
+          />
+          <Route
+            path='/camperEdit'
+            render={props => <CamperEdit {...props} />}
           />
         </Switch>
       </div>
