@@ -1,13 +1,10 @@
 const express = require('express');
-const router = express.Router();
-const path = require('path');
 const PORT = process.env.PORT || 5000;
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 
 const app = express();
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'build')));
+app.use(bodyParser.json());
 
 try {
   var con = mysql.createConnection({
@@ -61,10 +58,13 @@ con.connect(err => {
     const newFields = {};
     textFields.forEach(field => {
       if (oldFields[field] && oldFields[field] !== '') {
-        newFields[field] = replaceQuotes(req.body[field]);
+        newFields[field] = replaceQuotes(oldFields[field]);
       }
     });
-    return newFields;
+    return {
+      ...oldFields,
+      ...newFields
+    };
   }
 
   const replaceQuotes = str => {
@@ -77,17 +77,16 @@ con.connect(err => {
   });
 
   app.get('/groupsAndCampers', (req, res) => {
-    console.log(req.groups, req.campers)
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers }));
   });
 
 
   app.get('/', (req, res) => {
     // res.render('pages/index', { groups: req.groups, campers: req.campers });
-    res.render('index');
+    // res.render('index');
   })
     .get('/login', (req, res) => {
-      res.render('pages/login', { error: false });
+      // res.render('pages/login', { error: false });
     })
     .post('/login', (req, res) => {
       let user = req.users.find(user => {
@@ -97,14 +96,14 @@ con.connect(err => {
         res.redirect('/admin');
       }
       else {
-        res.render('pages/login', { error: true });
+        // res.render('pages/login', { error: true });
       }
     })
     .get('/admin', (req, res) => {
-      res.render('pages/admin', { groups: req.groups, campers: req.campers })
+      // res.render('pages/admin', { groups: req.groups, campers: req.campers })
     })
     .get('/signup', (req, res) => {
-      res.render('pages/signup', { error: false });
+      // res.render('pages/signup', { error: false });
     })
     .post('/signup', (req, res) => {
       //check if the name is already taken
@@ -116,7 +115,7 @@ con.connect(err => {
       }
 
       if (exists) {
-        res.render('pages/signup', { error: true });
+        // res.render('pages/signup', { error: true });
       } else {
         con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
           if (err) throw err;
@@ -158,15 +157,27 @@ con.connect(err => {
       var newSize = Number(req.body.size) + 1;
       con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
     })
-    .get('/camperDelete', (req, res) => {
-      con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.query.id}`);
+    .post('/camperDelete', (req, res) => {
+      con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.body.id}`);
 
-      con.query(`DELETE FROM campers WHERE id = '${req.query.id}'`, (err) => {
+      con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
 
-        var newSize = Math.max(0, Number(req.query.size) - 1);
-        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.query.group_id}`);
-        res.redirect('/admin');
+        var newSize = Math.max(0, Number(req.body.size) - 1);
+        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+
+        const campers = [...req.campers];
+        let index;
+        campers.forEach((camper, i) => {
+          if (camper.id === req.body.id) {
+            index = i;
+          }
+        });
+
+        console.log(index);
+        campers.splice(index, 1);
+        console.log(campers)
+        res.status(200).send(JSON.stringify({campers}));
       });
     });
 
