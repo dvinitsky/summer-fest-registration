@@ -144,10 +144,21 @@ con.connect(err => {
       });
     })
     .post('/camperEdit', (req, res) => {
+      console.log(req.body)
       con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
         if (err) throw err;
-        res.redirect('/admin');
       });
+
+      const campers = [...req.campers];
+      let index;
+      campers.forEach((camper, i) => {
+        if (camper.id === req.body.id) {
+          index = i;
+        }
+      });
+
+      campers[index] = { ...campers[index], ...req.body };
+      res.status(200).send(JSON.stringify({ campers }));
     })
     .post('/camperAdd', (req, res) => {
       con.query(`INSERT INTO campers (first_name, last_name, group_id) VALUES('${req.body.first_name}', '${req.body.last_name}', '${req.body.group_id}')`, (err) => {
@@ -175,7 +186,7 @@ con.connect(err => {
         });
 
         campers.splice(index, 1);
-        res.status(200).send(JSON.stringify({campers}));
+        res.status(200).send(JSON.stringify({ campers }));
       });
     });
 

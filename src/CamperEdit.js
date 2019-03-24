@@ -3,16 +3,31 @@ import Error from './Error';
 import { Redirect } from 'react-router-dom';
 
 class CamperEdit extends React.Component {
-  constructor() {
-    super();
-    this.state = {};
+  constructor(props) {
+    super(props);
+
+    let group = {};
+    let camper = {};
+
+    const {location} = this.props;
+    if (location && location.state && location.state.group && location.state.camper) {
+      group = location.state.group;
+      camper = location.state.camper;
+    }
+
+    this.state = {
+      group,
+      camper
+    };
+
+    this.handleChange = this.handleChange.bind(this);
   }
-  cancelDelete = () => {
+  cancelDelete () {
     document.getElementById('delete-camper-modal').style.display = 'none';
     document.getElementById('camper-deleted-error').style.display = 'none';
-  };
+  }
 
-  deleteCamper = (id, size, group_id) => {
+  deleteCamper (id, size, group_id) {
     const options = {
       method: 'POST',
       headers: {
@@ -30,54 +45,85 @@ class CamperEdit extends React.Component {
       })
       .then(data => {
         this.setState({
-          deleteSuccessful: true,
+          shouldRedirect: true,
           campers: data.campers
         });
       })
       .catch(error => {
-        document.getElementById('camper-deleted-error').style.display = 'block';
+        document.getElementById('error').style.display = 'block';
       })
-  };
-  showDeleteModal = () => {
+  }
+  showDeleteModal () {
     document.getElementById('delete-camper-modal').style.display = 'block';
-  };
+  }
+  editCamper (id, first_name, last_name) {
+    console.log(id, first_name, last_name)
+    const options = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, first_name, last_name })
+    };
+
+    console.log(options)
+
+    fetch('/camperEdit', options)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      else throw new Error();
+    })
+    .then(data => {
+      this.setState({
+        shouldRedirect: true,
+        campers: data.campers
+      });
+    })
+    .catch(error => {
+      document.getElementById('error').style.display = 'block';
+    });
+  }
+  handleChange(e) {
+    const newState = {...this.state}
+    newState.camper[e.target.name] = e.target.value;
+    this.setState(newState);
+  }
 
   render() {
     const { location } = this.props;
 
-    if (this.state.deleteSuccessful) {
+    if (this.state.shouldRedirect) {
       return (
         <Redirect
           to={{
             pathname: '/groupEdit',
             state: {
               group: location.state.group,
-              campers : this.state.campers
+              campers: this.state.campers
             }
           }}
         />
       );
     }
 
-    if (location && location.state && location.state.group && location.state.camper) {
-      const group = location.state.group;
-      const camper = location.state.camper;
-
+    if (this.state.group && this.state.camper) {
       return (
-        <form className="camper-edit" method="post">
+        <div className="camper-edit">
           <h3>
             First Name:
           </h3>
-          <input className="camper-input" defaultValue={camper.first_name} name="first_name" />
+          <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.first_name} name="first_name" />
           <br />
           <h3>
             Last Name:
           </h3>
-          <input className="camper-input" defaultValue={camper.last_name} name="last_name" />
+          <input onChange={this.handleChange}  className="camper-input" defaultValue={this.state.camper.last_name} name="last_name" />
           <br />
           <br />
 
-          <button type="submit">Save</button>
+          <button type="button" onClick={() => this.editCamper(this.state.camper.id, this.state.camper.first_name, this.state.camper.last_name)}>Save</button>
 
           <br />
           <br />
@@ -85,20 +131,20 @@ class CamperEdit extends React.Component {
           <button type="button" onClick={this.showDeleteModal}>Delete</button>
 
           <div id="delete-camper-modal">
-            <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?
+            <h1>Are you sure you want to delete {this.state.camper.first_name} {this.state.camper.last_name}?
             </h1>
             <button type="button" onClick={this.cancelDelete}>No</button>
-            <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id, group.size) }}>Yes</button>
+            <button type="button" onClick={() => { this.deleteCamper(this.state.camper.id, this.state.camper.group_id, this.state.group.size) }}>Yes</button>
           </div>
           <div id="camper-deleted">
             Camper Deleted.
           </div>
-          <div id="camper-deleted-error">
+          <div id="error">
             There's been an error. Please try again.
           </div>
 
-          <input className="do-not-show" name="id" defaultValue={camper.id} />
-        </form>
+          <input className="do-not-show" name="id" defaultValue={this.state.camper.id} />
+        </div>
       );
     }
     return <Error />;
