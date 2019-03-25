@@ -11,7 +11,7 @@ class GroupEdit extends Component {
     const { location } = this.props;
     if (location && location.state && location.state.group) {
       group = location.state.group;
-    
+    }
 
     this.state = {
       group
