@@ -135,10 +135,7 @@ con.connect(err => {
       });
 
       con.query('SELECT * FROM groups', (err, groups) => {
-        console.log('groups', groups
-        )
         const group = groups.find(group => group.id === req.body.id);
-        console.log(group)
         res.status(200).send(JSON.stringify({ group }));
       });
     })
@@ -150,7 +147,6 @@ con.connect(err => {
       });
     })
     .post('/camperEdit', (req, res) => {
-      console.log(req.body)
       con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
         if (err) throw err;
       });
@@ -172,6 +168,13 @@ con.connect(err => {
       });
       var newSize = Number(req.body.size) + 1;
       con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          const group = groups.find(group => group.id === req.body.group_id);
+          res.status(200).send(JSON.stringify({ group, campers }));
+        });
+      });
     })
     .post('/camperDelete', (req, res) => {
       con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.body.id}`);
