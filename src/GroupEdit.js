@@ -4,11 +4,20 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 
 class GroupEdit extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
+
+    let group = {};
+    const { location } = this.props;
+    if (location && location.state && location.state.group) {
+      group = location.state.group;
+    
+
     this.state = {
-      group: {}
+      group
     };
+
+    this.handleChange = this.handleChange.bind(this);
   }
   handleChange(e) {
     const newState = { ...this.state }
@@ -37,7 +46,7 @@ class GroupEdit extends Component {
       .then(data => {
         this.setState({
           redirectUrl: '/groupEdit',
-          groups: data.groups
+          group: data.group
         });
       })
       .catch(error => {
@@ -56,6 +65,8 @@ class GroupEdit extends Component {
       body: JSON.stringify({ id, group_name, leader_name })
     };
 
+    console.log(id, group_name, leader_name)
+
     fetch('/groupEdit', options)
       .then(response => {
         if (response.ok) {
@@ -66,7 +77,7 @@ class GroupEdit extends Component {
       .then(data => {
         this.setState({
           redirectUrl: '/admin',
-          group: data.group
+          groups: data.groups
         });
       })
       .catch(error => {
@@ -81,6 +92,7 @@ class GroupEdit extends Component {
           to={{
             pathname: this.state.redirectUrl,
             state: {
+              groups: this.state.groups,
               group: this.state.group
             }
           }}
@@ -104,10 +116,10 @@ class GroupEdit extends Component {
           <h3>
             Group Name:
         </h3>
-          <input onChange={this.onChange} defaultValue={group.group_name} name="group_name" />
+          <input onChange={this.handleChange} defaultValue={group.group_name} name="group_name" />
           <br />
           Leader Name:
-        <input onChange={this.onChange} defaultValue={group.leader_name} name="leader_name" />
+        <input onChange={this.handleChange} defaultValue={group.leader_name} name="leader_name" />
           <br />
           Campers:
 
@@ -144,7 +156,7 @@ class GroupEdit extends Component {
             </tbody>
           </table>
 
-          <button onClick={() => this.editGroup()} type="submit">Save</button>
+          <button onClick={() => this.editGroup(this.state.group.id, this.state.group.group_name, this.state.group.leader_name)} type="submit">Save</button>
 
           <Link
             to={{

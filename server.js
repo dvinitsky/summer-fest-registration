@@ -124,13 +124,14 @@ con.connect(err => {
       }
     })
     .post('/groupEdit', (req, res) => {
+      console.log(req.body)
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
       });
 
       con.query('SELECT * FROM groups', (err, groups) => {
-        const group = groups.find(group => group.id === req.body.id);
-        res.status(200).send(JSON.stringify({ group }));
+        console.log(groups)
+        res.status(200).send(JSON.stringify({ groups }));
       });
     })
     .post('/groupAdd', (req, res) => {
