@@ -1,9 +1,93 @@
 import React, { Component } from 'react';
 import Error from './Error';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class GroupEdit extends Component {
+  constructor() {
+    super();
+    this.state = {
+      group: {}
+    };
+  }
+  handleChange(e) {
+    const newState = { ...this.state }
+    newState.group[e.target.name] = e.target.value;
+    this.setState(newState);
+  }
+  cancelDelete() {
+    document.getElementById('delete-group-modal').style.display = 'none';
+  };
+  deleteGroup(id) {
+    const options = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id })
+    };
+
+    fetch('/groupDelete', options)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        else throw new Error();
+      })
+      .then(data => {
+        this.setState({
+          redirectUrl: '/groupEdit',
+          groups: data.groups
+        });
+      })
+      .catch(error => {
+        document.getElementById('error').style.display = 'block';
+      })
+  };
+  showDeleteModal() {
+    document.getElementById('delete-group-modal').style.display = 'block';
+  };
+  editGroup(id, group_name, leader_name) {
+    const options = {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ id, group_name, leader_name })
+    };
+
+    fetch('/groupEdit', options)
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        else throw new Error();
+      })
+      .then(data => {
+        this.setState({
+          redirectUrl: '/admin',
+          group: data.group
+        });
+      })
+      .catch(error => {
+        document.getElementById('error').style.display = 'block';
+      })
+  };
+
   render() {
+    if (this.state.redirectUrl) {
+      return (
+        <Redirect
+          to={{
+            pathname: this.state.redirectUrl,
+            state: {
+              group: this.state.group
+            }
+          }}
+        />
+      );
+    }
+
     const { campers, location } = this.props;
 
     if (location && location.state && location.state.group) {
@@ -12,18 +96,18 @@ class GroupEdit extends Component {
       const campersArray = location.state.campers || campers;
 
       let campersInThisGroup = [];
-      if(campersArray) {
-        campersInThisGroup = campersArray.filter(camper => camper.group_id === group.id); 
+      if (campersArray) {
+        campersInThisGroup = campersArray.filter(camper => camper.group_id === group.id);
       }
       return (
-        <form className="group-edit" method="post">
+        <div className="group-edit">
           <h3>
             Group Name:
         </h3>
-          <input defaultValue={group.group_name} name="group_name" />
+          <input onChange={this.onChange} defaultValue={group.group_name} name="group_name" />
           <br />
           Leader Name:
-        <input defaultValue={group.leader_name} name="leader_name" />
+        <input onChange={this.onChange} defaultValue={group.leader_name} name="leader_name" />
           <br />
           Campers:
 
@@ -60,9 +144,7 @@ class GroupEdit extends Component {
             </tbody>
           </table>
 
-          <input className="do-not-show" defaultValue={group.id} name="id" />
-
-          <button type="submit">Save</button>
+          <button onClick={() => this.editGroup()} type="submit">Save</button>
 
           <Link
             to={{
@@ -73,15 +155,15 @@ class GroupEdit extends Component {
             Add a Camper
           </Link>
 
-          <button type="button" onClick={showDeleteModal}>Delete</button>
+          <button type="button" onClick={this.showDeleteModal}>Delete</button>
 
           <div id="delete-group-modal">
             <h1>Are you sure you want to delete {group.group_name} and all its campers?
           </h1>
-            <button type="button" onClick={cancelDelete}>No</button>
-            <button type="button" onClick={() => deleteGroup(group.id)}>Yes</button>
+            <button type="button" onClick={this.cancelDelete}>No</button>
+            <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
           </div>
-        </form>
+        </div>
       );
     }
     return <Error />
@@ -89,13 +171,3 @@ class GroupEdit extends Component {
 }
 
 export default GroupEdit;
-
-const cancelDelete = () => {
-  document.getElementById('delete-group-modal').style.display = 'none';
-};
-const deleteGroup = (id) => {
-  window.location.assign(`/groupDelete?id=${id}`);
-};
-const showDeleteModal = () => {
-  document.getElementById('delete-group-modal').style.display = 'block';
-};

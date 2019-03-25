@@ -4,7 +4,14 @@ import { Link } from 'react-router-dom';
 
 class Admin extends React.Component {
   render() {
-    const { groups } = this.props;
+    const { location } = this.props;
+
+    let groups;
+    if (location && location.state && location.state.groups) {
+      groups = this.props.location.state.groups
+    } else {
+      groups = this.props.groups;
+    }
 
     return (
       <div>

@@ -126,7 +126,11 @@ con.connect(err => {
     .post('/groupEdit', (req, res) => {
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
-        res.redirect('/admin');
+      });
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        const group = groups.find(group => group.id === req.body.id);
+        res.status(200).send(JSON.stringify({ group }));
       });
     })
     .post('/groupAdd', (req, res) => {
@@ -139,11 +143,14 @@ con.connect(err => {
         res.status(200).send(JSON.stringify({ group }));
       });
     })
-    .get('/groupDelete', (req, res) => {
-      con.query(`DELETE FROM campers WHERE group_id = '${req.query.id}'`);
-
-      con.query(`DELETE FROM groups WHERE id = '${req.query.id}'`, (err) => {
+    .post('/groupDelete', (req, res) => {
+      con.query(`DELETE FROM campers WHERE group_id = '${req.body.id}'`);
+      con.query(`DELETE FROM groups WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
+      });
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        res.status(200).send(JSON.stringify({ groups }));
       });
     })
     .post('/camperEdit', (req, res) => {

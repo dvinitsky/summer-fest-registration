@@ -21,7 +21,11 @@ class App extends Component {
 
   componentWillMount() {
     fetch('/groupsAndCampers')
-      .then(response => response.json())
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
       .then(data => {
         this.setState({
           groups: data.groups || [],

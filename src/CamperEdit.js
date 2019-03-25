@@ -9,7 +9,7 @@ class CamperEdit extends React.Component {
     let group = {};
     let camper = {};
 
-    const {location} = this.props;
+    const { location } = this.props;
     if (location && location.state && location.state.group && location.state.camper) {
       group = location.state.group;
       camper = location.state.camper;
@@ -22,12 +22,12 @@ class CamperEdit extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
   }
-  cancelDelete () {
+  cancelDelete() {
     document.getElementById('delete-camper-modal').style.display = 'none';
     document.getElementById('camper-deleted-error').style.display = 'none';
   }
 
-  deleteCamper (id, size, group_id) {
+  deleteCamper(id, size, group_id) {
     const options = {
       method: 'POST',
       headers: {
@@ -53,10 +53,10 @@ class CamperEdit extends React.Component {
         document.getElementById('error').style.display = 'block';
       })
   }
-  showDeleteModal () {
+  showDeleteModal() {
     document.getElementById('delete-camper-modal').style.display = 'block';
   }
-  editCamper (id, first_name, last_name) {
+  editCamper(id, first_name, last_name) {
     const options = {
       method: 'POST',
       headers: {
@@ -66,24 +66,24 @@ class CamperEdit extends React.Component {
     };
 
     fetch('/camperEdit', options)
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      }
-      else throw new Error();
-    })
-    .then(data => {
-      this.setState({
-        shouldRedirect: true,
-        campers: data.campers
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        }
+        else throw new Error();
+      })
+      .then(data => {
+        this.setState({
+          shouldRedirect: true,
+          campers: data.campers
+        });
+      })
+      .catch(error => {
+        document.getElementById('error').style.display = 'block';
       });
-    })
-    .catch(error => {
-      document.getElementById('error').style.display = 'block';
-    });
   }
   handleChange(e) {
-    const newState = {...this.state}
+    const newState = { ...this.state }
     newState.camper[e.target.name] = e.target.value;
     this.setState(newState);
   }
@@ -116,7 +116,7 @@ class CamperEdit extends React.Component {
           <h3>
             Last Name:
           </h3>
-          <input onChange={this.handleChange}  className="camper-input" defaultValue={this.state.camper.last_name} name="last_name" />
+          <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.last_name} name="last_name" />
           <br />
           <br />
 
@@ -139,8 +139,6 @@ class CamperEdit extends React.Component {
           <div id="error">
             There's been an error. Please try again.
           </div>
-
-          <input className="do-not-show" name="id" defaultValue={this.state.camper.id} />
         </div>
       );
     }
