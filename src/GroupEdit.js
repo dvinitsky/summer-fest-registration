@@ -11,8 +11,10 @@ class GroupEdit extends Component {
 
       const campersArray = location.state.campers || campers;
 
-      const campersInThisGroup = campersArray.filter(camper => camper.group_id === group.id);
-
+      let campersInThisGroup = [];
+      if(campersArray) {
+        campersInThisGroup = campersArray.filter(camper => camper.group_id === group.id); 
+      }
       return (
         <form className="group-edit" method="post">
           <h3>

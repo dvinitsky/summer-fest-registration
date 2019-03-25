@@ -130,9 +130,16 @@ con.connect(err => {
       });
     })
     .post('/groupAdd', (req, res) => {
-      con.query(`INSERT INTO groups (leader_name, group_name) VALUES('${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
+      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.id}', '${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
         if (err) throw err;
-        res.redirect('/admin');
+      });
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        console.log('groups', groups
+        )
+        const group = groups.find(group => group.id === req.body.id);
+        console.log(group)
+        res.status(200).send(JSON.stringify({ group }));
       });
     })
     .get('/groupDelete', (req, res) => {
@@ -140,7 +147,6 @@ con.connect(err => {
 
       con.query(`DELETE FROM groups WHERE id = '${req.query.id}'`, (err) => {
         if (err) throw err;
-        res.redirect('/admin');
       });
     })
     .post('/camperEdit', (req, res) => {
@@ -163,7 +169,6 @@ con.connect(err => {
     .post('/camperAdd', (req, res) => {
       con.query(`INSERT INTO campers (first_name, last_name, group_id) VALUES('${req.body.first_name}', '${req.body.last_name}', '${req.body.group_id}')`, (err) => {
         if (err) throw err;
-        res.redirect('/admin');
       });
       var newSize = Number(req.body.size) + 1;
       con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);

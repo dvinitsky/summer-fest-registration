@@ -14,7 +14,9 @@ class App extends Component {
     this.state = {
       groups: [],
       campers: [],
-    }
+      nextGroupId: 0
+    };
+    this.incrementNextGroupId = this.incrementNextGroupId.bind(this);
   }
 
   componentWillMount() {
@@ -24,11 +26,26 @@ class App extends Component {
         this.setState({
           groups: data.groups || [],
           campers: data.campers || [],
+          nextGroupId: this.getHighestGroupId(data.groups) + 1
         });
       })
       .catch(error => {
         console.log(error);
       });
+  }
+
+  incrementNextGroupId() {
+    this.setState({
+      nextGroupId: this.state.nextGroupId + 1
+    });
+  }
+
+  getHighestGroupId(groups) {
+    const ids = [];
+    groups.forEach(group => {
+      ids.push(group.id);
+    })
+    return Math.max(...ids);
   }
 
   render() {
@@ -40,11 +57,11 @@ class App extends Component {
             exact
             path='/admin'
             render={props => <Admin {...props} groups={this.state.groups}
-              />}
+            />}
           />
           <Route
             path='/groupAdd'
-            render={props => <GroupAdd {...props} />}
+            render={props => <GroupAdd {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
           />
           <Route
             path='/groupEdit'

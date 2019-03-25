@@ -144,7 +144,7 @@ input[type="number"] {
   display: none;
 }
 
-#delete-camper-modal, #delete-group-modal, #camper-deleted, #camper-deleted-error {
+#delete-camper-modal, #delete-group-modal, #camper-deleted, #error {
   display: none;
 }
 

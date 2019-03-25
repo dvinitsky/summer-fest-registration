@@ -57,7 +57,6 @@ class CamperEdit extends React.Component {
     document.getElementById('delete-camper-modal').style.display = 'block';
   }
   editCamper (id, first_name, last_name) {
-    console.log(id, first_name, last_name)
     const options = {
       method: 'POST',
       headers: {
@@ -65,8 +64,6 @@ class CamperEdit extends React.Component {
       },
       body: JSON.stringify({ id, first_name, last_name })
     };
-
-    console.log(options)
 
     fetch('/camperEdit', options)
     .then(response => {
