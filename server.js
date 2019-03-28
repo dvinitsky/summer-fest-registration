@@ -6,6 +6,22 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
+//Static file declaration
+app.use(express.static(path.join(__dirname, 'client/build')));
+
+//production mode
+if(process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'client/build')));
+  //
+  app.get('*', (req, res) => {
+    res.sendfile(path.join(__dirname = 'client/build/index.html'));
+  })
+}
+//build mode
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname+'/client/public/index.html'));
+})
+
 try {
   var con = mysql.createConnection({
     host: 'z12itfj4c1vgopf8.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
