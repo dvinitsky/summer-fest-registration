@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "auth0-js": "^9.10.1",
+    "auth0-js": "9.10.1",
     "body-parser": "1.18.3",
     "client-sessions": "0.8.0",
     "express": "4.16.4",
@@ -19,10 +19,12 @@
     "tape": "4.10.1"
   },
   "scripts": {
-    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start": "concurrently \"npm run server\" \"npm run client\"",
+    "server": "node server.js",
+    "client": "react-scripts start"
   },
   "browserslist": [
     ">0.2%",
