@@ -72,7 +72,12 @@ con.connect(err => {
   }
 
   app.use((req, res, next) => {
+    // console.log('middleware in')
+    // console.log(req.body)
+    // TODO
     req.body = scrubApostrophes(req.body);
+    // console.log('middleware out')
+    // console.log(req.body)
     next();
   });
 
@@ -124,13 +129,11 @@ con.connect(err => {
       }
     })
     .post('/groupEdit', (req, res) => {
-      console.log(req.body)
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
       });
 
       con.query('SELECT * FROM groups', (err, groups) => {
-        console.log(groups)
         res.status(200).send(JSON.stringify({ groups }));
       });
     })
@@ -155,6 +158,8 @@ con.connect(err => {
       });
     })
     .post('/camperEdit', (req, res) => {
+      // console.log('camperEdit')
+      // console.log(req.body)
       con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
         if (err) throw err;
       });

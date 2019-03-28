@@ -7,6 +7,8 @@ class GroupEdit extends Component {
   constructor(props) {
     super(props);
 
+    console.log('in group edit')
+
     let group = {};
     const { location } = this.props;
     if (location && location.state && location.state.group) {
