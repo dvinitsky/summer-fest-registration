@@ -7,8 +7,6 @@ class GroupEdit extends Component {
   constructor(props) {
     super(props);
 
-    console.log('in group edit')
-
     let group = {};
     const { location } = this.props;
     if (location && location.state && location.state.group) {
@@ -47,7 +45,7 @@ class GroupEdit extends Component {
       })
       .then(data => {
         this.setState({
-          redirectUrl: '/groupEdit',
+          redirectUrl: '/admin',
           group: data.group
         });
       })
@@ -66,8 +64,6 @@ class GroupEdit extends Component {
       },
       body: JSON.stringify({ id, group_name, leader_name })
     };
-
-    console.log(id, group_name, leader_name)
 
     fetch('/groupEdit', options)
       .then(response => {
@@ -176,6 +172,10 @@ class GroupEdit extends Component {
           </h1>
             <button type="button" onClick={this.cancelDelete}>No</button>
             <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
+          </div>
+
+          <div id="error">
+            There's been an error. Please try again.
           </div>
         </div>
       );

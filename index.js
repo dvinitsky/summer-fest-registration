@@ -76,17 +76,11 @@ con.connect(err => {
   }
 
   app.use((req, res, next) => {
-    // console.log('middleware in')
-    // console.log(req.body)
-    // TODO
     req.body = scrubApostrophes(req.body);
-    // console.log('middleware out')
-    // console.log(req.body)
     next();
   });
 
   app.get('/groupsAndCampers', (req, res) => {
-    console.log('good')
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers }));
   })
     .post('/login', (req, res) => {
@@ -101,23 +95,23 @@ con.connect(err => {
       }
     })
     .post('/signup', (req, res) => {
-    //check if the name is already taken
-    let exists = false;
-    for (let i = 0; i < req.campers.length; i++) {
-      if (req.campers[i].name === req.body.name) {
-        exists = true;
+      //check if the name is already taken
+      let exists = false;
+      for (let i = 0; i < req.campers.length; i++) {
+        if (req.campers[i].name === req.body.name) {
+          exists = true;
+        }
       }
-    }
 
-    if (exists) {
-      // res.render('pages/signup', { error: true });
-    } else {
-      con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
-        if (err) throw err;
-        res.redirect('/');
-      });
-    }
-  })
+      if (exists) {
+        // res.render('pages/signup', { error: true });
+      } else {
+        con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
+          if (err) throw err;
+          res.redirect('/');
+        });
+      }
+    })
     .post('/groupEdit', (req, res) => {
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
@@ -148,8 +142,6 @@ con.connect(err => {
       });
     })
     .post('/camperEdit', (req, res) => {
-      // console.log('camperEdit')
-      // console.log(req.body)
       con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
         if (err) throw err;
       });
@@ -204,7 +196,7 @@ con.connect(err => {
   // The "catchall" handler: for any request that doesn't
   // match one above, send back React's index.html file.
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
   });
 
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
