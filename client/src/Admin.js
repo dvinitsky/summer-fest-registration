@@ -1,8 +1,14 @@
 import React from 'react';
 import './App.css';
 import { Link } from 'react-router-dom';
+import Auth from './Auth.js';
 
 class Admin extends React.Component {
+  componentDidMount() {
+    const auth = new Auth();
+    auth.login();
+  }
+  
   render() {
     const { location } = this.props;
 
@@ -18,6 +24,8 @@ class Admin extends React.Component {
         <div className="admin-logged-message">
           Logged in as Admin
         </div>
+
+
 
         <table name="camperId">
           <tbody>
