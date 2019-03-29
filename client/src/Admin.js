@@ -5,10 +5,16 @@ import Auth from './Auth.js';
 
 class Admin extends React.Component {
   componentDidMount() {
-    const auth = new Auth();
-    auth.login();
+    fetch('/env').then(response => {
+      if(response.ok) {
+        return response.json();
+      }
+    }).then(env => {
+      const auth = new Auth(env);
+      auth.login();
+    });
   }
-  
+
   render() {
     const { location } = this.props;
 
