@@ -7,21 +7,8 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
-//Static file declaration
-app.use(express.static(path.join(__dirname, 'build')));
-
-//production mode
-if(process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname, 'build')));
-  //
-  app.get('*', (req, res) => {
-    res.sendfile(path.join(__dirname = 'build/index.html'));
-  })
-}
-//build mode
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname+'/public/index.html'));
-// })
+// Serve static files from the React app
+app.use(express.static(path.join(__dirname, 'client/build')));
 
 try {
   var con = mysql.createConnection({
@@ -99,17 +86,9 @@ con.connect(err => {
   });
 
   app.get('/groupsAndCampers', (req, res) => {
+    console.log('good')
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers }));
-  });
-
-
-  app.get('/', (req, res) => {
-    // res.render('pages/index', { groups: req.groups, campers: req.campers });
-    // res.render('index');
   })
-    .get('/login', (req, res) => {
-      // res.render('pages/login', { error: false });
-    })
     .post('/login', (req, res) => {
       let user = req.users.find(user => {
         return user.username === req.body.username;
@@ -121,30 +100,24 @@ con.connect(err => {
         // res.render('pages/login', { error: true });
       }
     })
-    .get('/admin', (req, res) => {
-      // res.render('pages/admin', { groups: req.groups, campers: req.campers })
-    })
-    .get('/signup', (req, res) => {
-      // res.render('pages/signup', { error: false });
-    })
     .post('/signup', (req, res) => {
-      //check if the name is already taken
-      let exists = false;
-      for (let i = 0; i < req.campers.length; i++) {
-        if (req.campers[i].name === req.body.name) {
-          exists = true;
-        }
+    //check if the name is already taken
+    let exists = false;
+    for (let i = 0; i < req.campers.length; i++) {
+      if (req.campers[i].name === req.body.name) {
+        exists = true;
       }
+    }
 
-      if (exists) {
-        // res.render('pages/signup', { error: true });
-      } else {
-        con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
-          if (err) throw err;
-          res.redirect('/');
-        });
-      }
-    })
+    if (exists) {
+      // res.render('pages/signup', { error: true });
+    } else {
+      con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
+        if (err) throw err;
+        res.redirect('/');
+      });
+    }
+  })
     .post('/groupEdit', (req, res) => {
       con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
         if (err) throw err;
@@ -227,6 +200,12 @@ con.connect(err => {
         res.status(200).send(JSON.stringify({ campers }));
       });
     });
+
+  // The "catchall" handler: for any request that doesn't
+  // match one above, send back React's index.html file.
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname+'/client/build/index.html'));
+  });
 
   app.listen(PORT, () => console.log(`Listening on ${PORT}`));
 });
