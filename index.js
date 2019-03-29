@@ -84,8 +84,6 @@ con.connect(err => {
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers }));
   })
     .get('/env', (req, res) => {
-      console.log('oy')
-      console.log(process.env.NODE_ENV)
       res.send(JSON.stringify({env: process.env.NODE_ENV || 'dev'}));
     })
     .post('/login', (req, res) => {
