@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 import { Link } from 'react-router-dom';
 
 class Admin extends React.Component {
@@ -18,8 +17,6 @@ class Admin extends React.Component {
         <div className="admin-logged-message">
           Logged in as Admin
         </div>
-
-
 
         <table name="camperId">
           <tbody>
@@ -63,6 +60,22 @@ class Admin extends React.Component {
             to={"/groupAdd"}
           >
             Add a Group
+          </Link>
+        </h4>
+
+        <h4 className="add-delete-link">
+          <Link
+            to={"/userAdd"}
+          >
+            Add a User
+          </Link>
+        </h4>
+
+        <h4 className="add-delete-link">
+          <Link
+            to={"/users"}
+          >
+            View All Users
           </Link>
         </h4>
       </div>

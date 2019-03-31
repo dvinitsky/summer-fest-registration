@@ -7,6 +7,9 @@ import GroupAdd from './GroupAdd';
 import Header from './Header';
 import CamperEdit from './CamperEdit';
 import CamperAdd from './CamperAdd';
+import Login from './Login';
+import UserAdd from './UserAdd';
+import Users from './Users';
 
 class App extends Component {
   constructor() {
@@ -20,7 +23,7 @@ class App extends Component {
   }
 
   componentWillMount() {
-    fetch('/groupsAndCampers')
+    fetch('/allData')
       .then(response => {
         if (response.ok) {
           return response.json();
@@ -30,6 +33,7 @@ class App extends Component {
         this.setState({
           groups: data.groups || [],
           campers: data.campers || [],
+          users: data.users || [],
           nextGroupId: this.getHighestGroupId(data.groups) + 1
         });
       })
@@ -59,9 +63,20 @@ class App extends Component {
         <Switch>
           <Route
             exact
+            path='/'
+            render={props => <Login {...props} />}
+          />
+          <Route
+            path='/userAdd'
+            render={props => <UserAdd {...props} />}
+          />
+          <Route
             path='/admin'
-            render={props => <Admin {...props} groups={this.state.groups}
-            />}
+            render={props => <Admin {...props} groups={this.state.groups} />}
+          />
+          <Route
+            path='/users'
+            render={props => <Users {...props} users={this.state.users} />}
           />
           <Route
             path='/groupAdd'
