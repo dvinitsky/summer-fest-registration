@@ -14,7 +14,7 @@ class Signup extends React.Component {
     this.setState(newState);
   }
 
-  login(username, password) {
+  add(username, password) {
     if (!username || !password) {
       this.setState({ incomplete: true });
       return;
@@ -27,20 +27,24 @@ class Signup extends React.Component {
       body: JSON.stringify({
         username,
         password,
-        status: 'leader'
+        nextGroupId: this.props.nextGroupId
       })
     };
 
-    fetch('/userAdd', options)
+    fetch('/signup', options)
       .then(response => {
+        this.props.incrementNextGroupId();
         return response.json();
       })
       .then(data => {
+        console.log('data response:')
+        console.log(data)
         if (data.error) {
           throw new Error(data.error);
         }
         this.setState({
-          shouldRedirect: true
+          shouldRedirect: true,
+          group: data.group
         });
       })
       .catch(error => {
@@ -51,15 +55,18 @@ class Signup extends React.Component {
   }
 
   render() {
-    // if (this.state.shouldRedirect) {
-    //   return (
-    //     <Redirect
-    //       to={{
-    //         pathname: '/admin'
-    //       }}
-    //     />
-    //   );
-    // }
+    if (this.state.shouldRedirect) {
+      return (
+        <Redirect
+          to={{
+            pathname: '/groupEdit',
+            state: {
+              group: this.state.group
+            }
+          }}
+        />
+      );
+    }
 
     return (
       <div>
@@ -70,7 +77,7 @@ class Signup extends React.Component {
         <input name="username" onChange={this.handleChange}></input>
         <div>Password:</div>
         <input name="password" onChange={this.handleChange}></input>
-        <button onClick={() => this.login(this.state.username, this.state.password)}>Submit</button>
+        <button onClick={() => this.add(this.state.username, this.state.password)}>Submit</button>
 
         {this.state.error && <div>{this.state.error}</div>}
 

@@ -113,6 +113,28 @@ con.connect(err => {
     });
     res.send(JSON.stringify({ redirectUrl, group }))
   })
+  app.post('/signup', (req, res) => {
+    const exists = userNameExists(req.body.username, req.users);
+    if (exists) {
+      res.status(400).send(JSON.stringify({ error: 'Username already exists.' }));
+      return;
+    } else {
+      const hashedPassword = passwordHash.generate(req.body.password);
+
+      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.nextGroupId}', '', '')`, (err) => {
+        if (err) throw err;
+      });
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        const group = groups.find(group => group.id === req.body.nextGroupId);
+
+        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err) => {
+          if (err) throw err;
+          res.status(200).send(JSON.stringify({ group }));
+        });
+      });
+    }
+  })
   app.post('/userAdd', (req, res) => {
     const exists = userNameExists(req.body.username, req.users);
     if (exists) {
@@ -120,21 +142,14 @@ con.connect(err => {
       return;
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
-      con.query(`INSERT INTO users (username, password, status) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}')`, (err) => {
+
+      let group_id = null;
+      if (req.body.group_name) {
+        group_id = req.groups.find(group => group.group_name === req.body.group_name);
+      }
+      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}', '${group_id}')`, (err) => {
         if (err) throw err;
         res.status(200).send(JSON.stringify({}));
-      });
-    }
-  })
-  app.post('/signup', (req, res) => {
-    const exists = userNameExists(req.body.name, req.users);
-
-    if (exists) {
-      // res.render('pages/signup', { error: true });
-    } else {
-      con.query(`INSERT INTO campers (name) VALUES ('${req.body.name}')`, (err) => {
-        if (err) throw err;
-        res.redirect('/');
       });
     }
   })

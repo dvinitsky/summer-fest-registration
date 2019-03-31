@@ -10,23 +10,26 @@ class Header extends React.Component {
         <div className="container">
           <h1>Registration</h1>
 
-          <Link
-            to={{
-              pathname: "/admin",
-              state: { groups }
-            }}
-          >
-            Click here to go home
+          <p>
+            <Link
+              to={{
+                pathname: "/admin",
+                state: { groups }
+              }}
+            >
+              Click here to go home
           </Link>
+          </p>
 
-          <Link
-            to={{
-              pathname: "/signup"
-            }}
-          >
-            Click here to sign up
+          <p>
+            <Link
+              to={{
+                pathname: "/signup"
+              }}
+            >
+              Click here to sign up
           </Link>
-
+          </p>
 
 
 

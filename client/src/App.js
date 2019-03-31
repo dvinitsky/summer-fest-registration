@@ -10,6 +10,7 @@ import CamperAdd from './CamperAdd';
 import Login from './Login';
 import UserAdd from './UserAdd';
 import Users from './Users';
+import Signup from './Signup';
 
 class App extends Component {
   constructor() {
@@ -68,11 +69,11 @@ class App extends Component {
           />
           <Route
             path='/signup'
-            render={props => <Signup {...props} />}
+            render={props => <Signup {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
           />
           <Route
             path='/userAdd'
-            render={props => <UserAdd {...props} />}
+            render={props => <UserAdd {...props} groups={this.state.groups} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
           />
           <Route
             path='/admin'
