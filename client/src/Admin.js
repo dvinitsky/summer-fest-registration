@@ -1,7 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class Admin extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      clearance: sessionStorage.getItem('clearance')
+    }
+  }
   render() {
     const { location } = this.props;
 
@@ -12,12 +19,18 @@ class Admin extends React.Component {
       groups = this.props.groups;
     }
 
+    if (this.state.clearance !== 'admin') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
+          }}
+        />
+      );
+    }
+
     return (
       <div>
-        <div className="admin-logged-message">
-          Logged in as Admin
-        </div>
-
         <table name="camperId">
           <tbody>
             <tr className="table-header-row">

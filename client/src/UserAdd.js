@@ -4,7 +4,9 @@ import { Redirect } from 'react-router-dom';
 class UserAdd extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      clearance: sessionStorage.getItem('clearance')
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -59,6 +61,16 @@ class UserAdd extends React.Component {
         <Redirect
           to={{
             pathname: '/admin'
+          }}
+        />
+      );
+    }
+
+    if (this.state.clearance !== 'admin') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
           }}
         />
       );

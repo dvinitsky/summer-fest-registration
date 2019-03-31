@@ -1,9 +1,26 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Redirect } from 'react-router-dom';
 
 class Users extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      clearance: sessionStorage.getItem('clearance')
+    };
+  }
   render() {
     const users = this.props.users || [];
+
+    if (this.state.clearance !== 'admin') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
+          }}
+        />
+      );
+    }
 
     return (
       <table name="users">

@@ -8,7 +8,8 @@ class CamperAdd extends React.Component {
     this.state = {
       campersInGroup: [],
       group: {},
-      camper: {}
+      camper: {},
+      clearance: sessionStorage.getItem('clearance')
     };
     this.addCamper = this.addCamper.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -62,7 +63,17 @@ class CamperAdd extends React.Component {
         />
       );
     }
-
+    
+    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
+          }}
+        />
+      );
+    }
+    
     const { groups, location } = this.props;
 
     if (location && location.state && location.state.group_id) {

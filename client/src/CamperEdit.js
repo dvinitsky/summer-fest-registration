@@ -17,7 +17,8 @@ class CamperEdit extends React.Component {
 
     this.state = {
       group,
-      camper
+      camper,
+      clearance: sessionStorage.getItem('clearance')
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -100,6 +101,16 @@ class CamperEdit extends React.Component {
               group: location.state.group,
               campers: this.state.campers
             }
+          }}
+        />
+      );
+    }
+
+    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
           }}
         />
       );

@@ -108,10 +108,13 @@ con.connect(err => {
     }
 
     const redirectUrl = user.status === 'admin' ? '/admin' : '/groupEdit';
+    const clearance = user.status === 'admin' ? 'admin' : 'leader';
+
     const group = req.groups.find(group => {
       return group.id === user.group_id;
     });
-    res.send(JSON.stringify({ redirectUrl, group }))
+    console.log(clearance)
+    res.send(JSON.stringify({ redirectUrl, group, clearance }))
   })
   app.post('/signup', (req, res) => {
     const exists = userNameExists(req.body.username, req.users);
@@ -130,7 +133,7 @@ con.connect(err => {
 
         con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err) => {
           if (err) throw err;
-          res.status(200).send(JSON.stringify({ group }));
+          res.status(200).send(JSON.stringify({ group, clearance: 'leader' }));
         });
       });
     }

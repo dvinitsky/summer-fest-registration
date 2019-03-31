@@ -42,9 +42,11 @@ class Signup extends React.Component {
         if (data.error) {
           throw new Error(data.error);
         }
+        sessionStorage.setItem('clearance', data.clearance)
         this.setState({
           shouldRedirect: true,
-          group: data.group
+          group: data.group,
+          clearance: data.clearance
         });
       })
       .catch(error => {

@@ -34,10 +34,13 @@ class Login extends React.Component {
         if (data.error) {
           throw new Error(data.error);
         }
+        console.log(data.clearance)
+
+        sessionStorage.setItem('clearance', data.clearance)
         this.setState({
           shouldRedirect: true,
           redirectUrl: data.redirectUrl,
-          group: data.group || null
+          group: data.group || null,
         });
       })
       .catch(error => {

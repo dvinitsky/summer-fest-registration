@@ -2,6 +2,12 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 class Header extends React.Component {
+  constructor() {
+    super();
+    this.state = {
+      clearance: sessionStorage.getItem('clearance')
+    };
+  }
   render() {
     const groups = this.props.groups;
 
@@ -13,7 +19,7 @@ class Header extends React.Component {
           <p>
             <Link
               to={{
-                pathname: "/admin",
+                pathname: "/",
                 state: { groups }
               }}
             >
@@ -31,7 +37,16 @@ class Header extends React.Component {
           </Link>
           </p>
 
-
+          {this.state.clearance === 'admin' && (
+          <div className="admin-logged-message">
+            Logged in as Admin
+          </div>
+          )}
+          {this.state.clearance === 'leader' && (
+          <div className="admin-logged-message">
+            Logged in as Group Leader
+          </div>
+          )}
 
         </div>
       </div>

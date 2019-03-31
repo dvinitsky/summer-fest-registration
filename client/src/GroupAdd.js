@@ -6,7 +6,8 @@ class GroupAdd extends React.Component {
     super(props);
     this.state = {
       nextId: '',
-      group: {}
+      group: {},
+      clearance: sessionStorage.getItem('clearance')
     };
     this.addGroup = this.addGroup.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -60,6 +61,17 @@ class GroupAdd extends React.Component {
         />
       );
     }
+
+    if (this.state.clearance !== 'admin') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
+          }}
+        />
+      );
+    }
+
     return (
       <div className="container" method="post">
         <h3>

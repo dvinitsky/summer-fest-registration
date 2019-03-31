@@ -14,7 +14,8 @@ class GroupEdit extends Component {
     }
 
     this.state = {
-      group
+      group,
+      clearance: sessionStorage.getItem('clearance')
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -46,7 +47,7 @@ class GroupEdit extends Component {
       .then(data => {
         this.setState({
           redirectUrl: '/admin',
-          group: data.group
+          groups: data.groups
         });
       })
       .catch(error => {
@@ -93,6 +94,16 @@ class GroupEdit extends Component {
               groups: this.state.groups,
               group: this.state.group
             }
+          }}
+        />
+      );
+    }
+
+    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+      return (
+        <Redirect
+          to={{
+            pathname: '/'
           }}
         />
       );
