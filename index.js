@@ -50,12 +50,13 @@ con.connect(err => {
   });
 
   const userNameExists = (name, users) => {
+    let exists = false;
     users.forEach(user => {
       if (user.username === name) {
-        return true;
+        exists = true;
       }
     });
-    return false;
+    return exists;
   }
 
   const scrubApostrophes = oldFields => {
@@ -116,6 +117,7 @@ con.connect(err => {
     const exists = userNameExists(req.body.username, req.users);
     if (exists) {
       res.status(400).send(JSON.stringify({ error: 'Username already exists.' }));
+      return;
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
       con.query(`INSERT INTO users (username, password, status) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}')`, (err) => {

@@ -67,6 +67,10 @@ class App extends Component {
             render={props => <Login {...props} />}
           />
           <Route
+            path='/signup'
+            render={props => <Signup {...props} />}
+          />
+          <Route
             path='/userAdd'
             render={props => <UserAdd {...props} />}
           />

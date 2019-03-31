@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 
-class UserAdd extends React.Component {
+class Signup extends React.Component {
   constructor() {
     super();
     this.state = {};
@@ -14,7 +14,7 @@ class UserAdd extends React.Component {
     this.setState(newState);
   }
 
-  login(username, password, status) {
+  login(username, password) {
     if (!username || !password) {
       this.setState({ incomplete: true });
       return;
@@ -27,7 +27,7 @@ class UserAdd extends React.Component {
       body: JSON.stringify({
         username,
         password,
-        status
+        status: 'leader'
       })
     };
 
@@ -51,39 +51,35 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    if (this.state.shouldRedirect) {
-      return (
-        <Redirect
-          to={{
-            pathname: '/admin'
-          }}
-        />
-      );
-    }
+    // if (this.state.shouldRedirect) {
+    //   return (
+    //     <Redirect
+    //       to={{
+    //         pathname: '/admin'
+    //       }}
+    //     />
+    //   );
+    // }
 
     return (
       <div>
         <h4>
-          Add a User:
+          Signup
         </h4>
         <div>Username:</div>
         <input name="username" onChange={this.handleChange}></input>
         <div>Password:</div>
         <input name="password" onChange={this.handleChange}></input>
-        <div>Admin or Leader?</div>
-        <input type="radio" name="status" value="Admin" onChange={this.handleChange}></input>
-        <div>Admin</div>
-        <input type="radio" name="status" value="Leader" onChange={this.handleChange}></input>
-        <div>Leader</div>
-        <button onClick={() => this.login(this.state.username, this.state.password, this.state.status)}>Add</button>
+        <button onClick={() => this.login(this.state.username, this.state.password)}>Submit</button>
 
         {this.state.error && <div>{this.state.error}</div>}
+
         {this.state.incomplete && (
-          <div>User must have both a username and password.</div>
+          <div>You must have both a username and password.</div>
         )}
       </div>
     );
   }
 }
 
-export default UserAdd;
+export default Signup;
