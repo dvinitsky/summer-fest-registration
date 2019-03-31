@@ -113,7 +113,6 @@ con.connect(err => {
     const group = req.groups.find(group => {
       return group.id === user.group_id;
     });
-    console.log(clearance)
     res.send(JSON.stringify({ redirectUrl, group, clearance }))
   })
   app.post('/signup', (req, res) => {

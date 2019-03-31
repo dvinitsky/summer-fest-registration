@@ -4,7 +4,6 @@ import { Route, Switch } from 'react-router-dom';
 import Admin from './Admin';
 import GroupEdit from './GroupEdit';
 import GroupAdd from './GroupAdd';
-import Header from './Header';
 import CamperEdit from './CamperEdit';
 import CamperAdd from './CamperAdd';
 import Login from './Login';
@@ -26,6 +25,10 @@ class App extends Component {
   }
 
   componentWillMount() {
+    if (this.props.location && this.props.location.state && this.props.location.state.logout) {
+      sessionStorage.clear();
+    }
+
     fetch('/allData')
       .then(response => {
         if (response.ok) {
@@ -51,8 +54,6 @@ class App extends Component {
     });
   }
   setClearance(clearance) {
-    console.log('setting clearance!')
-    console.log(clearance)
     this.setState({
       clearance
     });
@@ -67,12 +68,8 @@ class App extends Component {
   }
 
   render() {
-    const isAdmin = this.state.clearance === 'admin';
-    const isLeader = this.state.clearance === 'leader';
-
     return (
       <div>
-        <Header />
         <Switch>
           <Route
             exact
@@ -83,45 +80,35 @@ class App extends Component {
             path='/signup'
             render={props => <Signup {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} setClearance={this.setClearance} />}
           />
+          <Route
+            path='/userAdd'
+            render={props => <UserAdd {...props} groups={this.state.groups} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
+          />
+          <Route
+            path='/admin'
+            render={props => <Admin {...props} groups={this.state.groups} />}
+          />
+          <Route
+            path='/users'
+            render={props => <Users {...props} users={this.state.users} />}
+          />
+          <Route
+            path='/groupAdd'
+            render={props => <GroupAdd {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
+          />
+          <Route
+            path='/groupEdit'
+            render={props => <GroupEdit {...props} campers={this.state.campers} groups={this.state.groups} />}
+          />
+          <Route
+            path='/camperAdd'
+            render={props => <CamperAdd {...props} groups={this.state.groups} />}
+          />
+          <Route
+            path='/camperEdit'
+            render={props => <CamperEdit {...props} />}
+          />
         </Switch>
-
-        {/* {isAdmin && ( */}
-          <Switch>
-            <Route
-              path='/userAdd'
-              render={props => <UserAdd {...props} groups={this.state.groups} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
-            />
-            <Route
-              path='/admin'
-              render={props => <Admin {...props} groups={this.state.groups} />}
-            />
-            <Route
-              path='/users'
-              render={props => <Users {...props} users={this.state.users} />}
-            />
-            <Route
-              path='/groupAdd'
-              render={props => <GroupAdd {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
-            />
-          </Switch>
-        {/* )} */}
-
-        {/* {(isLeader || isAdmin) && ( */}
-          <Switch>
-            <Route
-              path='/groupEdit'
-              render={props => <GroupEdit {...props} campers={this.state.campers} />}
-            />
-            <Route
-              path='/camperAdd'
-              render={props => <CamperAdd {...props} groups={this.state.groups} />}
-            />
-            <Route
-              path='/camperEdit'
-              render={props => <CamperEdit {...props} />}
-            />
-          </Switch>
-        {/* )} */}
       </div>
     );
   }

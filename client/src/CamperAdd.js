@@ -1,6 +1,7 @@
 import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 class CamperAdd extends React.Component {
   constructor(props) {
@@ -63,7 +64,7 @@ class CamperAdd extends React.Component {
         />
       );
     }
-    
+
     if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
       return (
         <Redirect
@@ -73,30 +74,33 @@ class CamperAdd extends React.Component {
         />
       );
     }
-    
+
     const { groups, location } = this.props;
 
     if (location && location.state && location.state.group_id) {
       const group_id = location.state.group_id;
 
       return (
-        <div className="container">
-          <h3>
-            First Name:
-        </h3>
-          <input onChange={this.handleChange} name="first_name" />
-          <h3>
-            Last Name:
-        </h3>
-          <input onChange={this.handleChange} name="last_name" />
+        <>
+          <Header />
+          <div className="container">
+            <h3>
+              First Name:
+            </h3>
+            <input onChange={this.handleChange} name="first_name" />
+            <h3>
+              Last Name:
+            </h3>
+            <input onChange={this.handleChange} name="last_name" />
 
-          {groups.map(group => {
-            if (group.id === group_id) {
-              return <input key={group.id} className="do-not-show" defaultValue={group.size} name="size" />;
-            } return null;
-          })}
-          <button onClick={() => this.addCamper(this.state.camper.first_name, this.state.camper.last_name)} type="button">Save</button>
-        </div>
+            {groups.map(group => {
+              if (group.id === group_id) {
+                return <input key={group.id} className="do-not-show" defaultValue={group.size} name="size" />;
+              } return null;
+            })}
+            <button onClick={() => this.addCamper(this.state.camper.first_name, this.state.camper.last_name)} type="button">Save</button>
+          </div>
+        </>
       );
     }
     return <Error />;

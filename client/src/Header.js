@@ -5,9 +5,11 @@ class Header extends React.Component {
   constructor() {
     super();
     this.state = {
-      clearance: sessionStorage.getItem('clearance')
+      clearance: sessionStorage.getItem('clearance'),
+      group_id: sessionStorage.getItem('group_id')
     };
   }
+
   render() {
     const groups = this.props.groups;
 
@@ -38,14 +40,34 @@ class Header extends React.Component {
           </p>
 
           {this.state.clearance === 'admin' && (
-          <div className="admin-logged-message">
-            Logged in as Admin
+            <div className="admin-logged-message">
+              Logged in as Admin
           </div>
           )}
           {this.state.clearance === 'leader' && (
-          <div className="admin-logged-message">
-            Logged in as Group Leader
-          </div>
+            <>
+              <div className="admin-logged-message">
+                Logged in as Group Leader
+              </div>
+              <Link
+                to={{
+                  pathname: "/groupEdit",
+                  state: { group_id: this.state.group_id }
+                }}
+              >
+                View my group
+              </Link>
+            </>
+          )}
+          {this.state.clearance && (
+            <Link
+              to={{
+                pathname: "/",
+                state: { logout: true}
+              }}
+            >
+              Log Out
+            </Link>
           )}
 
         </div>

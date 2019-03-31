@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 class Signup extends React.Component {
   constructor() {
@@ -37,8 +38,6 @@ class Signup extends React.Component {
         return response.json();
       })
       .then(data => {
-        console.log('data response:')
-        console.log(data)
         if (data.error) {
           throw new Error(data.error);
         }
@@ -71,22 +70,25 @@ class Signup extends React.Component {
     }
 
     return (
-      <div>
-        <h4>
-          Signup
+      <>
+        <Header />
+        <div>
+          <h4>
+            Signup
         </h4>
-        <div>Username:</div>
-        <input name="username" onChange={this.handleChange}></input>
-        <div>Password:</div>
-        <input name="password" onChange={this.handleChange}></input>
-        <button onClick={() => this.add(this.state.username, this.state.password)}>Submit</button>
+          <div>Username:</div>
+          <input name="username" onChange={this.handleChange}></input>
+          <div>Password:</div>
+          <input name="password" onChange={this.handleChange}></input>
+          <button onClick={() => this.add(this.state.username, this.state.password)}>Submit</button>
 
-        {this.state.error && <div>{this.state.error}</div>}
+          {this.state.error && <div>{this.state.error}</div>}
 
-        {this.state.incomplete && (
-          <div>You must have both a username and password.</div>
-        )}
-      </div>
+          {this.state.incomplete && (
+            <div>You must have both a username and password.</div>
+          )}
+        </div>
+      </>
     );
   }
 }

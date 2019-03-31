@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 class Login extends React.Component {
   constructor(props) {
@@ -34,9 +35,9 @@ class Login extends React.Component {
         if (data.error) {
           throw new Error(data.error);
         }
-        console.log(data.clearance)
 
         sessionStorage.setItem('clearance', data.clearance)
+        sessionStorage.setItem('group_id', data.group.id)
         this.setState({
           shouldRedirect: true,
           redirectUrl: data.redirectUrl,
@@ -68,6 +69,8 @@ class Login extends React.Component {
 
     return (
       <div>
+        <Header />
+        <h4>Login</h4>
         <div>Username:</div>
         <input name="username" onChange={this.handleChange}></input>
         <div>Password:</div>

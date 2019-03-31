@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 class GroupEdit extends Component {
   constructor(props) {
@@ -11,6 +12,12 @@ class GroupEdit extends Component {
     const { location } = this.props;
     if (location && location.state && location.state.group) {
       group = location.state.group;
+    }
+
+    if(location && location.state && location.state.group_id) {
+      group = this.props.groups.find(group => {
+        return String(group.id) === location.state.group_id;
+      })
     }
 
     this.state = {
@@ -111,8 +118,8 @@ class GroupEdit extends Component {
 
     const { campers, location } = this.props;
 
-    if (location && location.state && location.state.group) {
-      const group = location.state.group
+    if (this.state.group) {
+      const group = this.state.group;
 
       const campersArray = location.state.campers || campers;
 
@@ -121,6 +128,8 @@ class GroupEdit extends Component {
         campersInThisGroup = campersArray.filter(camper => camper.group_id === group.id);
       }
       return (
+        <>
+        <Header />
         <div className="group-edit">
           <h3>
             Group Name:
@@ -189,6 +198,7 @@ class GroupEdit extends Component {
             There's been an error. Please try again.
           </div>
         </div>
+        </>
       );
     }
     return <Error />
