@@ -25,10 +25,6 @@ class App extends Component {
   }
 
   componentWillMount() {
-    if (this.props.location && this.props.location.state && this.props.location.state.logout) {
-      sessionStorage.clear();
-    }
-
     fetch('/allData')
       .then(response => {
         if (response.ok) {
