@@ -1,20 +1,8 @@
 import React from 'react';
 import './App.css';
 import { Link } from 'react-router-dom';
-import Auth from './Auth.js';
 
 class Admin extends React.Component {
-  componentDidMount() {
-    fetch('/env').then(response => {
-      if(response.ok) {
-        return response.json();
-      }
-    }).then(env => {
-      const auth = new Auth(env);
-      auth.login();
-    });
-  }
-
   render() {
     const { location } = this.props;
 
