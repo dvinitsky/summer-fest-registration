@@ -112,6 +112,9 @@ con.connect(err => {
       return;
     }
 
+    console.log(req.groups)
+    console.log(req.groups)
+
     const redirectUrl = user.status === 'admin' ? '/admin' : '/groupEdit';
     const clearance = user.status === 'admin' ? 'admin' : 'leader';
 

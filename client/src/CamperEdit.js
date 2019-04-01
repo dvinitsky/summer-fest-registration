@@ -1,6 +1,7 @@
 import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
+import Header from './Header';
 
 class CamperEdit extends React.Component {
   constructor(props) {
@@ -71,7 +72,8 @@ class CamperEdit extends React.Component {
     roommate,
     notes,
     registration,
-    signed_status
+    signed_status,
+    room
   ) {
     const options = {
       method: 'POST',
@@ -92,7 +94,8 @@ class CamperEdit extends React.Component {
         roommate,
         notes,
         registration,
-        signed_status
+        signed_status,
+        room
       })
     };
 
@@ -148,6 +151,8 @@ class CamperEdit extends React.Component {
 
     if (this.state.group && this.state.camper) {
       return (
+        <>
+        <Header />
         <div className="camper-edit">
           <h3>
             First Name:
@@ -233,6 +238,15 @@ class CamperEdit extends React.Component {
             <option value="Signed">Signed</option>
           </select>
           <br />
+          {this.state.clearance === 'admin' && (
+            <>
+              <h3>
+                Room Assignment:
+              </h3>
+              <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.room} name="room" />
+            </>
+          )}
+          <br />
           <br />
 
           <button type="button" onClick={() => this.editCamper(
@@ -249,7 +263,8 @@ class CamperEdit extends React.Component {
             this.state.camper.roommate,
             this.state.camper.notes,
             this.state.camper.registration,
-            this.state.camper.signed_status
+            this.state.camper.signed_status,
+            this.state.camper.room
           )}>Save</button>
 
           <br />
@@ -270,6 +285,7 @@ class CamperEdit extends React.Component {
             There's been an error. Please try again.
           </div>
         </div>
+        </>
       );
     }
     return <Error />;

@@ -158,6 +158,9 @@ class GroupEdit extends Component {
                   <th className="header-name">Notes</th>
                   <th className="header-name">Online or Paper Registration</th>
                   <th className="header-name">Waiver Signed Status</th>
+                  {this.state.clearance === 'admin' && (
+                  <th className="header-name">Room Assignment</th>
+                  )}
                 </tr>
 
                 {campersInThisGroup.map(camper => {
@@ -212,6 +215,11 @@ class GroupEdit extends Component {
                       <td>
                         {camper.signed_status}
                       </td>
+                      {this.state.clearance === 'admin' && (
+                        <td>
+                          {camper.room}
+                        </td>
+                      )}
                     </tr>
                   );
                 })}
