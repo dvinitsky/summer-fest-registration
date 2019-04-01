@@ -7,7 +7,9 @@ class Login extends React.Component {
     super(props);
     this.state = {};
     this.handleChange = this.handleChange.bind(this);
+  }
 
+  componentWillMount() {
     if (this.props.location && this.props.location.state && this.props.location.state.logout) {
       sessionStorage.clear();
     }

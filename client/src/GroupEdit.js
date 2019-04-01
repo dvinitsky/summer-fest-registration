@@ -14,7 +14,7 @@ class GroupEdit extends Component {
       group = location.state.group;
     }
 
-    if(location && location.state && location.state.group_id) {
+    if (location && location.state && location.state.group_id) {
       group = this.props.groups.find(group => {
         return String(group.id) === location.state.group_id;
       })
@@ -129,75 +129,77 @@ class GroupEdit extends Component {
       }
       return (
         <>
-        <Header />
-        <div className="group-edit">
-          <h3>
-            Group Name:
+          <Header />
+          <div className="group-edit">
+            <h3>
+              Group Name:
         </h3>
-          <input onChange={this.handleChange} defaultValue={group.group_name} name="group_name" />
-          <br />
-          Leader Name:
+            <input onChange={this.handleChange} defaultValue={group.group_name} name="group_name" />
+            <br />
+            Leader Name:
         <input onChange={this.handleChange} defaultValue={group.leader_name} name="leader_name" />
-          <br />
-          Campers:
-
+            <br />
+            Campers:
+  
         <table name="camperId">
-            <tbody>
-              <tr className="table-header-row">
-                <th className="header-place"></th>
-                <th className="header-place">First Name</th>
-                <th className="header-name">Last Name</th>
-              </tr>
+              <tbody>
+                <tr className="table-header-row">
+                  <th className="header-place"></th>
+                  <th className="header-place">First Name</th>
+                  <th className="header-name">Last Name</th>
+                </tr>
 
-              {campersInThisGroup.map(camper => {
-                return (
-                  <tr key={camper.id} className="table-row">
-                    <td className="table-edit">
-                      <Link
-                        to={{
-                          pathname: "/camperEdit",
-                          state: { group, camper }
-                        }}
-                      >
-                        Edit
+                {campersInThisGroup.map(camper => {
+                  return (
+                    <tr key={camper.id} className="table-row">
+                      <td className="table-edit">
+                        <Link
+                          to={{
+                            pathname: "/camperEdit",
+                            state: { group, camper }
+                          }}
+                        >
+                          Edit
                     </Link>
-                    </td>
-                    <td className="table-name">
-                      {camper.first_name}
-                    </td>
-                    <td className="table-score">
-                      {camper.last_name}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                      </td>
+                      <td className="table-name">
+                        {camper.first_name}
+                      </td>
+                      <td className="table-score">
+                        {camper.last_name}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
 
-          <button onClick={() => this.editGroup(this.state.group.id, this.state.group.group_name, this.state.group.leader_name)} type="submit">Save</button>
+            <button onClick={() => this.editGroup(this.state.group.id, this.state.group.group_name, this.state.group.leader_name)} type="submit">Save</button>
 
-          <Link
-            to={{
-              pathname: "/camperAdd",
-              state: { group_id: group.id }
-            }}
-          >
-            Add a Camper
+            <Link
+              to={{
+                pathname: "/camperAdd",
+                state: { group_id: group.id }
+              }}
+            >
+              Add a Camper
           </Link>
 
-          <button type="button" onClick={this.showDeleteModal}>Delete</button>
+            {this.state.clearance === 'admin' && (
+              <button type="button" onClick={this.showDeleteModal}>Delete</button>
+            )}
 
-          <div id="delete-group-modal">
-            <h1>Are you sure you want to delete {group.group_name} and all its campers?
-          </h1>
-            <button type="button" onClick={this.cancelDelete}>No</button>
-            <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
-          </div>
+            <div id="delete-group-modal">
+              <h1>Are you sure you want to delete {group.group_name} and all its campers?
+              </h1>
+              <button type="button" onClick={this.cancelDelete}>No</button>
+              <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
+            </div>
 
-          <div id="error">
-            There's been an error. Please try again.
+            <div id="error">
+              There's been an error. Please try again.
           </div>
-        </div>
+          </div>
         </>
       );
     }
