@@ -64,7 +64,12 @@ con.connect(err => {
       'group_name',
       'leader_name',
       'first_name',
-      'last_name'
+      'last_name',
+      'allergies',
+      'parent_email',
+      'emergency_name',
+      'roommate',
+      'notes'
     ];
 
     const newFields = {};
@@ -185,7 +190,7 @@ con.connect(err => {
     });
   })
   app.post('/camperEdit', (req, res) => {
-    con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}' WHERE id=${req.body.id}`, (err) => {
+    con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}' WHERE id=${req.body.id}`, (err) => {
       if (err) throw err;
     });
 
@@ -201,7 +206,7 @@ con.connect(err => {
     res.status(200).send(JSON.stringify({ campers }));
   })
   app.post('/camperAdd', (req, res) => {
-    con.query(`INSERT INTO campers (first_name, last_name, group_id) VALUES('${req.body.first_name}', '${req.body.last_name}', '${req.body.group_id}')`, (err) => {
+    con.query(`INSERT INTO campers (group_id = '${req.body.group_id}, first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}')`, (err) => {
       if (err) throw err;
     });
     var newSize = Number(req.body.size) + 1;

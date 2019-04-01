@@ -140,13 +140,24 @@ class GroupEdit extends Component {
         <input onChange={this.handleChange} defaultValue={group.leader_name} name="leader_name" />
             <br />
             Campers:
-  
+
         <table name="camperId">
               <tbody>
                 <tr className="table-header-row">
                   <th className="header-place"></th>
                   <th className="header-place">First Name</th>
                   <th className="header-name">Last Name</th>
+                  <th className="header-name">Gender</th>
+                  <th className="header-name">Birthday</th>
+                  <th className="header-name">Grade just completed</th>
+                  <th className="header-name">Food Alergies</th>
+                  <th className="header-name">Parent or Guardian Email</th>
+                  <th className="header-name">Emergency Contact Name</th>
+                  <th className="header-name">Emergency Contact Number</th>
+                  <th className="header-name">Roommate</th>
+                  <th className="header-name">Notes</th>
+                  <th className="header-name">Online or Paper Registration</th>
+                  <th className="header-name">Waiver Signed Status</th>
                 </tr>
 
                 {campersInThisGroup.map(camper => {
@@ -160,13 +171,46 @@ class GroupEdit extends Component {
                           }}
                         >
                           Edit
-                    </Link>
+                        </Link>
                       </td>
-                      <td className="table-name">
+                      <td>
                         {camper.first_name}
                       </td>
-                      <td className="table-score">
+                      <td>
                         {camper.last_name}
+                      </td>
+                      <td>
+                        {camper.gender}
+                      </td>
+                      <td>
+                        {camper.birthday}
+                      </td>
+                      <td>
+                        {camper.grade_completed}
+                      </td>
+                      <td>
+                        {camper.allergies}
+                      </td>
+                      <td>
+                        {camper.parent_email}
+                      </td>
+                      <td>
+                        {camper.emergency_name}
+                      </td>
+                      <td>
+                        {camper.emergency_number}
+                      </td>
+                      <td>
+                        {camper.roommate}
+                      </td>
+                      <td>
+                        {camper.notes}
+                      </td>
+                      <td>
+                        {camper.registration}
+                      </td>
+                      <td>
+                        {camper.signed_status}
                       </td>
                     </tr>
                   );
@@ -174,7 +218,11 @@ class GroupEdit extends Component {
               </tbody>
             </table>
 
-            <button onClick={() => this.editGroup(this.state.group.id, this.state.group.group_name, this.state.group.leader_name)} type="submit">Save</button>
+            <button onClick={() => this.editGroup(
+              this.state.group.id,
+              this.state.group.group_name,
+              this.state.group.leader_name
+            )} type="submit">Save</button>
 
             <Link
               to={{
