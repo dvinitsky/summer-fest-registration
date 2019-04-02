@@ -159,7 +159,7 @@ class GroupEdit extends Component {
                   <th className="header-name">Online or Paper Registration</th>
                   <th className="header-name">Waiver Signed Status</th>
                   {this.state.clearance === 'admin' && (
-                  <th className="header-name">Room Assignment</th>
+                    <th className="header-name">Room Assignment</th>
                   )}
                 </tr>
 
@@ -235,7 +235,7 @@ class GroupEdit extends Component {
             <Link
               to={{
                 pathname: "/camperAdd",
-                state: { group_id: group.id }
+                state: { group_id: group.id, group_size: group.size }
               }}
             >
               Add a Camper

@@ -51,7 +51,8 @@ class CamperAdd extends React.Component {
     notes,
     registration,
     signed_status,
-    room
+    room,
+    groupSize
   ) {
     const options = {
       method: 'POST',
@@ -73,7 +74,8 @@ class CamperAdd extends React.Component {
         notes,
         registration,
         signed_status,
-        room
+        room,
+        groupSize
       })
     };
 
@@ -121,10 +123,9 @@ class CamperAdd extends React.Component {
       );
     }
 
-    const { groups, location } = this.props;
+    const { location } = this.props;
 
     if (location && location.state && location.state.group_id) {
-      const group_id = location.state.group_id;
 
       return (
         <>
@@ -227,11 +228,6 @@ class CamperAdd extends React.Component {
               </>
             )}
 
-            {groups.map(group => {
-              if (group.id === group_id) {
-                return <input key={group.id} className="do-not-show" defaultValue={group.size} name="size" />;
-              } return null;
-            })}
             <button onClick={() => this.addCamper(
               this.state.camper.first_name,
               this.state.camper.last_name,
@@ -246,7 +242,8 @@ class CamperAdd extends React.Component {
               this.state.camper.notes,
               this.state.camper.registration,
               this.state.camper.signed_status,
-              this.state.camper.room
+              this.state.camper.room,
+              location.state.group_size
             )} type="button">Save</button>
           </div>
         </>

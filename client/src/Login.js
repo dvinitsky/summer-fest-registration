@@ -80,7 +80,7 @@ class Login extends React.Component {
         <div>Username:</div>
         <input name="username" onChange={this.handleChange}></input>
         <div>Password:</div>
-        <input name="password" onChange={this.handleChange}></input>
+        <input name="password" type="password" onChange={this.handleChange}></input>
         <button onClick={() => this.login(this.state.username, this.state.password)}>Log In</button>
 
         {this.state.error && <div>{this.state.error}</div>}

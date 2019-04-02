@@ -29,13 +29,13 @@ class CamperEdit extends React.Component {
     document.getElementById('camper-deleted-error').style.display = 'none';
   }
 
-  deleteCamper(id, size, group_id) {
+  deleteCamper(id, group_id, groupSize) {
     const options = {
       method: 'POST',
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ id, size, group_id })
+      body: JSON.stringify({ id, groupSize, group_id })
     };
 
     fetch('/camperDelete', options)

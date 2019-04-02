@@ -219,7 +219,7 @@ con.connect(err => {
     con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status})`, (err) => {
       if (err) throw err;
     });
-    var newSize = Number(req.body.size) + 1;
+    var newSize = Number(req.body.groupSize) + 1;
     con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
     con.query('SELECT * FROM groups', (err, groups) => {
@@ -235,7 +235,8 @@ con.connect(err => {
     con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
 
-      var newSize = Math.max(0, Number(req.body.size) - 1);
+      console.log('size:', req.body.groupSize)
+      var newSize = Math.max(0, Number(req.body.groupSize) - 1);
       con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
       const campers = [...req.campers];
