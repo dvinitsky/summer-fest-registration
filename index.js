@@ -235,7 +235,6 @@ con.connect(err => {
     con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
 
-      console.log('size:', req.body.groupSize)
       var newSize = Math.max(0, Number(req.body.groupSize) - 1);
       con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
