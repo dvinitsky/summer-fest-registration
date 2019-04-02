@@ -44,6 +44,7 @@ class Login extends React.Component {
 
         sessionStorage.setItem('clearance', data.clearance)
         sessionStorage.setItem('group_id', data.group.id)
+        sessionStorage.setItem('username', data.username)
         this.setState({
           shouldRedirect: true,
           redirectUrl: data.redirectUrl,

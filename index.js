@@ -118,7 +118,7 @@ con.connect(err => {
     const group = req.groups.find(group => {
       return group.id === user.group_id;
     });
-    res.send(JSON.stringify({ redirectUrl, group, clearance }))
+    res.send(JSON.stringify({ redirectUrl, group, clearance, username: user.username }))
   })
   app.post('/signup', (req, res) => {
     const exists = userNameExists(req.body.username, req.users);
@@ -249,6 +249,19 @@ con.connect(err => {
       campers.splice(index, 1);
       res.status(200).send(JSON.stringify({ campers }));
     });
+  });
+  app.post('/toggleAdmin', (req, res) => {
+    console.log(req.body.user_id);
+    const user = req.users.find(user => {
+      console.log('user')
+      console.log(user)
+      return String(user.id) === req.body.user_id;
+    });
+    console.log(user.id);
+    const newStatus = user.status === 'leader' ? 'admin' : 'leader';
+
+    console.log('going to set to ', newStatus)
+    con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`);
   });
 
   // The "catchall" handler: for any request that doesn't
