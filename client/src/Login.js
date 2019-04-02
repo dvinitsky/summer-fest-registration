@@ -57,6 +57,15 @@ class Login extends React.Component {
       });
   }
 
+  toggleShowPassword() {
+    const element = document.getElementById("password-input");
+    if (element.type === "password") {
+      element.type = "text";
+    } else {
+      element.type = "password";
+    }
+  }
+
   render() {
     const shouldRedirect = this.props.shouldRedirect || this.state.shouldRedirect;
 
@@ -78,9 +87,13 @@ class Login extends React.Component {
         <Header />
         <h4>Login</h4>
         <div>Username:</div>
-        <input name="username" onChange={this.handleChange}></input>
+        <input name="username" onChange={this.handleChange} />
         <div>Password:</div>
-        <input name="password" type="password" onChange={this.handleChange}></input>
+        <input id="password-input" name="password" type="password" onChange={this.handleChange} />
+        <div>
+          <input type="checkbox" onClick={this.toggleShowPassword} />
+          Show Password
+        </div>
         <button onClick={() => this.login(this.state.username, this.state.password)}>Log In</button>
 
         {this.state.error && <div>{this.state.error}</div>}
