@@ -177,7 +177,7 @@ class CamperEdit extends React.Component {
             <h3>
               Birthday:
           </h3>
-            <input type="date" onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.birthday} name="birthday" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.birthday} name="birthday" />
             <br />
             <h3>
               Grade just completed:
