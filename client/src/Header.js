@@ -40,9 +40,18 @@ class Header extends React.Component {
           </p>
 
           {this.state.clearance === 'admin' && (
-            <div className="admin-logged-message">
-              Logged in as Admin
-          </div>
+            <>
+              <div className="admin-logged-message">
+                Logged in as Admin
+            </div>
+              <Link
+                to={{
+                  pathname: "/admin"
+                }}
+              >
+                View Admin Page
+              </Link>
+            </>
           )}
           {this.state.clearance === 'leader' && (
             <>
@@ -63,7 +72,7 @@ class Header extends React.Component {
             <Link
               to={{
                 pathname: "/",
-                state: { logout: true}
+                state: { logout: true }
               }}
             >
               Log Out

@@ -9,8 +9,23 @@ class CamperAdd extends React.Component {
     this.state = {
       campersInGroup: [],
       group: {},
-      camper: {},
-      clearance: sessionStorage.getItem('clearance')
+      clearance: sessionStorage.getItem('clearance'),
+      camper: {
+        first_name: null,
+        last_name: null,
+        gender: null,
+        birthday: null,
+        grade_completed: null,
+        allergies: null,
+        parent_email: null,
+        emergency_name: null,
+        emergency_number: null,
+        roommate: null,
+        notes: null,
+        registration: null,
+        signed_status: null,
+        room: null,
+      }
     };
     this.addCamper = this.addCamper.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -129,6 +144,7 @@ class CamperAdd extends React.Component {
               Gender:
           </h3>
             <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.gender} name="gender">
+              <option value="null">{null}</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Other">Other</option>
@@ -143,6 +159,7 @@ class CamperAdd extends React.Component {
               Grade just completed:
           </h3>
             <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.grade_completed} name="grade_completed" >
+              <option value="null">{null}</option>
               <option value="6">6</option>
               <option value="7">7</option>
               <option value="8">8</option>
@@ -186,6 +203,7 @@ class CamperAdd extends React.Component {
               Online or Paper Registration:
           </h3>
             <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.registration} name="registration">
+              <option value="null">{null}</option>
               <option value="Online">Online</option>
               <option value="Paper">Paper</option>
             </select>
@@ -194,6 +212,7 @@ class CamperAdd extends React.Component {
               Waiver Signed Status:
           </h3>
             <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.signed_status} name="signed_status">
+              <option value="null">{null}</option>
               <option value="Not Sent">Not Sent</option>
               <option value="Emailed">Emailed</option>
               <option value="Signed">Signed</option>
@@ -201,10 +220,10 @@ class CamperAdd extends React.Component {
             <br />
             {this.state.clearance === 'admin' && (
               <>
-              <h3>
+                <h3>
                   Room Assignment:
               </h3>
-              <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.room} name="room" />
+                <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.room} name="room" />
               </>
             )}
 

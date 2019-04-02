@@ -112,9 +112,6 @@ con.connect(err => {
       return;
     }
 
-    console.log(req.groups)
-    console.log(req.groups)
-
     const redirectUrl = user.status === 'admin' ? '/admin' : '/groupEdit';
     const clearance = user.status === 'admin' ? 'admin' : 'leader';
 
@@ -209,7 +206,17 @@ con.connect(err => {
     res.status(200).send(JSON.stringify({ campers }));
   })
   app.post('/camperAdd', (req, res) => {
-    con.query(`INSERT INTO campers (group_id = '${req.body.group_id}, first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}')`, (err) => {
+    const body = {};
+
+    Object.keys(req.body).map((key) => {
+      if (req.body[key]) {
+        body[key] = `'${req.body[key]}'`
+      } else {
+        body[key] = '\'\'';
+      }
+    });
+
+    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status})`, (err) => {
       if (err) throw err;
     });
     var newSize = Number(req.body.size) + 1;
