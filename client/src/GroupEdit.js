@@ -8,20 +8,20 @@ class GroupEdit extends Component {
   constructor(props) {
     super(props);
 
-    let group = {};
-    const { location } = this.props;
-    if (location && location.state && location.state.group) {
-      group = location.state.group;
-    }
+    // let group = {};
+    // const { location } = this.props;
+    // if (location && location.state && location.state.group) {
+    //   group = location.state.group;
+    // }
 
-    if (location && location.state && location.state.group_id) {
-      group = this.props.groups.find(group => {
-        return String(group.id) === location.state.group_id;
-      })
-    }
+    // if (location && location.state && location.state.group_id) {
+    //   group = this.props.groups.find(group => {
+    //     return String(group.id) === location.state.group_id;
+    //   })
+    // }
 
     this.state = {
-      group,
+      // group,
       clearance: sessionStorage.getItem('clearance')
     };
 
@@ -92,6 +92,7 @@ class GroupEdit extends Component {
   };
 
   render() {
+    console.log(this.props.data)
     if (this.state.redirectUrl) {
       return (
         <Redirect
