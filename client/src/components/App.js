@@ -11,6 +11,7 @@ import Login from './Login';
 import UserAdd from './UserAdd';
 import Users from './Users';
 import Signup from './Signup';
+import { getHighestGroupId } from '../helpers';
 
 class App extends Component {
   constructor() {
@@ -18,7 +19,6 @@ class App extends Component {
     this.state = {
       clearance: sessionStorage.getItem('clearance')
     };
-    this.incrementNextGroupId = this.incrementNextGroupId.bind(this);
     this.setClearance = this.setClearance.bind(this);
   }
 
@@ -30,7 +30,7 @@ class App extends Component {
         } else throw new Error();
       })
       .then(data => {
-        this.props.setNextGroupId(this.getHighestGroupId(data.groups) + 1);
+        this.props.setNextGroupId(getHighestGroupId(data.groups) + 1);
         this.props.setData(data.groups, data.campers, data.users);
       })
       .catch(error => {
@@ -38,23 +38,10 @@ class App extends Component {
       });
   }
 
-  incrementNextGroupId() {
-    this.setState({
-      nextGroupId: this.state.nextGroupId + 1
-    });
-  }
   setClearance(clearance) {
     this.setState({
       clearance
     });
-  }
-
-  getHighestGroupId(groups) {
-    const ids = [];
-    groups.forEach(group => {
-      ids.push(group.id);
-    })
-    return Math.max(...ids);
   }
 
   render() {
@@ -69,11 +56,11 @@ class App extends Component {
           />
           <Route
             path='/signup'
-            render={props => <Signup {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} setClearance={this.setClearance} />}
+            render={props => <Signup {...props} setClearance={this.setClearance} />}
           />
           <Route
             path='/userAdd'
-            render={props => <UserAdd {...props} groups={this.state.groups} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
+            render={props => <UserAdd {...props} groups={this.state.groups} />}
           />
           <Route
             path='/admin'
