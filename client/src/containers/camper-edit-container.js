@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import CamperEdit from '../components/CamperEdit';
-import {} from '../actions/app.js';
+import { setActiveGroup } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
@@ -12,5 +12,6 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
+    setActiveGroup
   }
 )(CamperEdit);

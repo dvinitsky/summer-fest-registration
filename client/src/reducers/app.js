@@ -20,6 +20,16 @@ export default function app(state = initialState.app, action) {
         ...state,
         activeCamper: action.activeCamper || {}
       };
+    case INCREMENT_NEXT_GROUP_ID:
+      return {
+        ...state,
+        nextGroupId: state.nextGroupId + 1
+      };
+    case SET_NEXT_GROUP_ID:
+      return {
+        ...state,
+        nextGroupId: action.nextGroupId || 0
+      };
     default:
       return state;
   }

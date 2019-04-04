@@ -14,7 +14,11 @@ export function deleteGroup(id) {
       }
       else throw new Error();
     })
-    .then(data => data)
+    .then(data => {
+      return {
+        shouldRedirect: true
+      };
+    })
     .catch(error => {
       return {
         error
@@ -40,7 +44,7 @@ export function editGroup(id, group_name, leader_name) {
     })
     .then(data => {
       return {
-        redirectUrl: '/admin'
+        shouldRedirect: true
       };
     })
     .catch(error => {
@@ -49,3 +53,27 @@ export function editGroup(id, group_name, leader_name) {
       };
     })
 };
+
+export function addGroup(group_name, leader_name, id) {
+  const options = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ group_name, leader_name, id })
+  };
+
+  fetch('/groupAdd', options)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      else throw new Error();
+    })
+    .then(data => data)
+    .catch(error => {
+      return {
+        error
+      };
+    });
+}

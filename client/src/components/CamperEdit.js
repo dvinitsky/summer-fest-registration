@@ -40,6 +40,7 @@ class CamperEdit extends React.Component {
       this.setState({
         shouldRedirect: response.shouldRedirect
       });
+      this.props.setActiveGroup(this.props.group)
     }
   }
   handleChange(e) {
@@ -49,17 +50,13 @@ class CamperEdit extends React.Component {
   }
 
   render() {
-    const { location } = this.props;
+    const { group, camper } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
         <Redirect
           to={{
-            pathname: '/groupEdit',
-            state: {
-              group: location.state.group,
-              campers: this.state.campers
-            }
+            pathname: '/groupEdit'
           }}
         />
       );
@@ -75,25 +72,26 @@ class CamperEdit extends React.Component {
       );
     }
 
-    if (this.state.group && this.state.camper) {
-      return (
+    return (!group || !camper) ?
+      <Error />
+      : (
         <>
           <Header />
           <div className="camper-edit">
             <h3>
               First Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.first_name} name="first_name" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.first_name} name="first_name" />
             <br />
             <h3>
               Last Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.last_name} name="last_name" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.last_name} name="last_name" />
             <br />
             <h3>
               Gender:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.gender} name="gender">
+            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.gender} name="gender">
               <option value="null">{null}</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -103,12 +101,12 @@ class CamperEdit extends React.Component {
             <h3>
               Birthday:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.birthday} name="birthday" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.birthday} name="birthday" />
             <br />
             <h3>
               Grade just completed:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.grade_completed} name="grade_completed" >
+            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.grade_completed} name="grade_completed" >
               <option value="null">{null}</option>
               <option value="6">6</option>
               <option value="7">7</option>
@@ -122,37 +120,37 @@ class CamperEdit extends React.Component {
             <h3>
               Food Allergies:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.allergies} name="allergies" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.allergies} name="allergies" />
             <br />
             <h3>
               Parent or Guardian Email:
           </h3>
-            <input type="email" onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.parent_email} name="parent_email" />
+            <input type="email" onChange={this.handleChange} className="camper-input" defaultValue={camper.parent_email} name="parent_email" />
             <br />
             <h3>
               Emergency Contact Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.emergency_name} name="emergency_name" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_name} name="emergency_name" />
             <br />
             <h3>
               Emergency Contact Number:
           </h3>
-            <input type="tel" onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.emergency_number} name="emergency_number" />
+            <input type="tel" onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_number} name="emergency_number" />
             <br />
             <h3>
               Roommate:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.roommate} name="roommate" />
+            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.roommate} name="roommate" />
             <br />
             <h3>
               Notes:
           </h3>
-            <textarea onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.notes} name="notes" />
+            <textarea onChange={this.handleChange} className="camper-input" defaultValue={camper.notes} name="notes" />
             <br />
             <h3>
               Online or Paper Registration:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.registration} name="registration">
+            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.registration} name="registration">
               <option value="null">{null}</option>
               <option value="Online">Online</option>
               <option value="Paper">Paper</option>
@@ -161,7 +159,7 @@ class CamperEdit extends React.Component {
             <h3>
               Waiver Signed Status:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.signed_status} name="signed_status">
+            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.signed_status} name="signed_status">
               <option value="null">{null}</option>
               <option value="Not Sent">Not Sent</option>
               <option value="Emailed">Emailed</option>
@@ -173,7 +171,7 @@ class CamperEdit extends React.Component {
                 <h3>
                   Room Assignment:
               </h3>
-                <input onChange={this.handleChange} className="camper-input" defaultValue={this.state.camper.room} name="room" />
+                <input onChange={this.handleChange} className="camper-input" defaultValue={camper.room} name="room" />
               </>
             )}
             <br />
@@ -203,10 +201,10 @@ class CamperEdit extends React.Component {
             <button type="button" onClick={this.showDeleteModal}>Delete</button>
 
             <div id="delete-camper-modal">
-              <h1>Are you sure you want to delete {this.state.camper.first_name} {this.state.camper.last_name}?
+              <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?
             </h1>
               <button type="button" onClick={this.cancelDelete}>No</button>
-              <button type="button" onClick={() => { this.deleteCamper(this.state.camper.id, this.state.camper.group_id, this.state.group.size) }}>Yes</button>
+              <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id, group.size) }}>Yes</button>
             </div>
             <div id="camper-deleted">
               Camper Deleted.
@@ -217,8 +215,6 @@ class CamperEdit extends React.Component {
           </div>
         </>
       );
-    }
-    return <Error />;
   }
 }
 

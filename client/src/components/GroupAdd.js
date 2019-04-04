@@ -1,15 +1,17 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { addGroup } from '../services/group-service';
 
 class GroupAdd extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      nextId: '',
-      group: {},
+      group: {
+        group_name: null,
+        leader_name: null
+      },
       clearance: sessionStorage.getItem('clearance')
     };
-    this.addGroup = this.addGroup.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -20,31 +22,16 @@ class GroupAdd extends React.Component {
   }
 
   addGroup(group_name, leader_name) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ group_name, leader_name, id: this.props.nextGroupId })
-    };
-
-    fetch('/groupAdd', options)
-      .then(response => {
-        if (response.ok) {
-          this.props.incrementNextGroupId();
-          return response.json();
-        }
-        else throw new Error();
+    const response = addGroup(group_name, leader_name, this.props.nextGroupId);
+    this.props.incrementNextGroupId();
+    if (response.error) {
+      document.getElementById('error').style.display = 'block';
+    } else {
+      this.setState({
+        shouldRedirect: true,
+        group: response.group
       })
-      .then(data => {
-        this.setState({
-          shouldRedirect: true,
-          group: data.group
-        });
-      })
-      .catch(error => {
-        document.getElementById('error').style.display = 'block';
-      });
+    }
   }
 
   render() {
@@ -54,8 +41,7 @@ class GroupAdd extends React.Component {
           to={{
             pathname: '/groupEdit',
             state: {
-              group: this.state.group,
-              noCampers: {}
+              group: this.state.group
             }
           }}
         />

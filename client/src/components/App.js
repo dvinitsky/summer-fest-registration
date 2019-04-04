@@ -15,9 +15,6 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      groups: [],
-      campers: [],
-      nextGroupId: 0,
       clearance: sessionStorage.getItem('clearance')
     };
     this.incrementNextGroupId = this.incrementNextGroupId.bind(this);
@@ -32,14 +29,7 @@ class App extends Component {
         } else throw new Error();
       })
       .then(data => {
-        this.setState({
-          groups: data.groups || [],
-          campers: data.campers || [],
-          users: data.users || [],
-          nextGroupId: this.getHighestGroupId(data.groups) + 1
-        });
-
-        console.log(data)
+        this.props.setNextGroupId(this.getHighestGroupId(data.groups) + 1);
         this.props.setData(data.groups, data.campers, data.users);
       })
       .catch(error => {
@@ -93,7 +83,7 @@ class App extends Component {
           />
           <Route
             path='/groupAdd'
-            render={props => <GroupAdd {...props} incrementNextGroupId={this.incrementNextGroupId} nextGroupId={this.state.nextGroupId} />}
+            render={props => <GroupAdd {...props} />}
           />
           <Route
             path='/groupEdit'

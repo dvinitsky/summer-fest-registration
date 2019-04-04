@@ -33,7 +33,7 @@ class GroupEdit extends Component {
       document.getElementById('error').style.display = 'block';
     } else {
       this.setState({
-        redirectUrl: response.redirectUrl
+        shouldRedirect: response.shouldRedirect
       });
     }
   }
@@ -43,7 +43,7 @@ class GroupEdit extends Component {
       document.getElementById('error').style.display = 'block';
     } else {
       this.setState({
-        redirectUrl: response.redirectUrl
+        shouldRedirect: response.shouldRedirect
       });
     }
   };
@@ -51,7 +51,7 @@ class GroupEdit extends Component {
   render() {
     const { campers, activeGroup } = this.props;
 
-    if (this.state.redirectUrl) {
+    if (this.state.shouldRedirect) {
       return (
         <Redirect
           to={{

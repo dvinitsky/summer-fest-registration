@@ -1,16 +1,16 @@
 import { connect } from 'react-redux';
-import App from '../components/App';
-import { setData, setNextGroupId } from '../actions/app.js';
+import CamperAdd from '../components/CamperAdd';
+import {  } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
+    activeGroup: state.app.activeGroup
   };
 }
 
 export default connect(
   mapStateToProps,
   {
-    setData,
-    setNextGroupId
+    
   }
-)(App);
+)(CamperAdd);

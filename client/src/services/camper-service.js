@@ -81,3 +81,63 @@ export function editCamper(
       return { error }
     });
 }
+
+export function addCamper({
+  first_name,
+  last_name,
+  gender,
+  birthday,
+  grade_completed,
+  allergies,
+  parent_email,
+  emergency_name,
+  emergency_number,
+  roommate,
+  notes,
+  registration,
+  signed_status,
+  room,
+  groupSize
+}) {
+  const options = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      group_id: this.props.location.state.group_id,
+      first_name,
+      last_name,
+      gender,
+      birthday,
+      grade_completed,
+      allergies,
+      parent_email,
+      emergency_name,
+      emergency_number,
+      roommate,
+      notes,
+      registration,
+      signed_status,
+      room,
+      groupSize
+    })
+  };
+
+  fetch('/camperAdd', options)
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      }
+      else throw new Error();
+    })
+    .then(data => {
+      return {
+        group: data.group,
+        campersInGroup: data.campers
+      };
+    })
+    .catch(error => {
+      return { error };
+    });
+}
