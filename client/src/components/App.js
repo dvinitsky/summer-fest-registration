@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
-import Admin from './Admin';
-import GroupEdit from './containers/group-edit-container';
+import Admin from '../containers/admin-container';
+import GroupEdit from '../containers/group-edit-container';
 import GroupAdd from './GroupAdd';
 import CamperEdit from './CamperEdit';
 import CamperAdd from './CamperAdd';
@@ -39,7 +39,8 @@ class App extends Component {
           nextGroupId: this.getHighestGroupId(data.groups) + 1
         });
 
-        this.props.setData(data);
+        console.log(data)
+        this.props.setData(data.groups, data.campers, data.users);
       })
       .catch(error => {
         console.log(error);
@@ -96,7 +97,6 @@ class App extends Component {
           />
           <Route
             path='/groupEdit'
-            // render={props => <GroupEdit {...props} campers={this.state.campers} groups={this.state.groups} />}
             render={props => <GroupEdit {...props} />}
           />
           <Route

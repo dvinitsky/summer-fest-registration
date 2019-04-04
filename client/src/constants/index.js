@@ -1,1 +1,3 @@
 export const SET_DATA = 'SET_DATA';
+export const SET_ACTIVE_GROUP = 'SET_ACTIVE_GROUP';
+export const SET_ACTIVE_CAMPER = 'SET_ACTIVE_CAMPER';

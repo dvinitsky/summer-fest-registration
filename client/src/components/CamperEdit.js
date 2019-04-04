@@ -2,23 +2,13 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import Header from './Header';
+import { deleteCamper, editCamper } from '../services/camper-service';
 
 class CamperEdit extends React.Component {
   constructor(props) {
     super(props);
 
-    let group = {};
-    let camper = {};
-
-    const { location } = this.props;
-    if (location && location.state && location.state.group && location.state.camper) {
-      group = location.state.group;
-      camper = location.state.camper;
-    }
-
     this.state = {
-      group,
-      camper,
       clearance: sessionStorage.getItem('clearance')
     };
 
@@ -28,93 +18,29 @@ class CamperEdit extends React.Component {
     document.getElementById('delete-camper-modal').style.display = 'none';
     document.getElementById('camper-deleted-error').style.display = 'none';
   }
-
-  deleteCamper(id, group_id, groupSize) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ id, groupSize, group_id })
-    };
-
-    fetch('/camperDelete', options)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        else throw new Error();
-      })
-      .then(data => {
-        this.setState({
-          shouldRedirect: true,
-          campers: data.campers
-        });
-      })
-      .catch(error => {
-        document.getElementById('error').style.display = 'block';
-      })
-  }
   showDeleteModal() {
     document.getElementById('delete-camper-modal').style.display = 'block';
   }
-  editCamper(
-    id,
-    first_name,
-    last_name,
-    gender,
-    birthday,
-    grade_completed,
-    allergies,
-    parent_email,
-    emergency_name,
-    emergency_number,
-    roommate,
-    notes,
-    registration,
-    signed_status,
-    room
-  ) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        id,
-        first_name,
-        last_name,
-        gender,
-        birthday,
-        grade_completed,
-        allergies,
-        parent_email,
-        emergency_name,
-        emergency_number,
-        roommate,
-        notes,
-        registration,
-        signed_status,
-        room
-      })
-    };
 
-    fetch('/camperEdit', options)
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        }
-        else throw new Error();
-      })
-      .then(data => {
-        this.setState({
-          shouldRedirect: true,
-          campers: data.campers
-        });
-      })
-      .catch(error => {
-        document.getElementById('error').style.display = 'block';
+  deleteCamper(id, group_id, groupSize) {
+    const response = deleteCamper(id, group_id, groupSize);
+    if (response.error) {
+      document.getElementById('error').style.display = 'block';
+    } else {
+      this.setState({
+        shouldRedirect: response.shouldRedirect
       });
+    }
+  }
+  editCamper(...args) {
+    const response = editCamper(args);
+    if (response.error) {
+      document.getElementById('error').style.display = 'block';
+    } else {
+      this.setState({
+        shouldRedirect: response.shouldRedirect
+      });
+    }
   }
   handleChange(e) {
     const newState = { ...this.state }
