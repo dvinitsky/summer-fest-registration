@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
 import { deleteGroup, editGroup } from '../services/group-service';
 import { setActiveCamper } from '../actions/app';
 
@@ -77,7 +76,6 @@ class GroupEdit extends Component {
     const campersInThisGroup = campers.filter(camper => camper.group_id === activeGroup.id);
     return (
       <>
-        <Header />
         <div className="group-edit">
           <h3>
             Group Name:

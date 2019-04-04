@@ -1,6 +1,5 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
 
 class Signup extends React.Component {
   constructor() {
@@ -71,7 +70,6 @@ class Signup extends React.Component {
 
     return (
       <>
-        <Header />
         <div>
           <h4>
             Signup

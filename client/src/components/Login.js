@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
+import { login } from '../services/login-service';
 
 class Login extends React.Component {
   constructor(props) {
@@ -10,7 +10,7 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.location && this.props.location.state && this.props.location.state.logout) {
+    if (this.props.logout) {
       sessionStorage.clear();
     }
   }
@@ -22,40 +22,17 @@ class Login extends React.Component {
   }
 
   login(username, password) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    };
-
-    fetch('/login', options)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        sessionStorage.setItem('clearance', data.clearance)
-        sessionStorage.setItem('group_id', data.group.id)
-        sessionStorage.setItem('username', data.username)
-        this.setState({
-          shouldRedirect: true,
-          redirectUrl: data.redirectUrl,
-          group: data.group || null,
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        });
+    const response = login(username, password);
+    if (response.error) {
+      this.setState({
+        error: response.error.message
       });
+    } else {
+      this.setState({
+        redirectUrl: response.redirectUrl,
+        group: response.group || null,
+      });
+    }
   }
 
   toggleShowPassword() {
@@ -68,24 +45,21 @@ class Login extends React.Component {
   }
 
   render() {
-    const shouldRedirect = this.props.shouldRedirect || this.state.shouldRedirect;
+    const { setActiveGroup } = this.props;
 
-    if (shouldRedirect) {
+    if (this.state.redirectUrl) {
       return (
         <Redirect
           to={{
-            pathname: this.state.redirectUrl,
-            state: {
-              group: this.state.group
-            }
+            pathname: this.state.redirectUrl
           }}
+          onClick={() => setActiveGroup(this.state.group)}
         />
       );
     }
 
     return (
       <div>
-        <Header />
         <h4>Login</h4>
         <div>Username:</div>
         <input name="username" onChange={this.handleChange} />

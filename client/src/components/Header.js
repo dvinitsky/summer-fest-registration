@@ -5,13 +5,12 @@ class Header extends React.Component {
   constructor() {
     super();
     this.state = {
-      clearance: sessionStorage.getItem('clearance'),
-      group_id: sessionStorage.getItem('group_id')
+      clearance: sessionStorage.getItem('clearance')
     };
   }
 
   render() {
-    const groups = this.props.groups;
+    const { currentUser } = this.props;
 
     return (
       <div className="jumbotron text-center">
@@ -22,7 +21,6 @@ class Header extends React.Component {
             <Link
               to={{
                 pathname: "/",
-                state: { groups }
               }}
             >
               Click here to go home
@@ -60,9 +58,9 @@ class Header extends React.Component {
               </div>
               <Link
                 to={{
-                  pathname: "/groupEdit",
-                  state: { group_id: this.state.group_id }
+                  pathname: "/groupEdit"
                 }}
+                onClick={() => this.props.setActiveGroup(groups.find(group => group.id === currentUser.group_id))}
               >
                 View my group
               </Link>

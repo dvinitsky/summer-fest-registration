@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
 
 class Admin extends React.Component {
   constructor() {
@@ -25,7 +24,6 @@ class Admin extends React.Component {
 
     return (
       <>
-        <Header />
         <div>
           <table name="camperId">
             <tbody>

@@ -3,9 +3,10 @@ import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Admin from '../containers/admin-container';
 import GroupEdit from '../containers/group-edit-container';
-import GroupAdd from './GroupAdd';
-import CamperEdit from './CamperEdit';
-import CamperAdd from './CamperAdd';
+import GroupAdd from '../containers/GroupAdd';
+import CamperEdit from '../containers/CamperEdit';
+import CamperAdd from '../containers/CamperAdd';
+import Header from '../containers/header-container';
 import Login from './Login';
 import UserAdd from './UserAdd';
 import Users from './Users';
@@ -59,6 +60,7 @@ class App extends Component {
   render() {
     return (
       <div>
+        <Header />
         <Switch>
           <Route
             exact
@@ -75,7 +77,7 @@ class App extends Component {
           />
           <Route
             path='/admin'
-            render={props => <Admin {...props} groups={this.state.groups} />}
+            render={props => <Admin {...props} />}
           />
           <Route
             path='/users'
@@ -91,7 +93,7 @@ class App extends Component {
           />
           <Route
             path='/camperAdd'
-            render={props => <CamperAdd {...props} groups={this.state.groups} />}
+            render={props => <CamperAdd {...props} />}
           />
           <Route
             path='/camperEdit'

@@ -1,7 +1,6 @@
 import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
 import { deleteCamper, editCamper } from '../services/camper-service';
 
 class CamperEdit extends React.Component {
@@ -76,7 +75,6 @@ class CamperEdit extends React.Component {
       <Error />
       : (
         <>
-          <Header />
           <div className="camper-edit">
             <h3>
               First Name:
