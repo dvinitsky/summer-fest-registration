@@ -1,16 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
 import { Route, Switch } from 'react-router-dom';
-import Admin from '../containers/admin-container';
-import GroupEdit from '../containers/group-edit-container';
-import GroupAdd from '../containers/group-add-container';
-import CamperEdit from '../containers/camper-edit-container';
-import CamperAdd from '../containers/camper-add-container';
-import Header from '../containers/header-container';
-import Login from '../containers/login-container';
-import UserAdd from '../containers/user-add-container';
-import Users from '../containers/users-container';
-import Signup from '../containers/signup-container';
+import { Login } from '../components/Login';
+import { Signup } from '../components/Signup';
+import { UserAdd } from '../components/UserAdd';
+import { Admin } from '../components/Admin';
+import { Users } from '../components/Users';
+import { GroupAdd } from '../components/GroupAdd';
+import { GroupEdit } from '../components/GroupEdit';
+import { CamperAdd } from '../components/CamperAdd';
+import { CamperEdit } from '../components/CamperEdit';
 
 class App extends Component {
   constructor() {
