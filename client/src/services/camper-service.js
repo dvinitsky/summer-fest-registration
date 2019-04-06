@@ -65,7 +65,6 @@ export function editCamper(
     })
   };
 
-  console.log(options.body)
   return fetch('/camperEdit', options)
     .then(response => {
       if (response.ok) {
@@ -84,7 +83,7 @@ export function editCamper(
     });
 }
 
-export function addCamper({
+export function addCamper(
   group_id,
   first_name,
   last_name,
@@ -100,7 +99,7 @@ export function addCamper({
   registration,
   signed_status,
   room
-}) {
+) {
   const options = {
     method: 'POST',
     headers: {

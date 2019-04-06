@@ -39,9 +39,7 @@ class CamperEdit extends React.Component {
         } else throw new Error();
       })
       .then(data => {
-        console.log(getActiveCamperId())
         const camper = data.campers.find(camper => String(camper.id) === getActiveCamperId());
-        console.log(camper)
         this.setState({
           data,
           camper
@@ -106,8 +104,6 @@ class CamperEdit extends React.Component {
 
     const group = groups.find(group => String(group.id) === groupId);
     const camper = campers.find(camper => String(camper.id) === camperId);
-
-    console.log(camper)
 
     if (this.state.shouldRedirect) {
       return (

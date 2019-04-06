@@ -52,9 +52,11 @@ class CamperAdd extends React.Component {
   }
 
   addCamper(...args) {
-    addCamper(args).then(response => {
+    addCamper(...args).then(response => {
       if (response.error) {
-        document.getElementById('error').style.display = 'block';
+        this.setState({
+          error: true
+        });
       } else {
         this.setState({
           shouldRedirect: true
@@ -207,6 +209,9 @@ class CamperAdd extends React.Component {
               this.state.camper.room
             )} type="button">Save</button>
           </div>
+          {this.state.error && (
+            <div>There's been an error</div>
+          )}
         </>
       );
   }
