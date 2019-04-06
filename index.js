@@ -88,6 +88,18 @@ con.connect(err => {
     return str.replace(/'/g, "''");
   }
 
+  const fillNulls = reqBody => {
+    let body = {};
+    Object.keys(reqBody).map((key) => {
+      if (reqBody[key]) {
+        body[key] = `'${reqBody[key]}'`
+      } else {
+        body[key] = '\'\'';
+      }
+    });
+    return body;
+  }
+
   app.use((req, res, next) => {
     req.body = scrubApostrophes(req.body);
     next();
@@ -188,21 +200,15 @@ con.connect(err => {
     res.status(200).send();
   })
   app.post('/camperEdit', (req, res) => {
-    con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}', room = '${req.body.room}' WHERE id=${req.body.id}`, (err) => {
+    const body = fillNulls(req.body);
+
+    con.query(`UPDATE campers SET first_name = '${body.first_name}', last_name = '${body.last_name}', gender = '${body.gender}', birthday = '${body.birthday}', grade_completed = '${body.grade_completed}', allergies = '${body.allergies}', parent_email = '${body.parent_email}', emergency_name = '${body.emergency_name}', emergency_number = '${body.emergency_number}', roommate = '${body.roommate}', notes = '${body.notes}', registration = '${body.registration}', signed_status = '${body.signed_status}', room = '${body.room}' WHERE id=${body.id}`, (err) => {
       if (err) throw err;
     });
     res.status(200).send();
   })
   app.post('/camperAdd', (req, res) => {
-    const body = {};
-
-    Object.keys(req.body).map((key) => {
-      if (req.body[key]) {
-        body[key] = `'${req.body[key]}'`
-      } else {
-        body[key] = '\'\'';
-      }
-    });
+    const body = fillNulls(req.body);
 
     con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, room) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.room})`, (err) => {
       if (err) throw err;

@@ -20,25 +20,27 @@ class CamperEdit extends React.Component {
     })
   }
   deleteCamper(id, group_id) {
-    const response = deleteCamper(id, group_id);
-    if (response.error) {
-      this.setState({ error: true });
-    } else {
-      this.setState({
-        shouldRedirect: response.shouldRedirect
-      });
-    }
+    deleteCamper(id, group_id).then(response => {
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
+        this.setState({
+          shouldRedirect: response.shouldRedirect
+        });
+      }
+    });
   }
   editCamper(...args) {
-    const response = editCamper(args);
-    if (response.error) {
-      this.setState({ error: true })
-    } else {
-      this.setState({
-        shouldRedirect: response.shouldRedirect
-      });
-      this.props.setActiveGroup(this.props.group)
-    }
+    editCamper(args).then(response => {
+      if (response.error) {
+        this.setState({ error: true })
+      } else {
+        this.setState({
+          shouldRedirect: response.shouldRedirect
+        });
+        this.props.setActiveGroup(this.props.group)
+      }
+    });
   }
   handleChange(e) {
     const newState = { ...this.state }
