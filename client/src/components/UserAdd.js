@@ -1,13 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { userAdd } from '../services/user-service';
+import { getActiveUserClearance } from '../helpers';
 
 class UserAdd extends React.Component {
   constructor() {
     super();
     this.state = {
-      clearance: sessionStorage.getItem('clearance')
+      data: {}
     };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {
@@ -16,45 +34,32 @@ class UserAdd extends React.Component {
     this.setState(newState);
   }
 
-  add(username, password, status, group_name) {
+  userAdd(username, password, status, group_name) {
     if (!username || !password) {
       this.setState({ incomplete: true });
       return;
     }
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        status,
-        group_name
-      })
-    };
-
-    fetch('/userAdd', options)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
+    userAdd(username, password, status, group_name).then(response => {
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
         this.setState({
           shouldRedirect: true
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        });
-      });
+        })
+      }
+    });
   }
 
   render() {
-    const { groups } = this.props;
+    let groups;
+    if (!this.state.data.groups) {
+      return null;
+    }
+    else {
+      groups = this.state.data.groups;
+    }
+
+    const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
       return (
@@ -66,7 +71,7 @@ class UserAdd extends React.Component {
       );
     }
 
-    if (this.state.clearance !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{
@@ -90,7 +95,7 @@ class UserAdd extends React.Component {
         <div>Admin</div>
         <input type="radio" name="status" value="leader" onChange={this.handleChange}></input>
         <div>Leader</div>
-        <button onClick={() => this.add(this.state.username, this.state.password, this.state.status, this.setState.group_name)}>Add</button>
+        <button onClick={() => this.userAdd(this.state.username, this.state.password, this.state.status, this.setState.group_name)}>Add</button>
 
         {this.state.status === 'leader' && (
           <>
@@ -103,7 +108,7 @@ class UserAdd extends React.Component {
           </>
         )}
 
-        {this.state.error && <div>{this.state.error}</div>}
+        {this.state.error && <div>There's been an error. Please refresh and try again.</div>}
         {this.state.incomplete && (
           <div>User must have both a username and password.</div>
         )}

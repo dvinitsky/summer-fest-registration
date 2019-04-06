@@ -1,12 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
+import { signup } from '../services/user-service';
+import { setActiveGroupId } from '../helpers';
 
 class Signup extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {
@@ -15,44 +34,25 @@ class Signup extends React.Component {
     this.setState(newState);
   }
 
-  add(username, password) {
-    if (!username || !password) {
-      this.setState({ incomplete: true });
-      return;
-    }
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        nextGroupId: this.props.nextGroupId
-      })
-    };
-
-    fetch('/signup', options)
-      .then(response => {
-        this.props.incrementNextGroupId();
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
-        sessionStorage.setItem('clearance', data.clearance)
+  signup(username, password) {
+    signup(username, password).then(response => {
+      if (response.error) {
         this.setState({
-          shouldRedirect: true,
-          group: data.group,
-          clearance: data.clearance
+          error: response.error.message
         });
-      })
-      .catch(error => {
+      } else if (response.incomplete) {
         this.setState({
-          error: error.message
+          incomplete: true
         });
-      });
+      } else {
+        sessionStorage.setItem('clearance', response.user.status);
+        sessionStorage.setItem('username', response.user.username);
+        this.setState({
+          shouldRedirect: true
+        });
+        setActiveGroupId(response.group.id);
+      }
+    });
   }
 
   render() {
@@ -71,7 +71,6 @@ class Signup extends React.Component {
 
     return (
       <>
-        <Header />
         <div>
           <h4>
             Signup
@@ -80,7 +79,7 @@ class Signup extends React.Component {
           <input name="username" onChange={this.handleChange}></input>
           <div>Password:</div>
           <input name="password" onChange={this.handleChange}></input>
-          <button onClick={() => this.add(this.state.username, this.state.password)}>Submit</button>
+          <button onClick={() => this.signup(this.state.username, this.state.password)}>Submit</button>
 
           {this.state.error && <div>{this.state.error}</div>}
 

@@ -1,18 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import Header from './Header';
+import { login } from '../services/user-service';
+import { setActiveGroupId, setActiveUserClearance, setActiveUserName } from '../helpers';
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  constructor() {
+    super();
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentWillMount() {
-    if (this.props.location && this.props.location.state && this.props.location.state.logout) {
-      sessionStorage.clear();
-    }
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {
@@ -22,40 +35,20 @@ class Login extends React.Component {
   }
 
   login(username, password) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password
-      })
-    };
-
-    fetch('/login', options)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        sessionStorage.setItem('clearance', data.clearance)
-        sessionStorage.setItem('group_id', data.group.id)
-        sessionStorage.setItem('username', data.username)
+    login(username, password).then(response => {
+      if (response.error) {
         this.setState({
-          shouldRedirect: true,
-          redirectUrl: data.redirectUrl,
-          group: data.group || null,
+          error: response.error.message
         });
-      })
-      .catch(error => {
+      } else {
+        setActiveUserClearance(response.user.status);
+        setActiveUserName(response.user.username);
+        setActiveGroupId(response.group.id);
         this.setState({
-          error: error.message
+          redirectUrl: response.redirectUrl
         });
-      });
+      }
+    });
   }
 
   toggleShowPassword() {
@@ -68,16 +61,11 @@ class Login extends React.Component {
   }
 
   render() {
-    const shouldRedirect = this.props.shouldRedirect || this.state.shouldRedirect;
-
-    if (shouldRedirect) {
+    if (this.state.redirectUrl) {
       return (
         <Redirect
           to={{
-            pathname: this.state.redirectUrl,
-            state: {
-              group: this.state.group
-            }
+            pathname: this.state.redirectUrl
           }}
         />
       );
@@ -85,7 +73,6 @@ class Login extends React.Component {
 
     return (
       <div>
-        <Header />
         <h4>Login</h4>
         <div>Username:</div>
         <input name="username" onChange={this.handleChange} />

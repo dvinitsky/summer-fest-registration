@@ -1,17 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getActiveUserClearance } from '../helpers';
 
 class Header extends React.Component {
   constructor() {
     super();
     this.state = {
-      clearance: sessionStorage.getItem('clearance'),
-      group_id: sessionStorage.getItem('group_id')
+      data: {}
     };
   }
 
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
+  }
+
+  logout() {
+    sessionStorage.clear();
+    this.setState({});
+  }
+
   render() {
-    const groups = this.props.groups;
+    const activeUserClearance = getActiveUserClearance();
 
     return (
       <div className="jumbotron text-center">
@@ -22,7 +43,6 @@ class Header extends React.Component {
             <Link
               to={{
                 pathname: "/",
-                state: { groups }
               }}
             >
               Click here to go home
@@ -39,7 +59,7 @@ class Header extends React.Component {
           </Link>
           </p>
 
-          {this.state.clearance === 'admin' && (
+          {activeUserClearance === 'admin' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Admin
@@ -53,27 +73,26 @@ class Header extends React.Component {
               </Link>
             </>
           )}
-          {this.state.clearance === 'leader' && (
+          {activeUserClearance === 'leader' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Group Leader
               </div>
               <Link
                 to={{
-                  pathname: "/groupEdit",
-                  state: { group_id: this.state.group_id }
+                  pathname: "/groupEdit"
                 }}
               >
                 View my group
               </Link>
             </>
           )}
-          {this.state.clearance && (
+          {activeUserClearance && (
             <Link
               to={{
                 pathname: "/",
-                state: { logout: true }
               }}
+              onClick={this.logout}
             >
               Log Out
             </Link>

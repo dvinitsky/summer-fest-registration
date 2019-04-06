@@ -1,15 +1,18 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { addGroup } from '../services/group-service';
+import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class GroupAdd extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      nextId: '',
-      group: {},
-      clearance: sessionStorage.getItem('clearance')
+      group: {
+        group_name: null,
+        leader_name: null
+      },
+      data: {}
     };
-    this.addGroup = this.addGroup.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -20,49 +23,48 @@ class GroupAdd extends React.Component {
   }
 
   addGroup(group_name, leader_name) {
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ group_name, leader_name, id: this.props.nextGroupId })
-    };
-
-    fetch('/groupAdd', options)
-      .then(response => {
-        if (response.ok) {
-          this.props.incrementNextGroupId();
-          return response.json();
-        }
-        else throw new Error();
-      })
-      .then(data => {
+    addGroup(group_name, leader_name).then(response => {
+      if (response.error) {
+        this.setState({ error: true });
+      } else if (response.group && response.group.id) {
+        setActiveGroupId(response.group.id);
         this.setState({
           shouldRedirect: true,
-          group: data.group
-        });
+        })
+      }
+    });
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
       })
       .catch(error => {
-        document.getElementById('error').style.display = 'block';
+        console.log(error);
+        return null;
       });
   }
 
   render() {
+    const activeUserClearance = getActiveUserClearance();
+
     if (this.state.shouldRedirect) {
       return (
         <Redirect
           to={{
-            pathname: '/groupEdit',
-            state: {
-              group: this.state.group,
-              noCampers: {}
-            }
+            pathname: '/groupEdit'
           }}
         />
       );
     }
 
-    if (this.state.clearance !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{
@@ -87,9 +89,11 @@ class GroupAdd extends React.Component {
 
         <button type="button" onClick={() => this.addGroup(this.state.group.group_name, this.state.group.leader_name)}>Save</button>
 
-        <div id="error">
-          There's been an error. Please try again.
+        {this.state.error && (
+          <div id="error">
+            There's been an error. Please try again.
           </div>
+        )}
       </div>
     );
   }
