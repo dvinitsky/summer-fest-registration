@@ -25,9 +25,9 @@ class Login extends React.Component {
       } else {
         setActiveUserClearance(response.user.status);
         setActiveUserName(response.user.username);
+        setActiveGroupId(response.group.id);
         this.setState({
-          redirectUrl: response.redirectUrl,
-          group: response.group || null
+          redirectUrl: response.redirectUrl
         });
       }
     });
@@ -44,12 +44,12 @@ class Login extends React.Component {
 
   render() {
     if (this.state.redirectUrl) {
+      console.log('redirecting')
       return (
         <Redirect
           to={{
             pathname: this.state.redirectUrl
           }}
-          onClick={() => setActiveGroupId(this.state.group.id)}
         />
       );
     }

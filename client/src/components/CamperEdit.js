@@ -39,7 +39,8 @@ class CamperEdit extends React.Component {
         this.setState({
           shouldRedirect: response.shouldRedirect
         });
-        setActiveGroupId(this.props.group.id)
+        const group = this.props.groups.find(group => String(group.id) === getActiveGroupId());
+        setActiveGroupId(group.id)
       }
     });
   }
@@ -55,8 +56,8 @@ class CamperEdit extends React.Component {
     const groupId = getActiveGroupId();
     const camperId = getActiveCamperId();
 
-    const group = groups.find(group => group.id === groupId);
-    const camper = campers.find(camper => camper.id === camperId);
+    const group = groups.find(group => String(group.id) === groupId);
+    const camper = campers.find(camper => String(camper.id) === camperId);
 
 
     if (this.state.shouldRedirect) {

@@ -3,7 +3,7 @@ import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
-import { getActiveGroupId, getActiveUserClearance, setActiveCamper } from '../helpers';
+import { getActiveGroupId, getActiveUserClearance, setActiveCamperId } from '../helpers';
 
 class GroupEdit extends Component {
   constructor(props) {
@@ -72,8 +72,8 @@ class GroupEdit extends Component {
     if (!activeGroupId) {
       return <Error />
     }
-    const campersInThisGroup = campers.filter(camper => camper.group_id === activeGroupId);
-    const activeGroup = groups.find(group => group.id === activeGroupId);
+    const campersInThisGroup = campers.filter(camper => String(camper.group_id) === activeGroupId);
+    const activeGroup = groups.find(group => String(group.id) === activeGroupId);
     return (
       <>
         <div className="group-edit">
@@ -117,7 +117,7 @@ class GroupEdit extends Component {
                         to={{
                           pathname: "/camperEdit"
                         }}
-                        onClick={() => setActiveCamper(camper.id)}
+                        onClick={() => setActiveCamperId(camper.id)}
                       >
                         Edit
                         </Link>
