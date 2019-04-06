@@ -4,9 +4,7 @@ import { Redirect } from 'react-router-dom';
 class UserAdd extends React.Component {
   constructor() {
     super();
-    this.state = {
-      clearance: sessionStorage.getItem('clearance')
-    };
+    this.state = {};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -54,7 +52,7 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    const { groups } = this.props;
+    const { groups, activeUser } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -66,7 +64,7 @@ class UserAdd extends React.Component {
       );
     }
 
-    if (this.state.clearance !== 'admin') {
+    if (activeUser.status !== 'admin') {
       return (
         <Redirect
           to={{

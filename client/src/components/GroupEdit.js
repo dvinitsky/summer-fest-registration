@@ -7,11 +7,7 @@ import { deleteGroup, editGroup } from '../services/group-service';
 class GroupEdit extends Component {
   constructor(props) {
     super(props);
-
-    this.state = {
-      clearance: sessionStorage.getItem('clearance')
-    };
-
+    this.state = {};
     this.handleChange = this.handleChange.bind(this);
   }
   handleChange(e) {
@@ -47,7 +43,7 @@ class GroupEdit extends Component {
   };
 
   render() {
-    const { campers, activeGroup } = this.props;
+    const { campers, activeGroup, activeUser } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -59,7 +55,7 @@ class GroupEdit extends Component {
       );
     }
 
-    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+    if (!activeUser) {
       return (
         <Redirect
           to={{
@@ -103,7 +99,7 @@ class GroupEdit extends Component {
                 <th className="header-name">Notes</th>
                 <th className="header-name">Online or Paper Registration</th>
                 <th className="header-name">Waiver Signed Status</th>
-                {this.state.clearance === 'admin' && (
+                {activeUser.status === 'admin' && (
                   <th className="header-name">Room Assignment</th>
                 )}
               </tr>
@@ -160,7 +156,7 @@ class GroupEdit extends Component {
                     <td>
                       {camper.signed_status}
                     </td>
-                    {this.state.clearance === 'admin' && (
+                    {activeUser.status === 'admin' && (
                       <td>
                         {camper.room}
                       </td>
@@ -183,15 +179,15 @@ class GroupEdit extends Component {
             }}>
           </Link>
 
-          {this.state.clearance === 'admin' && (
+          {activeUser.status === 'admin' && (
             <button type="button" onClick={this.showDeleteModal}>Delete</button>
           )}
 
           <div id="delete-group-modal">
-            <h1>Are you sure you want to delete {group.group_name} and all its campers?
+            <h1>Are you sure you want to delete {activeGroup.group_name} and all its campers?
               </h1>
             <button type="button" onClick={this.cancelDelete}>No</button>
-            <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
+            <button type="button" onClick={() => this.deleteGroup(activeGroup.id)}>Yes</button>
           </div>
 
           {this.state.error && (

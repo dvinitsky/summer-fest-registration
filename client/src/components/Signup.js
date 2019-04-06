@@ -28,11 +28,11 @@ class Signup extends React.Component {
         incomplete: true
       });
     } else {
-      sessionStorage.setItem('clearance', 'leader')
+      this.props.setActiveUser(response.user);
       this.setState({
         shouldRedirect: true
       });
-      this.props.setActiveGroup(data.group);
+      this.props.setActiveGroup(response.group);
     }
   }
 

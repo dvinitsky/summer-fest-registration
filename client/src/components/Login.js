@@ -10,8 +10,8 @@ class Login extends React.Component {
   }
 
   componentWillMount() {
-    if (this.props.logout) {
-      sessionStorage.clear();
+    if (this.props.shouldLogout) {
+      this.props.logout;
     }
   }
 
@@ -22,17 +22,20 @@ class Login extends React.Component {
   }
 
   login(username, password) {
-    const response = login(username, password);
-    if (response.error) {
-      this.setState({
-        error: response.error.message
-      });
-    } else {
-      this.setState({
-        redirectUrl: response.redirectUrl,
-        group: response.group || null,
-      });
-    }
+    login(username, password).then(response => {
+      console.log('response gotten')
+      if (response.error) {
+        this.setState({
+          error: response.error.message
+        });
+      } else {
+        this.props.setActiveUser(response.user);
+        this.setState({
+          redirectUrl: response.redirectUrl,
+          group: response.group || null
+        });
+      }
+    });
   }
 
   toggleShowPassword() {

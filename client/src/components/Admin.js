@@ -5,14 +5,12 @@ import { Redirect } from 'react-router-dom';
 class Admin extends React.Component {
   constructor() {
     super();
-    this.state = {
-      clearance: sessionStorage.getItem('clearance')
-    }
+    this.state = {}
   }
   render() {
-    const { setActiveGroup, groups } = this.props;
+    const { setActiveGroup, groups, activeUser } = this.props;
 
-    if (this.state.clearance !== 'admin') {
+    if (activeUser.status !== 'admin') {
       return (
         <Redirect
           to={{

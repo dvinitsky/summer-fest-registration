@@ -4,7 +4,8 @@ import { setActiveGroup } from '../actions/app';
 
 function mapStateToProps(state) {
   return {
-    groups: state.groups,
+    groups: state.app.groups,
+    activeUser: state.app.activeUser
   };
 }
 

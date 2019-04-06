@@ -97,6 +97,7 @@ con.connect(err => {
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers, users: req.users }));
   })
   app.post('/login', (req, res) => {
+    console.log('in login route')
     const user = req.users.find(user => {
       return user.username === req.body.username;
     });
@@ -113,12 +114,11 @@ con.connect(err => {
     }
 
     const redirectUrl = user.status === 'admin' ? '/admin' : '/groupEdit';
-    const clearance = user.status === 'admin' ? 'admin' : 'leader';
 
     const group = req.groups.find(group => {
       return group.id === user.group_id;
     });
-    res.send(JSON.stringify({ redirectUrl, group, clearance, username: user.username }))
+    res.send(JSON.stringify({ redirectUrl, group, user }))
   })
   app.post('/signup', (req, res) => {
     const exists = userNameExists(req.body.username, req.users);
@@ -135,9 +135,11 @@ con.connect(err => {
       con.query('SELECT * FROM groups', (err, groups) => {
         const group = groups.find(group => group.id === req.body.nextGroupId);
 
-        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err) => {
+        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err, user) => {
           if (err) throw err;
-          res.status(200).send(JSON.stringify({ group, clearance: 'leader' }));
+          console.log('insert user response:')
+          console.log(user)
+          res.status(200).send(JSON.stringify({ group, user }));
         });
       });
     }

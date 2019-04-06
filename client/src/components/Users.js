@@ -1,5 +1,4 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { toggleAdminRights } from '../services/user-service';
 
@@ -7,7 +6,6 @@ class Users extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clearance: sessionStorage.getItem('clearance'),
       users: this.props.users || []
     };
   }
@@ -20,13 +18,15 @@ class Users extends React.Component {
       });
     } else {
       this.setState({
-        users: data.users
+        users: response.users
       });
     }
   }
 
   render() {
-    if (this.state.clearance !== 'admin') {
+    const {activeUser} = this.props;
+    
+    if (activeUser.status !== 'admin') {
       return (
         <Redirect
           to={{

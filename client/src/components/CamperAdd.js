@@ -7,7 +7,6 @@ class CamperAdd extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      clearance: sessionStorage.getItem('clearance'),
       camper: {
         first_name: null,
         last_name: null,
@@ -47,7 +46,7 @@ class CamperAdd extends React.Component {
   }
 
   render() {
-    const { activeGroup } = this.props;
+    const { activeGroup, activeUser} = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -59,7 +58,7 @@ class CamperAdd extends React.Component {
       );
     }
 
-    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+    if (!activeUser) {
       return (
         <Redirect
           to={{
@@ -77,17 +76,17 @@ class CamperAdd extends React.Component {
             <h3>
               First Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.first_name} name="first_name" />
+            <input onChange={this.handleChange} className="camper-input" name="first_name" />
             <br />
             <h3>
               Last Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.last_name} name="last_name" />
+            <input onChange={this.handleChange} className="camper-input" name="last_name" />
             <br />
             <h3>
               Gender:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.gender} name="gender">
+            <select onChange={this.handleChange} className="camper-input" name="gender">
               <option value="null">{null}</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
@@ -97,12 +96,12 @@ class CamperAdd extends React.Component {
             <h3>
               Birthday:
           </h3>
-            <input type="date" onChange={this.handleChange} className="camper-input" defaultValue={camper.birthday} name="birthday" />
+            <input type="date" onChange={this.handleChange} className="camper-input" name="birthday" />
             <br />
             <h3>
               Grade just completed:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.grade_completed} name="grade_completed" >
+            <select onChange={this.handleChange} className="camper-input" name="grade_completed" >
               <option value="null">{null}</option>
               <option value="6">6</option>
               <option value="7">7</option>
@@ -116,37 +115,37 @@ class CamperAdd extends React.Component {
             <h3>
               Food Allergies:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.allergies} name="allergies" />
+            <input onChange={this.handleChange} className="camper-input" name="allergies" />
             <br />
             <h3>
               Parent or Guardian Email:
           </h3>
-            <input type="email" onChange={this.handleChange} className="camper-input" defaultValue={camper.parent_email} name="parent_email" />
+            <input type="email" onChange={this.handleChange} className="camper-input" name="parent_email" />
             <br />
             <h3>
               Emergency Contact Name:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_name} name="emergency_name" />
+            <input onChange={this.handleChange} className="camper-input" name="emergency_name" />
             <br />
             <h3>
               Emergency Contact Number:
           </h3>
-            <input type="tel" onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_number} name="emergency_number" />
+            <input type="tel" onChange={this.handleChange} className="camper-input" name="emergency_number" />
             <br />
             <h3>
               Roommate:
           </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.roommate} name="roommate" />
+            <input onChange={this.handleChange} className="camper-input" name="roommate" />
             <br />
             <h3>
               Notes:
           </h3>
-            <textarea onChange={this.handleChange} className="camper-input" defaultValue={camper.notes} name="notes" />
+            <textarea onChange={this.handleChange} className="camper-input" name="notes" />
             <br />
             <h3>
               Online or Paper Registration:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.registration} name="registration">
+            <select onChange={this.handleChange} className="camper-input" name="registration">
               <option value="null">{null}</option>
               <option value="Online">Online</option>
               <option value="Paper">Paper</option>
@@ -155,19 +154,19 @@ class CamperAdd extends React.Component {
             <h3>
               Waiver Signed Status:
           </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.signed_status} name="signed_status">
+            <select onChange={this.handleChange} className="camper-input" name="signed_status">
               <option value="null">{null}</option>
               <option value="Not Sent">Not Sent</option>
               <option value="Emailed">Emailed</option>
               <option value="Signed">Signed</option>
             </select>
             <br />
-            {this.state.clearance === 'admin' && (
+            {activeUser.status === 'admin' && (
               <>
                 <h3>
                   Room Assignment:
               </h3>
-                <input onChange={this.handleChange} className="camper-input" defaultValue={camper.room} name="room" />
+                <input onChange={this.handleChange} className="camper-input" name="room" />
               </>
             )}
 

@@ -1,4 +1,5 @@
 export function login(username, password) {
+  console.log('in login service')
   const options = {
     method: 'POST',
     headers: {
@@ -10,21 +11,19 @@ export function login(username, password) {
     })
   };
 
-  fetch('/login', options)
+  return fetch('/login', options)
     .then(response => {
       return response.json();
     })
     .then(data => {
+      console.log('data fetched')
       if (data.error) {
         throw new Error(data.error);
       }
-
-      sessionStorage.setItem('clearance', data.clearance)
-      sessionStorage.setItem('group_id', data.group.id)
-      sessionStorage.setItem('username', data.username)
       return {
         redirectUrl: data.redirectUrl,
-        group: data.group || null,
+        group: data.group,
+        user: data.user,
       };
     })
     .catch(error => {
@@ -58,7 +57,9 @@ export function addUser(username, password, nextGroupId) {
       if (data.error) {
         throw new Error(data.error);
       } else {
-        return { data };
+        return { 
+          user: data.user
+         };
       }
     })
     .catch(error => {

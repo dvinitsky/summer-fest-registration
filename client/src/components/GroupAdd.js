@@ -9,8 +9,7 @@ class GroupAdd extends React.Component {
       group: {
         group_name: null,
         leader_name: null
-      },
-      clearance: sessionStorage.getItem('clearance')
+      }
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -35,6 +34,8 @@ class GroupAdd extends React.Component {
   }
 
   render() {
+    const { activeUser } = this.props;
+
     if (this.state.shouldRedirect) {
       return (
         <Redirect
@@ -45,7 +46,7 @@ class GroupAdd extends React.Component {
       );
     }
 
-    if (this.state.clearance !== 'admin') {
+    if (activeUser.status !== 'admin') {
       return (
         <Redirect
           to={{

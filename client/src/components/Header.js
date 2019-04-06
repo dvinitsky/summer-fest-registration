@@ -4,13 +4,11 @@ import { Link } from 'react-router-dom';
 class Header extends React.Component {
   constructor() {
     super();
-    this.state = {
-      clearance: sessionStorage.getItem('clearance')
-    };
+    this.state = {};
   }
 
   render() {
-    const { currentUser } = this.props;
+    const { activeUser } = this.props;
 
     return (
       <div className="jumbotron text-center">
@@ -37,7 +35,7 @@ class Header extends React.Component {
           </Link>
           </p>
 
-          {this.state.clearance === 'admin' && (
+          {activeUser.status === 'admin' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Admin
@@ -51,7 +49,7 @@ class Header extends React.Component {
               </Link>
             </>
           )}
-          {this.state.clearance === 'leader' && (
+          {activeUser.status === 'leader' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Group Leader
@@ -60,18 +58,17 @@ class Header extends React.Component {
                 to={{
                   pathname: "/groupEdit"
                 }}
-                onClick={() => this.props.setActiveGroup(groups.find(group => group.id === currentUser.group_id))}
               >
                 View my group
               </Link>
             </>
           )}
-          {this.state.clearance && (
+          {activeUser && (
             <Link
               to={{
                 pathname: "/",
-                state: { logout: true }
               }}
+              onClick={this.props.logout}
             >
               Log Out
             </Link>

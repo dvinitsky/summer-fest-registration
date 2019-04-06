@@ -3,23 +3,20 @@ import './App.css';
 import { Route, Switch } from 'react-router-dom';
 import Admin from '../containers/admin-container';
 import GroupEdit from '../containers/group-edit-container';
-import GroupAdd from '../containers/GroupAdd';
-import CamperEdit from '../containers/CamperEdit';
-import CamperAdd from '../containers/CamperAdd';
+import GroupAdd from '../containers/group-add-container';
+import CamperEdit from '../containers/camper-edit-container';
+import CamperAdd from '../containers/camper-add-container';
 import Header from '../containers/header-container';
-import Login from './Login';
-import UserAdd from './UserAdd';
-import Users from './Users';
-import Signup from './Signup';
+import Login from '../containers/login-container';
+import UserAdd from '../containers/user-add-container';
+import Users from '../containers/users-container';
+import Signup from '../containers/signup-container';
 import { getHighestGroupId } from '../helpers';
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      clearance: sessionStorage.getItem('clearance')
-    };
-    this.setClearance = this.setClearance.bind(this);
+    this.state = {};
   }
 
   componentWillMount() {
@@ -39,12 +36,6 @@ class App extends Component {
       });
   }
 
-  setClearance(clearance) {
-    this.setState({
-      clearance
-    });
-  }
-
   render() {
     return (
       <div>
@@ -53,11 +44,11 @@ class App extends Component {
           <Route
             exact
             path='/'
-            render={props => <Login {...props} setClearance={this.setClearance} />}
+            render={props => <Login {...props} />}
           />
           <Route
             path='/signup'
-            render={props => <Signup {...props} setClearance={this.setClearance} />}
+            render={props => <Signup {...props} />}
           />
           <Route
             path='/userAdd'

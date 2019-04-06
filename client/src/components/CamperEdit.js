@@ -8,7 +8,6 @@ class CamperEdit extends React.Component {
     super(props);
 
     this.state = {
-      clearance: sessionStorage.getItem('clearance'),
       error: false
     };
 
@@ -50,7 +49,7 @@ class CamperEdit extends React.Component {
   }
 
   render() {
-    const { group, camper } = this.props;
+    const { group, camper, activeUser } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -62,7 +61,7 @@ class CamperEdit extends React.Component {
       );
     }
 
-    if (this.state.clearance !== 'admin' && this.state.clearance !== 'leader') {
+    if (!activeUser) {
       return (
         <Redirect
           to={{
@@ -165,7 +164,7 @@ class CamperEdit extends React.Component {
               <option value="Signed">Signed</option>
             </select>
             <br />
-            {this.state.clearance === 'admin' && (
+            {activeUser.status === 'admin' && (
               <>
                 <h3>
                   Room Assignment:

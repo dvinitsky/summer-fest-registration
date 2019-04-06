@@ -1,9 +1,10 @@
 import { connect } from 'react-redux';
-import Header from '../components/Header';
-import { setActiveGroup, logout } from '../actions/app.js';
+import UserAdd from '../components/UserAdd';
+import { } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
+    groups: state.app.groups,
     activeUser: state.app.activeUser
   };
 }
@@ -11,7 +12,6 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
-    setActiveGroup,
-    logout
+
   }
-)(Header);
+)(UserAdd);

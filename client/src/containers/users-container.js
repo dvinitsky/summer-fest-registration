@@ -4,13 +4,13 @@ import { } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
-    users: state.app.users
+    users: state.app.users,
+    activeUser: stat.app.activeUser
   };
 }
 
 export default connect(
   mapStateToProps,
   {
-
   }
 )(Users);
