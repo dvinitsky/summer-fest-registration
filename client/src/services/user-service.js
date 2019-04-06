@@ -28,7 +28,7 @@ export function login(username, password) {
     })
     .catch(error => {
       return {
-        error: error.message
+        error
       };
     });
 }

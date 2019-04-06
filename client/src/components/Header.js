@@ -63,7 +63,7 @@ class Header extends React.Component {
               </Link>
             </>
           )}
-          {activeUser && (
+          {activeUser.status && (
             <Link
               to={{
                 pathname: "/",

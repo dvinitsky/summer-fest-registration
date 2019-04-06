@@ -23,6 +23,7 @@ class Login extends React.Component {
           error: response.error.message
         });
       } else {
+        console.log(response)
         this.props.setActiveUser(response.user);
         this.setState({
           redirectUrl: response.redirectUrl,
