@@ -4,8 +4,6 @@ import { setData, setNextGroupId } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
-    groups: state.app.groups,
-    campers: state.app.campers
   };
 }
 

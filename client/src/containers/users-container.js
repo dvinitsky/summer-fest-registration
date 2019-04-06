@@ -4,7 +4,6 @@ import { setData, setNextGroupId } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
-    users: state.app.users
   };
 }
 

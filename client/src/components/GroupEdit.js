@@ -70,7 +70,7 @@ class GroupEdit extends Component {
     }
     else {
       groups = this.state.data.groups;
-      campers = this.state.data.camper;
+      campers = this.state.data.campers;
     }
 
     const activeGroupId = getActiveGroupId();
