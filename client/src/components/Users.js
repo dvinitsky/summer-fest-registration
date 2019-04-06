@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { toggleAdminRights } from '../services/user-service';
+import { getActiveUserClearance, getActiveUserName } from '../helpers';
 
 class Users extends React.Component {
   constructor(props) {
@@ -25,7 +26,8 @@ class Users extends React.Component {
   }
 
   render() {
-    const { activeUserClearance, activeUserUserName } = this.props;
+    const activeUserClearance = getActiveUserClearance();
+    const activeUserUserName = getActiveUserName();
 
     if (activeUserClearance !== 'admin') {
       return (

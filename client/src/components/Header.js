@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { getActiveUserClearance } from '../helpers';
 
 class Header extends React.Component {
   constructor() {
@@ -7,8 +8,12 @@ class Header extends React.Component {
     this.state = {};
   }
 
+  logout() {
+    sessionStorage.clear();
+  }
+
   render() {
-    const { activeUserClearance } = this.props;
+    const activeUserClearance = getActiveUserClearance();
 
     return (
       <div className="jumbotron text-center">
@@ -68,7 +73,7 @@ class Header extends React.Component {
               to={{
                 pathname: "/",
               }}
-              onClick={this.props.logout}
+              onClick={this.logout}
             >
               Log Out
             </Link>

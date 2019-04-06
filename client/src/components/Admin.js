@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
+import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class Admin extends React.Component {
   constructor() {
@@ -8,7 +9,8 @@ class Admin extends React.Component {
     this.state = {}
   }
   render() {
-    const { setActiveGroup, groups, activeUserClearance } = this.props;
+    const { groups } = this.props;
+    const activeUserClearance = getActiveUserClearance();
 
     if (activeUserClearance !== 'admin') {
       return (
@@ -40,7 +42,7 @@ class Admin extends React.Component {
                         to={{
                           pathname: "/groupEdit",
                         }}
-                        onClick={() => setActiveGroup(group)}
+                        onClick={() => setActiveGroupId(group.id)}
                       >
                         Edit
                     </Link>

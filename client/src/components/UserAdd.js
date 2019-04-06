@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { userAdd } from '../services/user-service';
+import { getActiveUserClearance } from '../helpers';
 
 class UserAdd extends React.Component {
   constructor() {
@@ -22,7 +23,7 @@ class UserAdd extends React.Component {
     }
     userAdd(username, password, status, group_name).then(response => {
       if (response.error) {
-        this.setState({ error: true});
+        this.setState({ error: true });
       } else {
         this.setState({
           shouldRedirect: true
@@ -32,7 +33,8 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    const { groups, activeUserClearance } = this.props;
+    const { groups } = this.props;
+    const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
       return (

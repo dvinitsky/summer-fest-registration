@@ -2,6 +2,7 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { addCamper } from '../services/camper-service';
+import { getActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class CamperAdd extends React.Component {
   constructor(props) {
@@ -46,7 +47,8 @@ class CamperAdd extends React.Component {
   }
 
   render() {
-    const { activeGroup, activeUserClearance  } = this.props;
+    const activeGroupId = getActiveGroupId();
+    const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
       return (
@@ -68,7 +70,7 @@ class CamperAdd extends React.Component {
       );
     }
 
-    return (!activeGroup || !activeGroup.group_id) ?
+    return (!activeGroupId) ?
       <Error />
       : (
         <>
@@ -171,7 +173,7 @@ class CamperAdd extends React.Component {
             )}
 
             <button onClick={() => this.addCamper(
-              activeGroup.group_id,
+              activeGroupId,
               this.state.camper.first_name,
               this.state.camper.last_name,
               this.state.camper.gender,

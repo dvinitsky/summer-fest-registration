@@ -2,6 +2,7 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { deleteCamper, editCamper } from '../services/camper-service';
+import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
 
 class CamperEdit extends React.Component {
   constructor(props) {
@@ -38,7 +39,7 @@ class CamperEdit extends React.Component {
         this.setState({
           shouldRedirect: response.shouldRedirect
         });
-        this.props.setActiveGroup(this.props.group)
+        setActiveGroupId(this.props.group.id)
       }
     });
   }
@@ -49,7 +50,14 @@ class CamperEdit extends React.Component {
   }
 
   render() {
-    const { group, camper, activeUserClearance } = this.props;
+    const { groups, campers } = this.props;
+    const activeUserClearance = getActiveUserClearance();
+    const groupId = getActiveGroupId();
+    const camperId = getActiveCamperId();
+
+    const group = groups.find(group => group.id === groupId);
+    const camper = campers.find(camper => camper.id === camperId);
+
 
     if (this.state.shouldRedirect) {
       return (

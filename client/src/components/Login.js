@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { login } from '../services/user-service';
+import { setActiveGroupId, setActiveUserClearance, setActiveUserName } from '../helpers';
 
 class Login extends React.Component {
   constructor(props) {
@@ -22,8 +23,8 @@ class Login extends React.Component {
           error: response.error.message
         });
       } else {
-        sessionStorage.set('clearance', response.user.status);
-        sessionStorage.set('username', response.user.username);
+        setActiveUserClearance(response.user.status);
+        setActiveUserName(response.user.username);
         this.setState({
           redirectUrl: response.redirectUrl,
           group: response.group || null
@@ -42,15 +43,13 @@ class Login extends React.Component {
   }
 
   render() {
-    const { setActiveGroup } = this.props;
-
     if (this.state.redirectUrl) {
       return (
         <Redirect
           to={{
             pathname: this.state.redirectUrl
           }}
-          onClick={() => setActiveGroup(this.state.group)}
+          onClick={() => setActiveGroupId(this.state.group.id)}
         />
       );
     }

@@ -1,4 +1,4 @@
-import { SET_DATA, SET_ACTIVE_GROUP, SET_ACTIVE_CAMPER, SET_NEXT_GROUP_ID, INCREMENT_NEXT_GROUP_ID } from "../constants";
+import { SET_DATA, SET_NEXT_GROUP_ID, INCREMENT_NEXT_GROUP_ID } from "../constants";
 
 export const setData = (groups, campers, users) => {
   return {
@@ -6,18 +6,6 @@ export const setData = (groups, campers, users) => {
     groups,
     campers,
     users
-  };
-}
-export const setActiveGroup = (activeGroup) => {
-  return {
-    type: SET_ACTIVE_GROUP,
-    activeGroup
-  };
-}
-export const setActiveCamper = (activeCamper) => {
-  return {
-    type: SET_ACTIVE_CAMPER,
-    activeCamper
   };
 }
 export const incrementNextGroupId = () => {

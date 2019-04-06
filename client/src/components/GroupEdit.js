@@ -3,6 +3,7 @@ import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
+import { getActiveGroupId, getActiveUserClearance, setActiveCamper } from '../helpers';
 
 class GroupEdit extends Component {
   constructor(props) {
@@ -44,7 +45,9 @@ class GroupEdit extends Component {
   };
 
   render() {
-    const { campers, activeGroup, activeUserClearance } = this.props;
+    const { campers, groups } = this.props;
+    const activeGroupId = getActiveGroupId();
+    const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
       return (
@@ -66,10 +69,11 @@ class GroupEdit extends Component {
       );
     }
 
-    if (!activeGroup) {
+    if (!activeGroupId) {
       return <Error />
     }
-    const campersInThisGroup = campers.filter(camper => camper.group_id === activeGroup.id);
+    const campersInThisGroup = campers.filter(camper => camper.group_id === activeGroupId);
+    const activeGroup = groups.find(group => group.id === activeGroupId);
     return (
       <>
         <div className="group-edit">
@@ -113,7 +117,7 @@ class GroupEdit extends Component {
                         to={{
                           pathname: "/camperEdit"
                         }}
-                        onClick={() => this.props.setActiveCamper(camper)}
+                        onClick={() => setActiveCamper(camper.id)}
                       >
                         Edit
                         </Link>
@@ -190,7 +194,7 @@ class GroupEdit extends Component {
               <h1>Are you sure you want to delete {activeGroup.group_name} and all its campers?
               </h1>
               <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
-              <button type="button" onClick={() => this.deleteGroup(activeGroup.id)}>Yes</button>
+              <button type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
             </div>
           )}
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { signup } from '../services/user-service';
+import { setActiveGroupId } from '../helpers';
 
 class Signup extends React.Component {
   constructor() {
@@ -28,12 +29,12 @@ class Signup extends React.Component {
           incomplete: true
         });
       } else {
-        sessionStorage.set('clearance', response.user.status);
-        sessionStorage.set('username', response.user.username);
+        sessionStorage.setItem('clearance', response.user.status);
+        sessionStorage.setItem('username', response.user.username);
         this.setState({
           shouldRedirect: true
         });
-        this.props.setActiveGroup(response.group);
+        setActiveGroupId(response.group.id);
       }
     });
   }
