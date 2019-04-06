@@ -2,15 +2,30 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { deleteCamper, editCamper } from '../services/camper-service';
-import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId, getHighestGroupId } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
 
 class CamperEdit extends React.Component {
   constructor() {
     super();
 
     this.state = {
-      camper: {},
-      data: {}
+      data: {},
+      camper: {
+        first_name: null,
+        last_name: null,
+        gender: null,
+        birthday: null,
+        grade_completed: null,
+        allergies: null,
+        parent_email: null,
+        emergency_name: null,
+        emergency_number: null,
+        roommate: null,
+        notes: null,
+        registration: null,
+        signed_status: null,
+        room: null,
+      }
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -24,7 +39,13 @@ class CamperEdit extends React.Component {
         } else throw new Error();
       })
       .then(data => {
-        this.setState({ data });
+        console.log(getActiveCamperId())
+        const camper = data.campers.find(camper => String(camper.id) === getActiveCamperId());
+        console.log(camper)
+        this.setState({
+          data,
+          camper
+        });
       })
       .catch(error => {
         console.log(error);
@@ -49,15 +70,17 @@ class CamperEdit extends React.Component {
     });
   }
   editCamper(...args) {
-    editCamper(args).then(response => {
+    editCamper(...args).then(response => {
       if (response.error) {
         this.setState({ error: true })
       } else if (this.state.data.groups) {
         this.setState({
-          shouldRedirect: response.shouldRedirect
+          shouldRedirect: response.shouldRedirect,
+          data: {
+            campers: response.campers,
+            groups: this.state.data.groups
+          }
         });
-        const group = this.state.data.groups.find(group => String(group.id) === getActiveGroupId());
-        setActiveGroupId(group.id)
       }
     });
   }
@@ -84,6 +107,7 @@ class CamperEdit extends React.Component {
     const group = groups.find(group => String(group.id) === groupId);
     const camper = campers.find(camper => String(camper.id) === camperId);
 
+    console.log(camper)
 
     if (this.state.shouldRedirect) {
       return (

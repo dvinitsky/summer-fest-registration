@@ -11,7 +11,6 @@ import Login from '../containers/login-container';
 import UserAdd from '../containers/user-add-container';
 import Users from '../containers/users-container';
 import Signup from '../containers/signup-container';
-import { getHighestGroupId } from '../helpers';
 
 class App extends Component {
   constructor() {

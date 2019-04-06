@@ -3,7 +3,7 @@ import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
-import { getActiveGroupId, getActiveUserClearance, setActiveCamperId, getHighestGroupId } from '../helpers';
+import { getActiveGroupId, getActiveUserClearance, setActiveCamperId } from '../helpers';
 
 class GroupEdit extends Component {
   constructor() {

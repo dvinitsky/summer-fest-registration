@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { userAdd } from '../services/user-service';
-import { getActiveUserClearance, getHighestGroupId } from '../helpers';
+import { getActiveUserClearance } from '../helpers';
 
 class UserAdd extends React.Component {
   constructor() {

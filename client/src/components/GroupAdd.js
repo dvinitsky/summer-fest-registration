@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { addGroup } from '../services/group-service';
-import { setActiveGroupId, getActiveUserClearance, getHighestGroupId } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class GroupAdd extends React.Component {
   constructor() {
@@ -14,6 +14,26 @@ class GroupAdd extends React.Component {
       data: {}
     };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleChange(e) {
+    const newState = { ...this.state }
+    newState.group[e.target.name] = e.target.value;
+    this.setState(newState);
+  }
+
+  addGroup(group_name, leader_name) {
+    addGroup(group_name, leader_name, this.props.nextGroupId).then(response => {
+      this.props.incrementNextGroupId();
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
+        setActiveGroupId(response.group.id);
+        this.setState({
+          shouldRedirect: true,
+        })
+      }
+    });
   }
 
   componentDidMount() {

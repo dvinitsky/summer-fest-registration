@@ -231,9 +231,13 @@ con.connect(err => {
     });
   })
   app.post('/camperEdit', (req, res) => {
+    console.log(req.body)
     const body = fillNulls(req.body);
 
-    con.query(`UPDATE campers SET first_name = '${body.first_name}', last_name = '${body.last_name}', gender = '${body.gender}', birthday = '${body.birthday}', grade_completed = '${body.grade_completed}', allergies = '${body.allergies}', parent_email = '${body.parent_email}', emergency_name = '${body.emergency_name}', emergency_number = '${body.emergency_number}', roommate = '${body.roommate}', notes = '${body.notes}', registration = '${body.registration}', signed_status = '${body.signed_status}', room = '${body.room}' WHERE id=${body.id}`, (err) => {
+    console.log('about to update with:')
+    console.log(body)
+
+    con.query(`UPDATE campers SET first_name = ${body.first_name}, last_name = ${body.last_name}, gender = ${body.gender}, birthday = ${body.birthday}, grade_completed = ${body.grade_completed}, allergies = ${body.allergies}, parent_email = ${body.parent_email}, emergency_name = ${body.emergency_name}, emergency_number = ${body.emergency_number}, roommate = ${body.roommate}, notes = ${body.notes}, registration = ${body.registration}, signed_status = ${body.signed_status}, room = ${body.room} WHERE id=${body.id}`, (err) => {
       if (err) throw err;
 
       con.query('SELECT * FROM groups', (err, groups) => {

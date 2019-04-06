@@ -65,10 +65,10 @@ export function editCamper(
     })
   };
 
+  console.log(options.body)
   return fetch('/camperEdit', options)
     .then(response => {
       if (response.ok) {
-        console.log('response os plkay')
         return response.json();
       }
       else throw new Error();
@@ -76,6 +76,7 @@ export function editCamper(
     .then(data => {
       return {
         shouldRedirect: true,
+        campers: data.campers
       };
     })
     .catch(error => {

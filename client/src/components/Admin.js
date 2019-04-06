@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import { setActiveGroupId, getActiveUserClearance, getHighestGroupId } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class Admin extends React.Component {
   constructor() {
