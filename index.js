@@ -109,7 +109,6 @@ con.connect(err => {
     res.send(JSON.stringify({ groups: req.groups, campers: req.campers, users: req.users }));
   })
   app.post('/login', (req, res) => {
-    console.log('in login route')
     const user = req.users.find(user => {
       return user.username === req.body.username;
     });
@@ -130,7 +129,13 @@ con.connect(err => {
     const group = req.groups.find(group => {
       return group.id === user.group_id;
     });
-    res.send(JSON.stringify({ redirectUrl, group, user }))
+    con.query('SELECT * FROM groups', (err, groups) => {
+      con.query('SELECT * FROM campers', (err, campers) => {
+        con.query('SELECT * FROM users', (err, users) => {
+          res.send(JSON.stringify({ redirectUrl, group, user, campers, groups, users }))
+        });
+      });
+    });
   })
   app.post('/signup', (req, res) => {
     const exists = userNameExists(req.body.username, req.users);
@@ -144,14 +149,16 @@ con.connect(err => {
         if (err) throw err;
       });
 
-      con.query('SELECT * FROM groups', (err, groups) => {
-        const group = groups.find(group => group.id === req.body.nextGroupId);
+      const group = req.groups.find(group => group.id === req.body.nextGroupId);
 
-        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err, user) => {
-          if (err) throw err;
-          console.log('insert user response:')
-          console.log(user)
-          res.status(200).send(JSON.stringify({ group, user }));
+      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err, user) => {
+        if (err) throw err;
+        con.query('SELECT * FROM groups', (err, groups) => {
+          con.query('SELECT * FROM campers', (err, campers) => {
+            con.query('SELECT * FROM users', (err, users) => {
+              res.status(200).send(JSON.stringify({ group, user, campers, groups, users }));
+            });
+          });
         });
       });
     }
@@ -170,42 +177,73 @@ con.connect(err => {
       }
       con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}', '${group_id}')`, (err) => {
         if (err) throw err;
-        res.status(200).send(JSON.stringify({}));
+
+        con.query('SELECT * FROM groups', (err, groups) => {
+          con.query('SELECT * FROM campers', (err, campers) => {
+            con.query('SELECT * FROM users', (err, users) => {
+              res.status(200).send(JSON.stringify({ campers, groups, users }));
+            });
+          });
+        });
       });
     }
   })
   app.post('/groupEdit', (req, res) => {
     con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
-    });
 
-    res.status(200).send(JSON.stringify({}));
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            res.status(200).send(JSON.stringify({ campers, groups, users }));
+          });
+        });
+      });
+    });
   })
   app.post('/groupAdd', (req, res) => {
     con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.id}', '${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
       if (err) throw err;
-    });
 
-    con.query('SELECT * FROM groups', (err, groups) => {
-      const group = groups.find(group => group.id === req.body.id);
-      res.status(200).send(JSON.stringify({ group }));
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            const group = groups.find(group => group.id === req.body.id);
+            res.status(200).send(JSON.stringify({ campers, groups, users, group }));
+          });
+        });
+      });
     });
-  })
+  });
   app.post('/groupDelete', (req, res) => {
-    con.query(`DELETE FROM campers WHERE group_id = '${req.body.id}'`);
-    con.query(`DELETE FROM groups WHERE id = '${req.body.id}'`, (err) => {
-      if (err) throw err;
-    });
+    con.query(`DELETE FROM campers WHERE group_id = '${req.body.id}'`, (err) => {
+      con.query(`DELETE FROM groups WHERE id = '${req.body.id}'`, (err) => {
+        if (err) throw err;
 
-    res.status(200).send(JSON.stringify({}));
+        con.query('SELECT * FROM groups', (err, groups) => {
+          con.query('SELECT * FROM campers', (err, campers) => {
+            con.query('SELECT * FROM users', (err, users) => {
+              res.status(200).send(JSON.stringify({ campers, groups, users }));
+            });
+          });
+        });
+      });
+    });
   })
   app.post('/camperEdit', (req, res) => {
     const body = fillNulls(req.body);
 
     con.query(`UPDATE campers SET first_name = '${body.first_name}', last_name = '${body.last_name}', gender = '${body.gender}', birthday = '${body.birthday}', grade_completed = '${body.grade_completed}', allergies = '${body.allergies}', parent_email = '${body.parent_email}', emergency_name = '${body.emergency_name}', emergency_number = '${body.emergency_number}', roommate = '${body.roommate}', notes = '${body.notes}', registration = '${body.registration}', signed_status = '${body.signed_status}', room = '${body.room}' WHERE id=${body.id}`, (err) => {
       if (err) throw err;
+
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            res.status(200).send(JSON.stringify({ campers, groups, users }));
+          });
+        });
+      });
     });
-    res.status(200).send(JSON.stringify({}));
   })
   app.post('/camperAdd', (req, res) => {
     const body = fillNulls(req.body);
@@ -214,49 +252,54 @@ con.connect(err => {
       if (err) throw err;
     });
 
-    con.query('SELECT * FROM groups', (err, groups) => {
-      con.query('SELECT * FROM campers', (err, campers) => {
-        const group = groups.find(group => group.id === req.body.group_id);
-        var newSize = Number(group.size) + 1;
-        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+    const group = req.groups.find(group => group.id === req.body.group_id);
+    var newSize = Number(group.size) + 1;
 
-        res.status(200).send(JSON.stringify({}));
+    con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`, (err) => {
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            res.status(200).send(JSON.stringify({ campers, groups, users }));
+          });
+        });
       });
     });
-  })
+  });
   app.post('/camperDelete', (req, res) => {
     // con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.body.id}`);
 
     con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
 
-      con.query('SELECT * FROM groups', (err, groups) => {
-        const group = groups.find(group => group.id === req.body.group_id);
+      const group = req.groups.find(group => group.id === req.body.group_id);
 
-        var newSize = Math.max(0, Number(group.size) - 1);
-        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
-
-        res.status(200).send(JSON.stringify({}));
+      var newSize = Math.max(0, Number(group.size) - 1);
+      con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`, (err) => {
+        con.query('SELECT * FROM groups', (err, groups) => {
+          con.query('SELECT * FROM campers', (err, campers) => {
+            con.query('SELECT * FROM users', (err, users) => {
+              res.status(200).send(JSON.stringify({ campers, groups, users }));
+            });
+          });
+        });
       });
     });
   });
   app.post('/toggleAdmin', (req, res) => {
-    console.log(req.body.user_id);
     const user = req.users.find(user => {
-      console.log('user')
-      console.log(user)
       return String(user.id) === req.body.user_id;
     });
-    console.log(user.id);
     const newStatus = user.status === 'leader' ? 'admin' : 'leader';
 
-    console.log('going to set to ', newStatus)
     con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`, (err) => {
-      con.query('SELECT * FROM users', (err, users) => {
-        res.status(200).send(JSON.stringify({ users }));
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            res.status(200).send(JSON.stringify({ campers, groups, users }));
+          });
+        });
       });
     });
-
   });
 
   // The "catchall" handler: for any request that doesn't
