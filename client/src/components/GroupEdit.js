@@ -15,11 +15,10 @@ class GroupEdit extends Component {
     newState.group[e.target.name] = e.target.value;
     this.setState(newState);
   }
-  cancelDelete() {
-    document.getElementById('delete-group-modal').style.display = 'none';
-  };
-  showDeleteModal() {
-    document.getElementById('delete-group-modal').style.display = 'block';
+  setShowDeleteModal(shouldShow) {
+    this.setState({
+      showDeleteModal: shouldShow
+    })
   };
   deleteGroup(id) {
     const response = deleteGroup(id);
@@ -180,15 +179,17 @@ class GroupEdit extends Component {
           </Link>
 
           {activeUser.status === 'admin' && (
-            <button type="button" onClick={this.showDeleteModal}>Delete</button>
+            <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
           )}
 
-          <div id="delete-group-modal">
-            <h1>Are you sure you want to delete {activeGroup.group_name} and all its campers?
+          {this.state.showDeleteModal && (
+            <div id="delete-group-modal">
+              <h1>Are you sure you want to delete {activeGroup.group_name} and all its campers?
               </h1>
-            <button type="button" onClick={this.cancelDelete}>No</button>
-            <button type="button" onClick={() => this.deleteGroup(activeGroup.id)}>Yes</button>
-          </div>
+              <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
+              <button type="button" onClick={() => this.deleteGroup(activeGroup.id)}>Yes</button>
+            </div>
+          )}
 
           {this.state.error && (
             <div id="error">

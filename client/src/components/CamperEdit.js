@@ -13,14 +13,11 @@ class CamperEdit extends React.Component {
 
     this.handleChange = this.handleChange.bind(this);
   }
-  cancelDelete() {
-    document.getElementById('delete-camper-modal').style.display = 'none';
-    document.getElementById('camper-deleted-error').style.display = 'none';
+  setShowDeleteModal(shouldShow) {
+    this.setState({
+      showDeleteModal: shouldShow
+    })
   }
-  showDeleteModal() {
-    document.getElementById('delete-camper-modal').style.display = 'block';
-  }
-
   deleteCamper(id, group_id) {
     const response = deleteCamper(id, group_id);
     if (response.error) {
@@ -196,17 +193,15 @@ class CamperEdit extends React.Component {
             <br />
             <br />
 
-            <button type="button" onClick={this.showDeleteModal}>Delete</button>
+            <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
 
-            <div id="delete-camper-modal">
-              <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?
-            </h1>
-              <button type="button" onClick={this.cancelDelete}>No</button>
-              <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
-            </div>
-            <div id="camper-deleted">
-              Camper Deleted.
-          </div>
+            {this.state.showDeleteModal && (
+              <div id="delete-camper-modal">
+                <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?</h1>
+                <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
+                <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
+              </div>
+            )}
 
             {this.state.error && (
               <div id="error">

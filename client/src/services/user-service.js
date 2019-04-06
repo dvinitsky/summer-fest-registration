@@ -1,5 +1,4 @@
 export function login(username, password) {
-  console.log('in login service')
   const options = {
     method: 'POST',
     headers: {
@@ -16,7 +15,6 @@ export function login(username, password) {
       return response.json();
     })
     .then(data => {
-      console.log('data fetched')
       if (data.error) {
         throw new Error(data.error);
       }

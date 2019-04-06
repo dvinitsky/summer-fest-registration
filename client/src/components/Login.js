@@ -17,13 +17,11 @@ class Login extends React.Component {
 
   login(username, password) {
     login(username, password).then(response => {
-      console.log('response gotten')
       if (response.error) {
         this.setState({
           error: response.error.message
         });
       } else {
-        console.log(response)
         this.props.setActiveUser(response.user);
         this.setState({
           redirectUrl: response.redirectUrl,
