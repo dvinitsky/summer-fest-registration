@@ -65,7 +65,9 @@ class Admin extends React.Component {
                         to={{
                           pathname: "/groupEdit",
                         }}
-                        onClick={() => setActiveGroupId(group.id)}
+                        onClick={() => {
+                          setActiveGroupId(group.id)
+                        }}
                       >
                         Edit
                     </Link>

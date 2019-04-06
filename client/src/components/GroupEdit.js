@@ -9,7 +9,8 @@ class GroupEdit extends Component {
   constructor() {
     super();
     this.state = {
-      data: {}
+      data: {},
+      group: {}
     };
     this.handleChange = this.handleChange.bind(this);
   }
@@ -22,7 +23,11 @@ class GroupEdit extends Component {
         } else throw new Error();
       })
       .then(data => {
-        this.setState({ data });
+        const group = data.groups.find(group => String(group.id) === getActiveGroupId());
+        this.setState({
+          data,
+          group
+        });
       })
       .catch(error => {
         console.log(error);
@@ -200,7 +205,7 @@ class GroupEdit extends Component {
           </table>
 
           <button onClick={() => this.editGroup(
-            this.state.group.id,
+            activeGroupId,
             this.state.group.group_name,
             this.state.group.leader_name
           )} type="submit">Save</button>

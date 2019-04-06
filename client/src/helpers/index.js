@@ -1,11 +1,3 @@
-export function getHighestGroupId(groups) {
-  const ids = [];
-  groups.forEach(group => {
-    ids.push(group.id);
-  })
-  return Math.max(...ids);
-}
-
 export function setActiveGroupId(group_id) {
   sessionStorage.setItem('group_id', group_id);
 }

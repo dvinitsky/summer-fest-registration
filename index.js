@@ -43,6 +43,7 @@ con.connect(err => {
           req.groups = groups;
           req.campers = campers;
           req.users = users;
+          req.nextGroupId = getHighestGroupId(groups) + 1;
           next();
         });
       });
@@ -98,6 +99,14 @@ con.connect(err => {
       }
     });
     return body;
+  }
+
+  const getHighestGroupId = (groups) => {
+    const ids = [];
+    groups.forEach(group => {
+      ids.push(group.id);
+    })
+    return Math.max(...ids);
   }
 
   app.use((req, res, next) => {
@@ -189,7 +198,9 @@ con.connect(err => {
     }
   })
   app.post('/groupEdit', (req, res) => {
-    con.query(`UPDATE groups SET leader_name = '${req.body.leader_name}', group_name = '${req.body.group_name}' WHERE id = '${req.body.id}'`, (err) => {
+    const body = fillNulls(req.body);
+
+    con.query(`UPDATE groups SET leader_name = ${body.leader_name}, group_name = ${body.group_name} WHERE id = ${req.body.id}`, (err) => {
       if (err) throw err;
 
       con.query('SELECT * FROM groups', (err, groups) => {
@@ -202,13 +213,15 @@ con.connect(err => {
     });
   })
   app.post('/groupAdd', (req, res) => {
-    con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.id}', '${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
+    const body = fillNulls(req.body);
+
+    con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES(${req.nextGroupId}, ${body.leader_name}, ${body.group_name})`, (err) => {
       if (err) throw err;
 
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
-            const group = groups.find(group => group.id === req.body.id);
+            const group = groups.find(group => group.id === req.nextGroupId);
             res.status(200).send(JSON.stringify({ campers, groups, users, group }));
           });
         });

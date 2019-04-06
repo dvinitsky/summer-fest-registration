@@ -27,7 +27,7 @@ class GroupAdd extends React.Component {
       this.props.incrementNextGroupId();
       if (response.error) {
         this.setState({ error: true });
-      } else {
+      } else if (response.group && response.group.id) {
         setActiveGroupId(response.group.id);
         this.setState({
           shouldRedirect: true,
