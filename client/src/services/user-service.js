@@ -33,3 +33,35 @@ export function login(username, password) {
       };
     });
 }
+
+export function addUser(username, password, nextGroupId) {
+  if (!username || !password) {
+    return { incomplete: true };
+  }
+  const options = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username,
+      password,
+      nextGroupId
+    })
+  };
+
+  fetch('/signup', options)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      } else {
+        return { data };
+      }
+    })
+    .catch(error => {
+      return error;
+    });
+}

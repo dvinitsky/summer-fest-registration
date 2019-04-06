@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { addUser } from '../services/user-service';
 
 class Signup extends React.Component {
   constructor() {
@@ -14,44 +15,25 @@ class Signup extends React.Component {
     this.setState(newState);
   }
 
-  add(username, password) {
-    if (!username || !password) {
-      this.setState({ incomplete: true });
-      return;
-    }
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        nextGroupId: this.props.nextGroupId
-      })
-    };
+  addUser(username, password) {
+    const response = addUser(username, password, this.props.nextGroupId);
+    this.props.incrementNextGroupId();
 
-    fetch('/signup', options)
-      .then(response => {
-        this.props.incrementNextGroupId();
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
-        sessionStorage.setItem('clearance', data.clearance)
-        this.setState({
-          shouldRedirect: true,
-          group: data.group,
-          clearance: data.clearance
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: error.message
-        });
+    if (response.error) {
+      this.setState({
+        error: response.error.message
       });
+    } else if (response.incomplete) {
+      this.setState({
+        incomplete: true
+      });
+    } else {
+      sessionStorage.setItem('clearance', 'leader')
+      this.setState({
+        shouldRedirect: true
+      });
+      this.props.setActiveGroup(data.group);
+    }
   }
 
   render() {
@@ -78,7 +60,7 @@ class Signup extends React.Component {
           <input name="username" onChange={this.handleChange}></input>
           <div>Password:</div>
           <input name="password" onChange={this.handleChange}></input>
-          <button onClick={() => this.add(this.state.username, this.state.password)}>Submit</button>
+          <button onClick={() => this.addUser(this.state.username, this.state.password)}>Submit</button>
 
           {this.state.error && <div>{this.state.error}</div>}
 

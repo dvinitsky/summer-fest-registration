@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { login } from '../services/login-service';
+import { login } from '../services/user-service';
 
 class Login extends React.Component {
   constructor(props) {
