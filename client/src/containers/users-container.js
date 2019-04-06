@@ -5,7 +5,7 @@ import { } from '../actions/app.js';
 function mapStateToProps(state) {
   return {
     users: state.app.users,
-    activeUser: stat.app.activeUser
+    activeUser: state.app.activeUser
   };
 }
 

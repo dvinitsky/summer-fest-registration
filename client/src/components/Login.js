@@ -9,12 +9,6 @@ class Login extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentWillMount() {
-    if (this.props.shouldLogout) {
-      this.props.logout;
-    }
-  }
-
   handleChange(e) {
     const newState = { ...this.state }
     newState[e.target.name] = e.target.value;
