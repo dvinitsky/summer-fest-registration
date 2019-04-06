@@ -55,7 +55,8 @@ export function signup(username, password) {
         throw new Error(data.error);
       } else {
         return {
-          user: data.user
+          user: data.user,
+          group: data.group
         };
       }
     })

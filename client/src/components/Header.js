@@ -1,6 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getActiveUserClearance } from '../helpers';
 
 class Header extends React.Component {
   constructor() {
@@ -8,6 +7,12 @@ class Header extends React.Component {
     this.state = {
       data: {}
     };
+  }
+
+  componentWillReceiveProps(props){
+    this.setState({
+      activeUserClearance: props.activeUserClearance
+    });
   }
 
   componentDidMount() {
@@ -32,7 +37,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const activeUserClearance = getActiveUserClearance();
+    const { activeUserClearance } = this.props;
 
     return (
       <div className="jumbotron text-center">

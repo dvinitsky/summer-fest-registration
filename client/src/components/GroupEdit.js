@@ -85,7 +85,7 @@ class GroupEdit extends Component {
       return (
         <Redirect
           to={{
-            pathname: './admin'
+            pathname: '/admin'
           }}
         />
       );

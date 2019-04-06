@@ -1,7 +1,7 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { signup } from '../services/user-service';
-import { setActiveGroupId } from '../helpers';
+import { setActiveGroupId, setActiveUserName, setActiveUserClearance } from '../helpers';
 
 class Signup extends React.Component {
   constructor() {
@@ -45,12 +45,13 @@ class Signup extends React.Component {
           incomplete: true
         });
       } else {
-        sessionStorage.setItem('clearance', response.user.status);
-        sessionStorage.setItem('username', response.user.username);
         this.setState({
           shouldRedirect: true
         });
         setActiveGroupId(response.group.id);
+        setActiveUserClearance(response.user.status);
+        setActiveUserName(response.user.usename);
+        this.props.refreshActiveUserClearance();
       }
     });
   }
@@ -60,10 +61,7 @@ class Signup extends React.Component {
       return (
         <Redirect
           to={{
-            pathname: '/groupEdit',
-            state: {
-              group: this.state.group
-            }
+            pathname: '/groupEdit'
           }}
         />
       );
