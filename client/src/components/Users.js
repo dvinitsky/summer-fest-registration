@@ -1,14 +1,30 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { toggleAdminRights } from '../services/user-service';
-import { getActiveUserClearance, getActiveUserName } from '../helpers';
+import { getActiveUserClearance, getActiveUserName, getHighestGroupId } from '../helpers';
 
 class Users extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
-      users: this.props.users || []
+      data: {}
     };
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   toggleAdminRights(user_id) {
@@ -26,6 +42,14 @@ class Users extends React.Component {
   }
 
   render() {
+    let users;
+    if (!this.state.data.users) {
+      return null;
+    }
+    else {
+      users = this.state.data.users;
+    }
+
     const activeUserClearance = getActiveUserClearance();
     const activeUserUserName = getActiveUserName();
 
@@ -54,7 +78,7 @@ class Users extends React.Component {
               {isSuperAdmin && <th className="header-place"></th>}
             </tr>
 
-            {this.state.users.map(user => {
+            {users.map(user => {
               return (
                 <tr key={user.id} className="table-row">
                   {/* <td className="table-edit">

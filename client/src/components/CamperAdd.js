@@ -2,12 +2,13 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { addCamper } from '../services/camper-service';
-import { getActiveGroupId, getActiveUserClearance } from '../helpers';
+import { getActiveGroupId, getActiveUserClearance, getHighestGroupId } from '../helpers';
 
 class CamperAdd extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
+      data: {},
       camper: {
         first_name: null,
         last_name: null,
@@ -26,6 +27,22 @@ class CamperAdd extends React.Component {
       }
     };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {

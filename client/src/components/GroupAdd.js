@@ -1,38 +1,35 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { addGroup } from '../services/group-service';
-import { setActiveGroupId, getActiveUserClearance } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance, getHighestGroupId } from '../helpers';
 
 class GroupAdd extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
     this.state = {
       group: {
         group_name: null,
         leader_name: null
-      }
+      },
+      data: {}
     };
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e) {
-    const newState = { ...this.state }
-    newState.group[e.target.name] = e.target.value;
-    this.setState(newState);
-  }
-
-  addGroup(group_name, leader_name) {
-    addGroup(group_name, leader_name, this.props.nextGroupId).then(response => {
-      this.props.incrementNextGroupId();
-      if (response.error) {
-        this.setState({ error: true });
-      } else {
-        setActiveGroupId(response.group.id);
-        this.setState({
-          shouldRedirect: true,
-        })
-      }
-    });
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   render() {

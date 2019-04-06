@@ -1,13 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { login } from '../services/user-service';
-import { setActiveGroupId, setActiveUserClearance, setActiveUserName } from '../helpers';
+import { setActiveGroupId, setActiveUserClearance, setActiveUserName, getHighestGroupId } from '../helpers';
 
 class Login extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  constructor() {
+    super();
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {

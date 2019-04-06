@@ -3,14 +3,33 @@ import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
-import { getActiveGroupId, getActiveUserClearance, setActiveCamperId } from '../helpers';
+import { getActiveGroupId, getActiveUserClearance, setActiveCamperId, getHighestGroupId } from '../helpers';
 
 class GroupEdit extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  constructor() {
+    super();
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
   }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
+  }
+
   handleChange(e) {
     const newState = { ...this.state }
     newState.group[e.target.name] = e.target.value;
@@ -45,7 +64,15 @@ class GroupEdit extends Component {
   };
 
   render() {
-    const { campers, groups } = this.props;
+    let groups, campers;
+    if (!this.state.data.groups || !this.state.data.campers) {
+      return null;
+    }
+    else {
+      groups = this.state.data.groups;
+      campers = this.state.data.camper;
+    }
+
     const activeGroupId = getActiveGroupId();
     const activeUserClearance = getActiveUserClearance();
 

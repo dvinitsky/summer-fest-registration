@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import CamperEdit from '../components/CamperEdit';
+import { setData, setNextGroupId } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
@@ -11,5 +12,7 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   {
+    setNextGroupId,
+    setData,
   }
 )(CamperEdit);

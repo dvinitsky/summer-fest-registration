@@ -1,13 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { userAdd } from '../services/user-service';
-import { getActiveUserClearance } from '../helpers';
+import { getActiveUserClearance, getHighestGroupId } from '../helpers';
 
 class UserAdd extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {
@@ -33,7 +51,14 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    const { groups } = this.props;
+    let groups;
+    if (!this.state.data.groups) {
+      return null;
+    }
+    else {
+      groups = this.state.data.groups;
+    }
+
     const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {

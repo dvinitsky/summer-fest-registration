@@ -1,13 +1,31 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { signup } from '../services/user-service';
-import { setActiveGroupId } from '../helpers';
+import { setActiveGroupId, getHighestGroupId } from '../helpers';
 
 class Signup extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: {}
+    };
     this.handleChange = this.handleChange.bind(this);
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   handleChange(e) {

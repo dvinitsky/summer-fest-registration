@@ -1,15 +1,38 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
-import { setActiveGroupId, getActiveUserClearance } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance, getHighestGroupId } from '../helpers';
 
 class Admin extends React.Component {
   constructor() {
     super();
-    this.state = {}
+    this.state = { data: {} }
   }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
+  }
+
   render() {
-    const { groups } = this.props;
+    let groups;
+    if (!this.state.data.groups) {
+      return null;
+    }
+    else {
+      groups = this.state.data.groups;
+    }
     const activeUserClearance = getActiveUserClearance();
 
     if (activeUserClearance !== 'admin') {

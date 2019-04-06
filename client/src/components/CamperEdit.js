@@ -2,19 +2,36 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { deleteCamper, editCamper } from '../services/camper-service';
-import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
+import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId, getHighestGroupId } from '../helpers';
 
 class CamperEdit extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor() {
+    super();
 
     this.state = {
-      error: false,
-      camper: {}
+      camper: {},
+      data: {}
     };
 
     this.handleChange = this.handleChange.bind(this);
   }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
+  }
+
   setShowDeleteModal(shouldShow) {
     this.setState({
       showDeleteModal: shouldShow
@@ -35,11 +52,11 @@ class CamperEdit extends React.Component {
     editCamper(args).then(response => {
       if (response.error) {
         this.setState({ error: true })
-      } else {
+      } else if (this.state.data.groups) {
         this.setState({
           shouldRedirect: response.shouldRedirect
         });
-        const group = this.props.groups.find(group => String(group.id) === getActiveGroupId());
+        const group = this.state.data.groups.find(group => String(group.id) === getActiveGroupId());
         setActiveGroupId(group.id)
       }
     });
@@ -51,7 +68,15 @@ class CamperEdit extends React.Component {
   }
 
   render() {
-    const { groups, campers } = this.props;
+    let groups, campers;
+    if (!this.state.data.groups || !this.state.data.campers) {
+      return null;
+    }
+    else {
+      groups = this.state.data.groups;
+      campers = this.state.data.campers;
+    }
+
     const activeUserClearance = getActiveUserClearance();
     const groupId = getActiveGroupId();
     const camperId = getActiveCamperId();

@@ -19,23 +19,6 @@ class App extends Component {
     this.state = {};
   }
 
-  componentWillMount() {
-    console.log('goign to fetch fresh data');
-    fetch('/allData')
-      .then(response => {
-        if (response.ok) {
-          return response.json();
-        } else throw new Error();
-      })
-      .then(data => {
-        this.props.setNextGroupId(getHighestGroupId(data.groups) + 1);
-        this.props.setData(data.groups, data.campers, data.users);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
   render() {
     return (
       <div>
@@ -52,7 +35,7 @@ class App extends Component {
           />
           <Route
             path='/userAdd'
-            render={props => <UserAdd {...props} groups={this.state.groups} />}
+            render={props => <UserAdd {...props} />}
           />
           <Route
             path='/admin'
@@ -60,7 +43,7 @@ class App extends Component {
           />
           <Route
             path='/users'
-            render={props => <Users {...props} users={this.state.users} />}
+            render={props => <Users {...props} />}
           />
           <Route
             path='/groupAdd'

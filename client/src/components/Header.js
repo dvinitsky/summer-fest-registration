@@ -1,11 +1,29 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getActiveUserClearance } from '../helpers';
+import { getActiveUserClearance, getHighestGroupId } from '../helpers';
 
 class Header extends React.Component {
   constructor() {
     super();
-    this.state = {};
+    this.state = {
+      data: {}
+    };
+  }
+
+  componentDidMount() {
+    fetch('/allData')
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else throw new Error();
+      })
+      .then(data => {
+        this.setState({ data });
+      })
+      .catch(error => {
+        console.log(error);
+        return null;
+      });
   }
 
   logout() {
