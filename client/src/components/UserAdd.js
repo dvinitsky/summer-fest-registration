@@ -48,7 +48,7 @@ class UserAdd extends React.Component {
       })
       .catch(error => {
         this.setState({
-          error: error.message
+          error: true
         });
       });
   }
@@ -103,7 +103,7 @@ class UserAdd extends React.Component {
           </>
         )}
 
-        {this.state.error && <div>{this.state.error}</div>}
+        {this.state.error && <div>There's been an error. Please refresh and try again.</div>}
         {this.state.incomplete && (
           <div>User must have both a username and password.</div>
         )}

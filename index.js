@@ -243,7 +243,12 @@ con.connect(err => {
     const newStatus = user.status === 'leader' ? 'admin' : 'leader';
 
     console.log('going to set to ', newStatus)
-    con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`);
+    con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`, (err) => {
+      con.query('SELECT * FROM users', (err, users) => {
+        res.status(200).send({ users });
+      });
+    });
+
   });
 
   // The "catchall" handler: for any request that doesn't
