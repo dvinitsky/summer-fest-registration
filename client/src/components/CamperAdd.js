@@ -40,9 +40,7 @@ class CamperAdd extends React.Component {
       document.getElementById('error').style.display = 'block';
     } else {
       this.setState({
-        shouldRedirect: true,
-        group: data.group,
-        campersInGroup: data.campers
+        shouldRedirect: true
       });
     }
 
@@ -174,6 +172,7 @@ class CamperAdd extends React.Component {
             )}
 
             <button onClick={() => this.addCamper(
+              activeGroup.group_id,
               this.state.camper.first_name,
               this.state.camper.last_name,
               this.state.camper.gender,
@@ -187,8 +186,7 @@ class CamperAdd extends React.Component {
               this.state.camper.notes,
               this.state.camper.registration,
               this.state.camper.signed_status,
-              this.state.camper.room,
-              activeGroup.group_size
+              this.state.camper.room
             )} type="button">Save</button>
           </div>
         </>

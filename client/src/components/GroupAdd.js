@@ -25,11 +25,11 @@ class GroupAdd extends React.Component {
     const response = addGroup(group_name, leader_name, this.props.nextGroupId);
     this.props.incrementNextGroupId();
     if (response.error) {
-      document.getElementById('error').style.display = 'block';
+      this.setState({ error: true });
     } else {
+      this.props.setActiveGroup(response.group);
       this.setState({
         shouldRedirect: true,
-        group: response.group
       })
     }
   }
@@ -39,10 +39,7 @@ class GroupAdd extends React.Component {
       return (
         <Redirect
           to={{
-            pathname: '/groupEdit',
-            state: {
-              group: this.state.group
-            }
+            pathname: '/groupEdit'
           }}
         />
       );
@@ -73,9 +70,11 @@ class GroupAdd extends React.Component {
 
         <button type="button" onClick={() => this.addGroup(this.state.group.group_name, this.state.group.leader_name)}>Save</button>
 
-        <div id="error">
-          There's been an error. Please try again.
+        {this.state.error && (
+          <div id="error">
+            There's been an error. Please try again.
           </div>
+        )}
       </div>
     );
   }

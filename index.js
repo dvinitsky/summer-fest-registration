@@ -165,9 +165,7 @@ con.connect(err => {
       if (err) throw err;
     });
 
-    con.query('SELECT * FROM groups', (err, groups) => {
-      res.status(200).send(JSON.stringify({ groups }));
-    });
+    res.status(200).send();
   })
   app.post('/groupAdd', (req, res) => {
     con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.id}', '${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
@@ -185,25 +183,13 @@ con.connect(err => {
       if (err) throw err;
     });
 
-    con.query('SELECT * FROM groups', (err, groups) => {
-      res.status(200).send(JSON.stringify({ groups }));
-    });
+    res.status(200).send();
   })
   app.post('/camperEdit', (req, res) => {
-    con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}' WHERE id=${req.body.id}`, (err) => {
+    con.query(`UPDATE campers SET first_name = '${req.body.first_name}', last_name = '${req.body.last_name}', gender = '${req.body.gender}', birthday = '${req.body.birthday}', grade_completed = '${req.body.grade_completed}', allergies = '${req.body.allergies}', parent_email = '${req.body.parent_email}', emergency_name = '${req.body.emergency_name}', emergency_number = '${req.body.emergency_number}', roommate = '${req.body.roommate}', notes = '${req.body.notes}', registration = '${req.body.registration}', signed_status = '${req.body.signed_status}', room = '${req.body.room}' WHERE id=${req.body.id}`, (err) => {
       if (err) throw err;
     });
-
-    const campers = [...req.campers];
-    let index;
-    campers.forEach((camper, i) => {
-      if (camper.id === req.body.id) {
-        index = i;
-      }
-    });
-
-    campers[index] = { ...campers[index], ...req.body };
-    res.status(200).send(JSON.stringify({ campers }));
+    res.status(200).send();
   })
   app.post('/camperAdd', (req, res) => {
     const body = {};
@@ -216,38 +202,34 @@ con.connect(err => {
       }
     });
 
-    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status})`, (err) => {
+    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, room) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.room})`, (err) => {
       if (err) throw err;
     });
-    var newSize = Number(req.body.groupSize) + 1;
-    con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
     con.query('SELECT * FROM groups', (err, groups) => {
       con.query('SELECT * FROM campers', (err, campers) => {
         const group = groups.find(group => group.id === req.body.group_id);
-        res.status(200).send(JSON.stringify({ group, campers }));
+        var newSize = Number(group.size) + 1;
+        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+
+        res.status(200).send();
       });
     });
   })
   app.post('/camperDelete', (req, res) => {
-    con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.body.id}`);
+    // con.query(`UPDATE campers SET group_id ='0' WHERE id = ${req.body.id}`);
 
     con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
 
-      var newSize = Math.max(0, Number(req.body.groupSize) - 1);
-      con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+      con.query('SELECT * FROM groups', (err, groups) => {
+        const group = groups.find(group => group.id === req.body.group_id);
 
-      const campers = [...req.campers];
-      let index;
-      campers.forEach((camper, i) => {
-        if (camper.id === req.body.id) {
-          index = i;
-        }
+        var newSize = Math.max(0, Number(group.size) - 1);
+        con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
+
+        res.status(200).send();
       });
-
-      campers.splice(index, 1);
-      res.status(200).send(JSON.stringify({ campers }));
     });
   });
   app.post('/toggleAdmin', (req, res) => {

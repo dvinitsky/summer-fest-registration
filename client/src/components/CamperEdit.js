@@ -8,7 +8,8 @@ class CamperEdit extends React.Component {
     super(props);
 
     this.state = {
-      clearance: sessionStorage.getItem('clearance')
+      clearance: sessionStorage.getItem('clearance'),
+      error: false
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -21,10 +22,10 @@ class CamperEdit extends React.Component {
     document.getElementById('delete-camper-modal').style.display = 'block';
   }
 
-  deleteCamper(id, group_id, groupSize) {
-    const response = deleteCamper(id, group_id, groupSize);
+  deleteCamper(id, group_id) {
+    const response = deleteCamper(id, group_id);
     if (response.error) {
-      document.getElementById('error').style.display = 'block';
+      this.setState({ error: true });
     } else {
       this.setState({
         shouldRedirect: response.shouldRedirect
@@ -34,7 +35,7 @@ class CamperEdit extends React.Component {
   editCamper(...args) {
     const response = editCamper(args);
     if (response.error) {
-      document.getElementById('error').style.display = 'block';
+      this.setState({ error: true })
     } else {
       this.setState({
         shouldRedirect: response.shouldRedirect
@@ -202,14 +203,17 @@ class CamperEdit extends React.Component {
               <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?
             </h1>
               <button type="button" onClick={this.cancelDelete}>No</button>
-              <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id, group.size) }}>Yes</button>
+              <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
             </div>
             <div id="camper-deleted">
               Camper Deleted.
           </div>
-            <div id="error">
-              There's been an error. Please try again.
-          </div>
+
+            {this.state.error && (
+              <div id="error">
+                There's been an error. Please try again.
+              </div>
+            )}
           </div>
         </>
       );

@@ -3,7 +3,6 @@ import Error from './Error';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
-import { setActiveCamper } from '../actions/app';
 
 class GroupEdit extends Component {
   constructor(props) {
@@ -29,7 +28,7 @@ class GroupEdit extends Component {
   deleteGroup(id) {
     const response = deleteGroup(id);
     if (response.error) {
-      document.getElementById('error').style.display = 'block';
+      this.setState({ error: true });
     } else {
       this.setState({
         shouldRedirect: response.shouldRedirect
@@ -39,7 +38,7 @@ class GroupEdit extends Component {
   editGroup(id, group_name, leader_name) {
     const response = editGroup(id, group_name, leader_name);
     if (response.error) {
-      document.getElementById('error').style.display = 'block';
+      this.setState({ error: true });
     } else {
       this.setState({
         shouldRedirect: response.shouldRedirect
@@ -117,7 +116,7 @@ class GroupEdit extends Component {
                         to={{
                           pathname: "/camperEdit"
                         }}
-                        onClick={() => setActiveCamper(camper)}
+                        onClick={() => this.props.setActiveCamper(camper)}
                       >
                         Edit
                         </Link>
@@ -180,11 +179,8 @@ class GroupEdit extends Component {
 
           <Link
             to={{
-              pathname: "/camperAdd",
-              state: { group_id: group.id, group_size: group.size }
-            }}
-          >
-            Add a Camper
+              pathname: "/camperAdd"
+            }}>
           </Link>
 
           {this.state.clearance === 'admin' && (
@@ -198,9 +194,11 @@ class GroupEdit extends Component {
             <button type="button" onClick={() => this.deleteGroup(group.id)}>Yes</button>
           </div>
 
-          <div id="error">
-            There's been an error. Please try again.
-          </div>
+          {this.state.error && (
+            <div id="error">
+              There's been an error. Please try again.
+            </div>
+          )}
         </div>
       </>
     );

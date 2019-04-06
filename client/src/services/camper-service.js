@@ -1,10 +1,10 @@
-export function deleteCamper(id, group_id, groupSize) {
+export function deleteCamper(id, group_id) {
   const options = {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id, groupSize, group_id })
+    body: JSON.stringify({ id, group_id })
   };
 
   fetch('/camperDelete', options)
@@ -83,6 +83,7 @@ export function editCamper(
 }
 
 export function addCamper({
+  group_id,
   first_name,
   last_name,
   gender,
@@ -96,8 +97,7 @@ export function addCamper({
   notes,
   registration,
   signed_status,
-  room,
-  groupSize
+  room
 }) {
   const options = {
     method: 'POST',
@@ -105,6 +105,7 @@ export function addCamper({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
+      group_id,
       first_name,
       last_name,
       gender,
@@ -118,8 +119,7 @@ export function addCamper({
       notes,
       registration,
       signed_status,
-      room,
-      groupSize
+      room
     })
   };
 
@@ -130,12 +130,7 @@ export function addCamper({
       }
       else throw new Error();
     })
-    .then(data => {
-      return {
-        group: data.group,
-        campersInGroup: data.campers
-      };
-    })
+    .then(data => data)
     .catch(error => {
       return { error };
     });

@@ -23,6 +23,7 @@ class App extends Component {
   }
 
   componentWillMount() {
+    console.log('goign to fetch fresh data');
     fetch('/allData')
       .then(response => {
         if (response.ok) {
