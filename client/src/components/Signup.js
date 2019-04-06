@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { addUser } from '../services/user-service';
+import { signup } from '../services/user-service';
 
 class Signup extends React.Component {
   constructor() {
@@ -15,25 +15,26 @@ class Signup extends React.Component {
     this.setState(newState);
   }
 
-  addUser(username, password) {
-    const response = addUser(username, password, this.props.nextGroupId);
-    this.props.incrementNextGroupId();
+  signup(username, password) {
+    signup(username, password, this.props.nextGroupId).then(response => {
+      this.props.incrementNextGroupId();
 
-    if (response.error) {
-      this.setState({
-        error: response.error.message
-      });
-    } else if (response.incomplete) {
-      this.setState({
-        incomplete: true
-      });
-    } else {
-      this.props.setActiveUser(response.user);
-      this.setState({
-        shouldRedirect: true
-      });
-      this.props.setActiveGroup(response.group);
-    }
+      if (response.error) {
+        this.setState({
+          error: response.error.message
+        });
+      } else if (response.incomplete) {
+        this.setState({
+          incomplete: true
+        });
+      } else {
+        this.props.setActiveUser(response.user);
+        this.setState({
+          shouldRedirect: true
+        });
+        this.props.setActiveGroup(response.group);
+      }
+    });
   }
 
   render() {
@@ -60,7 +61,7 @@ class Signup extends React.Component {
           <input name="username" onChange={this.handleChange}></input>
           <div>Password:</div>
           <input name="password" onChange={this.handleChange}></input>
-          <button onClick={() => this.addUser(this.state.username, this.state.password)}>Submit</button>
+          <button onClick={() => this.signup(this.state.username, this.state.password)}>Submit</button>
 
           {this.state.error && <div>{this.state.error}</div>}
 

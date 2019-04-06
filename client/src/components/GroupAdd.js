@@ -21,16 +21,17 @@ class GroupAdd extends React.Component {
   }
 
   addGroup(group_name, leader_name) {
-    const response = addGroup(group_name, leader_name, this.props.nextGroupId);
-    this.props.incrementNextGroupId();
-    if (response.error) {
-      this.setState({ error: true });
-    } else {
-      this.props.setActiveGroup(response.group);
-      this.setState({
-        shouldRedirect: true,
-      })
-    }
+    addGroup(group_name, leader_name, this.props.nextGroupId).then(response => {
+      this.props.incrementNextGroupId();
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
+        this.props.setActiveGroup(response.group);
+        this.setState({
+          shouldRedirect: true,
+        })
+      }
+    });
   }
 
   render() {

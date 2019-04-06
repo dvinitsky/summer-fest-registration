@@ -21,24 +21,26 @@ class GroupEdit extends Component {
     })
   };
   deleteGroup(id) {
-    const response = deleteGroup(id);
-    if (response.error) {
-      this.setState({ error: true });
-    } else {
-      this.setState({
-        shouldRedirect: response.shouldRedirect
-      });
-    }
+    deleteGroup(id).then(response => {
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
+        this.setState({
+          shouldRedirect: response.shouldRedirect
+        });
+      }
+    });
   }
   editGroup(id, group_name, leader_name) {
-    const response = editGroup(id, group_name, leader_name);
-    if (response.error) {
-      this.setState({ error: true });
-    } else {
-      this.setState({
-        shouldRedirect: response.shouldRedirect
-      });
-    }
+    editGroup(id, group_name, leader_name).then(response => {
+      if (response.error) {
+        this.setState({ error: true });
+      } else {
+        this.setState({
+          shouldRedirect: response.shouldRedirect
+        });
+      }
+    });
   };
 
   render() {
@@ -176,6 +178,7 @@ class GroupEdit extends Component {
             to={{
               pathname: "/camperAdd"
             }}>
+            Add a Camper
           </Link>
 
           {activeUser.status === 'admin' && (

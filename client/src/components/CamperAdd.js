@@ -34,19 +34,19 @@ class CamperAdd extends React.Component {
   }
 
   addCamper(...args) {
-    const response = addCamper(args);
-    if (response.error) {
-      document.getElementById('error').style.display = 'block';
-    } else {
-      this.setState({
-        shouldRedirect: true
-      });
-    }
-
+    addCamper(args).then(response => {
+      if (response.error) {
+        document.getElementById('error').style.display = 'block';
+      } else {
+        this.setState({
+          shouldRedirect: true
+        });
+      }
+    });
   }
 
   render() {
-    const { activeGroup, activeUser} = this.props;
+    const { activeGroup, activeUser } = this.props;
 
     if (this.state.shouldRedirect) {
       return (

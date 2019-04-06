@@ -8,7 +8,8 @@ class CamperEdit extends React.Component {
     super(props);
 
     this.state = {
-      error: false
+      error: false,
+      camper: {}
     };
 
     this.handleChange = this.handleChange.bind(this);

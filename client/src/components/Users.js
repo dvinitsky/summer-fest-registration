@@ -11,20 +11,21 @@ class Users extends React.Component {
   }
 
   toggleAdminRights(user_id) {
-    const response = toggleAdminRights(user_id);
-    if (response.error) {
-      this.setState({
-        error: true
-      });
-    } else {
-      this.setState({
-        users: response.users
-      });
-    }
+    toggleAdminRights(user_id).then(response => {
+      if (response.error) {
+        this.setState({
+          error: true
+        });
+      } else {
+        this.setState({
+          users: response.users
+        });
+      }
+    });
   }
 
   render() {
-    const {activeUser} = this.props;
+    const { activeUser } = this.props;
 
     if (activeUser.status !== 'admin') {
       return (

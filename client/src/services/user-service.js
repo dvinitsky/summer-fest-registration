@@ -31,7 +31,7 @@ export function login(username, password) {
     });
 }
 
-export function addUser(username, password, nextGroupId) {
+export function signup(username, password, nextGroupId) {
   if (!username || !password) {
     return { incomplete: true };
   }
@@ -55,9 +55,9 @@ export function addUser(username, password, nextGroupId) {
       if (data.error) {
         throw new Error(data.error);
       } else {
-        return { 
+        return {
           user: data.user
-         };
+        };
       }
     })
     .catch(error => {
@@ -87,6 +87,40 @@ export function toggleAdminRights(user_id) {
       return ({
         users: data.users
       });
+    })
+    .catch(error => {
+      return {
+        error
+      };
+    });
+}
+
+export function userAdd(username, password, status, group_name) {
+
+  const options = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username,
+      password,
+      status,
+      group_name
+    })
+  };
+
+  fetch('/userAdd', options)
+    .then(response => {
+      return response.json();
+    })
+    .then(data => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      return {
+        shouldRedirect: true
+      };
     })
     .catch(error => {
       return {

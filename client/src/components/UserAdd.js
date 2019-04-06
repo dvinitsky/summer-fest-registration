@@ -1,5 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
+import { userAdd } from '../services/user-service';
 
 class UserAdd extends React.Component {
   constructor() {
@@ -14,41 +15,20 @@ class UserAdd extends React.Component {
     this.setState(newState);
   }
 
-  add(username, password, status, group_name) {
+  userAdd(username, password, status, group_name) {
     if (!username || !password) {
       this.setState({ incomplete: true });
       return;
     }
-    const options = {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username,
-        password,
-        status,
-        group_name
-      })
-    };
-
-    fetch('/userAdd', options)
-      .then(response => {
-        return response.json();
-      })
-      .then(data => {
-        if (data.error) {
-          throw new Error(data.error);
-        }
+    userAdd(username, password, status, group_name).then(response => {
+      if (response.error) {
+        this.setState({ error: true});
+      } else {
         this.setState({
           shouldRedirect: true
-        });
-      })
-      .catch(error => {
-        this.setState({
-          error: true
-        });
-      });
+        })
+      }
+    });
   }
 
   render() {
@@ -88,7 +68,7 @@ class UserAdd extends React.Component {
         <div>Admin</div>
         <input type="radio" name="status" value="leader" onChange={this.handleChange}></input>
         <div>Leader</div>
-        <button onClick={() => this.add(this.state.username, this.state.password, this.state.status, this.setState.group_name)}>Add</button>
+        <button onClick={() => this.userAdd(this.state.username, this.state.password, this.state.status, this.setState.group_name)}>Add</button>
 
         {this.state.status === 'leader' && (
           <>
