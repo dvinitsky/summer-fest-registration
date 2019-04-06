@@ -47,7 +47,7 @@ export function signup(username, password, nextGroupId) {
     })
   };
 
-  fetch('/signup', options)
+  return fetch('/signup', options)
     .then(response => {
       return response.json();
     })
@@ -76,7 +76,7 @@ export function toggleAdminRights(user_id) {
     })
   };
 
-  fetch('/toggleAdmin', options)
+  return fetch('/toggleAdmin', options)
     .then(response => {
       return response.json();
     })
@@ -110,7 +110,7 @@ export function userAdd(username, password, status, group_name) {
     })
   };
 
-  fetch('/userAdd', options)
+  return fetch('/userAdd', options)
     .then(response => {
       return response.json();
     })

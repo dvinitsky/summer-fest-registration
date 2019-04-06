@@ -7,7 +7,7 @@ export function deleteGroup(id) {
     body: JSON.stringify({ id })
   };
 
-  fetch('/groupDelete', options)
+  return fetch('/groupDelete', options)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -35,7 +35,7 @@ export function editGroup(id, group_name, leader_name) {
     body: JSON.stringify({ id, group_name, leader_name })
   };
 
-  fetch('/groupEdit', options)
+  return fetch('/groupEdit', options)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -63,7 +63,7 @@ export function addGroup(group_name, leader_name, id) {
     body: JSON.stringify({ group_name, leader_name, id })
   };
 
-  fetch('/groupAdd', options)
+  return fetch('/groupAdd', options)
     .then(response => {
       if (response.ok) {
         return response.json();

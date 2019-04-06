@@ -7,7 +7,7 @@ export function deleteCamper(id, group_id) {
     body: JSON.stringify({ id, group_id })
   };
 
-  fetch('/camperDelete', options)
+  return fetch('/camperDelete', options)
     .then(response => {
       if (response.ok) {
         return response.json();
@@ -65,9 +65,10 @@ export function editCamper(
     })
   };
 
-  fetch('/camperEdit', options)
+  return fetch('/camperEdit', options)
     .then(response => {
       if (response.ok) {
+        console.log('response os plkay')
         return response.json();
       }
       else throw new Error();
@@ -123,7 +124,7 @@ export function addCamper({
     })
   };
 
-  fetch('/camperAdd', options)
+  return fetch('/camperAdd', options)
     .then(response => {
       if (response.ok) {
         return response.json();

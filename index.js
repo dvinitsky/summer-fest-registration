@@ -179,7 +179,7 @@ con.connect(err => {
       if (err) throw err;
     });
 
-    res.status(200).send();
+    res.status(200).send(JSON.stringify({}));
   })
   app.post('/groupAdd', (req, res) => {
     con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.id}', '${req.body.leader_name}', '${req.body.group_name}')`, (err) => {
@@ -197,7 +197,7 @@ con.connect(err => {
       if (err) throw err;
     });
 
-    res.status(200).send();
+    res.status(200).send(JSON.stringify({}));
   })
   app.post('/camperEdit', (req, res) => {
     const body = fillNulls(req.body);
@@ -205,7 +205,7 @@ con.connect(err => {
     con.query(`UPDATE campers SET first_name = '${body.first_name}', last_name = '${body.last_name}', gender = '${body.gender}', birthday = '${body.birthday}', grade_completed = '${body.grade_completed}', allergies = '${body.allergies}', parent_email = '${body.parent_email}', emergency_name = '${body.emergency_name}', emergency_number = '${body.emergency_number}', roommate = '${body.roommate}', notes = '${body.notes}', registration = '${body.registration}', signed_status = '${body.signed_status}', room = '${body.room}' WHERE id=${body.id}`, (err) => {
       if (err) throw err;
     });
-    res.status(200).send();
+    res.status(200).send(JSON.stringify({}));
   })
   app.post('/camperAdd', (req, res) => {
     const body = fillNulls(req.body);
@@ -220,7 +220,7 @@ con.connect(err => {
         var newSize = Number(group.size) + 1;
         con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
-        res.status(200).send();
+        res.status(200).send(JSON.stringify({}));
       });
     });
   })
@@ -236,7 +236,7 @@ con.connect(err => {
         var newSize = Math.max(0, Number(group.size) - 1);
         con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`);
 
-        res.status(200).send();
+        res.status(200).send(JSON.stringify({}));
       });
     });
   });
@@ -253,7 +253,7 @@ con.connect(err => {
     console.log('going to set to ', newStatus)
     con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`, (err) => {
       con.query('SELECT * FROM users', (err, users) => {
-        res.status(200).send({ users });
+        res.status(200).send(JSON.stringify({ users }));
       });
     });
 
