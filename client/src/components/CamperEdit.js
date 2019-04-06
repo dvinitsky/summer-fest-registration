@@ -2,7 +2,7 @@ import React from 'react';
 import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { deleteCamper, editCamper } from '../services/camper-service';
-import { setActiveGroupId, getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
+import { getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
 
 class CamperEdit extends React.Component {
   constructor() {

@@ -28,6 +28,7 @@ class Header extends React.Component {
 
   logout() {
     sessionStorage.clear();
+    this.setState({});
   }
 
   render() {
