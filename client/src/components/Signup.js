@@ -28,7 +28,8 @@ class Signup extends React.Component {
           incomplete: true
         });
       } else {
-        this.props.setActiveUser(response.user);
+        sessionStorage.set('clearance', response.user.status);
+        sessionStorage.set('username', response.user.username);
         this.setState({
           shouldRedirect: true
         });

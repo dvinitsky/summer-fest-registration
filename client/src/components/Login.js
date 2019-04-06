@@ -22,7 +22,8 @@ class Login extends React.Component {
           error: response.error.message
         });
       } else {
-        this.props.setActiveUser(response.user);
+        sessionStorage.set('clearance', response.user.status);
+        sessionStorage.set('username', response.user.username);
         this.setState({
           redirectUrl: response.redirectUrl,
           group: response.group || null

@@ -6,7 +6,7 @@ function mapStateToProps(state) {
   return {
     group: state.app.activeGroup,
     camper: state.app.activeCamper,
-    activeUser: state.app.activeUser
+    activeUserClearance: sessionStorage.get('clearance')
   };
 }
 

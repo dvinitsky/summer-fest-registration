@@ -1,6 +1,6 @@
 import { connect } from 'react-redux';
 import Signup from '../components/Signup';
-import { setActiveGroup, incrementNextGroupId, setActiveUser } from '../actions/app';
+import { setActiveGroup, incrementNextGroupId } from '../actions/app';
 
 function mapStateToProps(state) {
   return {
@@ -12,7 +12,6 @@ export default connect(
   mapStateToProps,
   {
     incrementNextGroupId,
-    setActiveGroup,
-    setActiveUser
+    setActiveGroup
   }
 )(Signup);

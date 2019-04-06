@@ -8,7 +8,7 @@ class Header extends React.Component {
   }
 
   render() {
-    const { activeUser } = this.props;
+    const { activeUserClearance } = this.props;
 
     return (
       <div className="jumbotron text-center">
@@ -35,7 +35,7 @@ class Header extends React.Component {
           </Link>
           </p>
 
-          {activeUser.status === 'admin' && (
+          {activeUserClearance === 'admin' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Admin
@@ -49,7 +49,7 @@ class Header extends React.Component {
               </Link>
             </>
           )}
-          {activeUser.status === 'leader' && (
+          {activeUserClearance === 'leader' && (
             <>
               <div className="admin-logged-message">
                 Logged in as Group Leader
@@ -63,7 +63,7 @@ class Header extends React.Component {
               </Link>
             </>
           )}
-          {activeUser.status && (
+          {activeUserClearance && (
             <Link
               to={{
                 pathname: "/",

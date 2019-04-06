@@ -8,9 +8,9 @@ class Admin extends React.Component {
     this.state = {}
   }
   render() {
-    const { setActiveGroup, groups, activeUser } = this.props;
+    const { setActiveGroup, groups, activeUserClearance } = this.props;
 
-    if (!activeUser || activeUser.status !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{

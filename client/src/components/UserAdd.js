@@ -32,7 +32,7 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    const { groups, activeUser } = this.props;
+    const { groups, activeUserClearance } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -44,7 +44,7 @@ class UserAdd extends React.Component {
       );
     }
 
-    if (activeUser.status !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{

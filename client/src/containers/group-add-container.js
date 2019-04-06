@@ -5,7 +5,7 @@ import { incrementNextGroupId, setActiveGroup } from '../actions/app.js';
 function mapStateToProps(state) {
   return {
     nextGroupId: state.app.nextGroupId,
-    activeUser : state.app.activeUser
+    activeUserClearance: sessionStorage.get('clearance')
   };
 }
 

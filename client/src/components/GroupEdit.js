@@ -44,7 +44,7 @@ class GroupEdit extends Component {
   };
 
   render() {
-    const { campers, activeGroup, activeUser } = this.props;
+    const { campers, activeGroup, activeUserClearance } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -56,7 +56,7 @@ class GroupEdit extends Component {
       );
     }
 
-    if (!activeUser) {
+    if (!activeUserClearance) {
       return (
         <Redirect
           to={{
@@ -100,7 +100,7 @@ class GroupEdit extends Component {
                 <th className="header-name">Notes</th>
                 <th className="header-name">Online or Paper Registration</th>
                 <th className="header-name">Waiver Signed Status</th>
-                {activeUser.status === 'admin' && (
+                {activeUserClearance === 'admin' && (
                   <th className="header-name">Room Assignment</th>
                 )}
               </tr>
@@ -157,7 +157,7 @@ class GroupEdit extends Component {
                     <td>
                       {camper.signed_status}
                     </td>
-                    {activeUser.status === 'admin' && (
+                    {activeUserClearance === 'admin' && (
                       <td>
                         {camper.room}
                       </td>
@@ -181,7 +181,7 @@ class GroupEdit extends Component {
             Add a Camper
           </Link>
 
-          {activeUser.status === 'admin' && (
+          {activeUserClearance === 'admin' && (
             <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
           )}
 

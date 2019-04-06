@@ -35,7 +35,7 @@ class GroupAdd extends React.Component {
   }
 
   render() {
-    const { activeUser } = this.props;
+    const { activeUserClearance } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -47,7 +47,7 @@ class GroupAdd extends React.Component {
       );
     }
 
-    if (activeUser.status !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{

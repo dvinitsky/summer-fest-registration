@@ -46,7 +46,7 @@ class CamperAdd extends React.Component {
   }
 
   render() {
-    const { activeGroup, activeUser } = this.props;
+    const { activeGroup, activeUserClearance  } = this.props;
 
     if (this.state.shouldRedirect) {
       return (
@@ -58,7 +58,7 @@ class CamperAdd extends React.Component {
       );
     }
 
-    if (!activeUser) {
+    if (!activeUserClearance) {
       return (
         <Redirect
           to={{
@@ -161,7 +161,7 @@ class CamperAdd extends React.Component {
               <option value="Signed">Signed</option>
             </select>
             <br />
-            {activeUser.status === 'admin' && (
+            {activeUserClearance === 'admin' && (
               <>
                 <h3>
                   Room Assignment:

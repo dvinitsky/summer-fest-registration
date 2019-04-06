@@ -5,7 +5,8 @@ import { } from '../actions/app.js';
 function mapStateToProps(state) {
   return {
     users: state.app.users,
-    activeUser: state.app.activeUser
+    activeUserClearance: sessionStorage.get('clearance'),
+    activeUserUserName: sessionStorage.get('username')
   };
 }
 

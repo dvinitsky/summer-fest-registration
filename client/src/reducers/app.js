@@ -1,5 +1,5 @@
 import initialState from './initialState';
-import {SET_DATA, SET_ACTIVE_GROUP, SET_ACTIVE_CAMPER, INCREMENT_NEXT_GROUP_ID, SET_NEXT_GROUP_ID, SET_ACTIVE_USER} from '../constants';
+import {SET_DATA, SET_ACTIVE_GROUP, SET_ACTIVE_CAMPER, INCREMENT_NEXT_GROUP_ID, SET_NEXT_GROUP_ID} from '../constants';
 
 export default function app(state = initialState.app, action) {
   switch (action.type) {
@@ -29,11 +29,6 @@ export default function app(state = initialState.app, action) {
       return {
         ...state,
         nextGroupId: action.nextGroupId || 0
-      };
-    case SET_ACTIVE_USER:
-      return {
-        ...state,
-        activeUser: action.activeUser || {}
       };
     default:
       return state;

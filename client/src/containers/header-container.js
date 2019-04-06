@@ -4,7 +4,7 @@ import { setActiveGroup, logout } from '../actions/app.js';
 
 function mapStateToProps(state) {
   return {
-    activeUser: state.app.activeUser || {}
+    activeUserClearance: sessionStorage.get('clearance')
   };
 }
 

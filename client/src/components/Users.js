@@ -25,9 +25,9 @@ class Users extends React.Component {
   }
 
   render() {
-    const { activeUser } = this.props;
+    const { activeUserClearance, activeUserUserName } = this.props;
 
-    if (activeUser.status !== 'admin') {
+    if (activeUserClearance !== 'admin') {
       return (
         <Redirect
           to={{
@@ -38,7 +38,7 @@ class Users extends React.Component {
     }
 
     let isSuperAdmin = false;
-    if (activeUser.username === "tonyducklow" || activeUser.username === "daniel.vinitsky") {
+    if (activeUserUserName === "tonyducklow" || activeUserUserName === "daniel.vinitsky") {
       isSuperAdmin = true;
     }
 
