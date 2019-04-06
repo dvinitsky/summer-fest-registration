@@ -23,8 +23,7 @@ class GroupAdd extends React.Component {
   }
 
   addGroup(group_name, leader_name) {
-    addGroup(group_name, leader_name, this.props.nextGroupId).then(response => {
-      this.props.incrementNextGroupId();
+    addGroup(group_name, leader_name).then(response => {
       if (response.error) {
         this.setState({ error: true });
       } else if (response.group && response.group.id) {

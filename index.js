@@ -154,13 +154,13 @@ con.connect(err => {
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
 
-      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.body.nextGroupId}', '', '')`, (err) => {
+      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.nextGroupId}', '', '')`, (err) => {
         if (err) throw err;
       });
 
-      const group = req.groups.find(group => group.id === req.body.nextGroupId);
+      const group = req.groups.find(group => group.id === req.nextGroupId);
 
-      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.body.nextGroupId}')`, (err, user) => {
+      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.nextGroupId}')`, (err, user) => {
         if (err) throw err;
         con.query('SELECT * FROM groups', (err, groups) => {
           con.query('SELECT * FROM campers', (err, campers) => {

@@ -54,13 +54,13 @@ export function editGroup(id, group_name, leader_name) {
     })
 };
 
-export function addGroup(group_name, leader_name, id) {
+export function addGroup(group_name, leader_name) {
   const options = {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ group_name, leader_name, id })
+    body: JSON.stringify({ group_name, leader_name })
   };
 
   return fetch('/groupAdd', options)

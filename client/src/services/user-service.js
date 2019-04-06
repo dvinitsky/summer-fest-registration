@@ -31,7 +31,7 @@ export function login(username, password) {
     });
 }
 
-export function signup(username, password, nextGroupId) {
+export function signup(username, password) {
   if (!username || !password) {
     return { incomplete: true };
   }
@@ -42,8 +42,7 @@ export function signup(username, password, nextGroupId) {
     },
     body: JSON.stringify({
       username,
-      password,
-      nextGroupId
+      password
     })
   };
 

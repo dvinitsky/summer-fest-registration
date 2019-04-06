@@ -35,9 +35,7 @@ class Signup extends React.Component {
   }
 
   signup(username, password) {
-    signup(username, password, this.props.nextGroupId).then(response => {
-      this.props.incrementNextGroupId();
-
+    signup(username, password).then(response => {
       if (response.error) {
         this.setState({
           error: response.error.message

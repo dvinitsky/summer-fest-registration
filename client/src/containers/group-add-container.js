@@ -13,6 +13,5 @@ export default connect(
   {
     incrementNextGroupId,
     setNextGroupId,
-    setData,
   }
 )(GroupAdd);
