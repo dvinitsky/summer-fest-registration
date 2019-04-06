@@ -188,7 +188,7 @@ class CamperAdd extends React.Component {
               this.state.camper.registration,
               this.state.camper.signed_status,
               this.state.camper.room,
-              location.state.group_size
+              activeGroup.group_size
             )} type="button">Save</button>
           </div>
         </>

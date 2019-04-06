@@ -105,7 +105,6 @@ export function addCamper({
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      group_id: this.props.location.state.group_id,
       first_name,
       last_name,
       gender,
