@@ -10,9 +10,21 @@ class Login extends React.Component {
       data: {}
     };
     this.handleChange = this.handleChange.bind(this);
+    this.login = this.login.bind(this);
   }
 
   componentDidMount() {
+    document.getElementById('password-input').onkeydown = (event) => {
+      if (event.key === 'Enter') {
+        this.login();
+      }
+    }
+    document.getElementById('username-input').onkeydown = (event) => {
+      if (event.key === 'Enter') {
+        this.login();
+      }
+    }
+
     fetch('/allData')
       .then(response => {
         if (response.ok) {
@@ -34,8 +46,8 @@ class Login extends React.Component {
     this.setState(newState);
   }
 
-  login(username, password) {
-    login(username, password).then(response => {
+  login() {
+    login(this.state.username, this.state.password).then(response => {
       if (response.error) {
         this.setState({
           error: response.error.message
@@ -75,14 +87,14 @@ class Login extends React.Component {
       <div>
         <h4>Login</h4>
         <div>Username:</div>
-        <input name="username" onChange={this.handleChange} />
+        <input id="username-input" name="username" onChange={this.handleChange} />
         <div>Password:</div>
         <input id="password-input" name="password" type="password" onChange={this.handleChange} />
         <div>
           <input type="checkbox" onClick={this.toggleShowPassword} />
           Show Password
         </div>
-        <button onClick={() => this.login(this.state.username, this.state.password)}>Log In</button>
+        <button onClick={this.login}>Log In</button>
 
         {this.state.error && <div>{this.state.error}</div>}
       </div>
