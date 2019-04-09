@@ -6,9 +6,7 @@ import { getActiveUserClearance } from '../helpers';
 class UserAdd extends React.Component {
   constructor() {
     super();
-    this.state = {
-      data: {}
-    };
+    this.state = {};
     this.handleChange = this.handleChange.bind(this);
   }
 
@@ -20,7 +18,6 @@ class UserAdd extends React.Component {
         } else throw new Error();
       })
       .then(data => {
-        this.setState({ data });
       })
       .catch(error => {
         console.log(error);
@@ -34,12 +31,12 @@ class UserAdd extends React.Component {
     this.setState(newState);
   }
 
-  userAdd(username, password, status, group_name) {
+  userAdd(username, password, status) {
     if (!username || !password) {
       this.setState({ incomplete: true });
       return;
     }
-    userAdd(username, password, status, group_name).then(response => {
+    userAdd(username, password, status).then(response => {
       if (response.error) {
         this.setState({ error: true });
       } else {
@@ -51,14 +48,6 @@ class UserAdd extends React.Component {
   }
 
   render() {
-    let groups;
-    if (!this.state.data.groups) {
-      return null;
-    }
-    else {
-      groups = this.state.data.groups;
-    }
-
     const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
@@ -95,18 +84,7 @@ class UserAdd extends React.Component {
         <div>Admin</div>
         <input type="radio" name="status" value="leader" onChange={this.handleChange}></input>
         <div>Leader</div>
-        <button onClick={() => this.userAdd(this.state.username, this.state.password, this.state.status, this.setState.group_name)}>Add</button>
-
-        {this.state.status === 'leader' && (
-          <>
-            <div>Group:</div>
-            <select name="group_name" onChange={this.handleChange}>
-              {groups.map(group => {
-                return <option key={group.id} value={group.group_name}>{group.group_name}</option>
-              })}
-            </select>
-          </>
-        )}
+        <button onClick={() => this.userAdd(this.state.username, this.state.password, this.state.status)}>Add</button>
 
         {this.state.error && <div>There's been an error. Please refresh and try again.</div>}
         {this.state.incomplete && (

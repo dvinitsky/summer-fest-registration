@@ -43,7 +43,7 @@ class Login extends React.Component {
       } else {
         setActiveUserClearance(response.user.status);
         setActiveUserName(response.user.username);
-        setActiveGroupId(response.group.id);
+        setActiveGroupId((response.group && response.group.id) || 0);
         this.setState({
           redirectUrl: response.redirectUrl
         });

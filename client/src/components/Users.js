@@ -35,23 +35,26 @@ class Users extends React.Component {
         });
       } else {
         this.setState({
-          users: response.users
+          data: {
+            users: response.users
+          }
         });
       }
     });
   }
 
   render() {
-    let users;
-    if (!this.state.data.users) {
+    let users, groups;
+    if (!this.state.data.users || !this.state.data.groups) {
       return null;
     }
     else {
       users = this.state.data.users;
+      groups = this.state.data.groups;
     }
 
     const activeUserClearance = getActiveUserClearance();
-    const activeUserUserName = getActiveUserName();
+    const activeUserName = getActiveUserName();
 
     if (activeUserClearance !== 'admin') {
       return (
@@ -63,46 +66,40 @@ class Users extends React.Component {
       );
     }
 
-    let isSuperAdmin = false;
-    if (activeUserUserName === "tonyducklow" || activeUserUserName === "daniel.vinitsky") {
-      isSuperAdmin = true;
-    }
-
     return (
       <>
         <table name="users">
           <tbody>
             <tr className="table-header-row">
-              {/* <th className="header-place"></th> */}
               <th className="header-place">User Name</th>
-              {isSuperAdmin && <th className="header-place"></th>}
+              <th className="header-place">Group Name</th>
+              <th className="header-place">Status</th>
+              <th className="header-place"></th>
             </tr>
 
             {users.map(user => {
-              return (
-                <tr key={user.id} className="table-row">
-                  {/* <td className="table-edit">
-                    <Link
-                      to={{
-                        pathname: "/userEdit",
-                        state: { user }
-                      }}
-                    >
-                      Edit
-                </Link>
-                  </td> */}
-                  <td className="table-name">
-                    {user.username}
-                  </td>
-                  {isSuperAdmin && (
+              if (user.username !== activeUserName) {
+                return (
+                  <tr key={user.id} className="table-row">
+                    <td className="table-name">
+                      {user.username}
+                    </td>
+                    <td className="table-name">
+                      {groups.find(group => {
+                        return group.id === user.group_id
+                      }).group_name}
+                    </td>
+                    <td className="table-name">
+                      {user.status}
+                    </td>
                     <td>
                       <button className="table-name" onClick={() => this.toggleAdminRights(user.id)}>
                         Toggle Admin Rights
                       </button>
                     </td>
-                  )}
-                </tr>
-              );
+                  </tr>
+                );
+              }
             })}
           </tbody>
         </table>

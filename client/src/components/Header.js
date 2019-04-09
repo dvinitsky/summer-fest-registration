@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { getActiveUserClearance } from '../helpers';
+import { getActiveUserClearance, getActiveUserName } from '../helpers';
 
 class Header extends React.Component {
   constructor() {
@@ -33,6 +33,7 @@ class Header extends React.Component {
 
   render() {
     const activeUserClearance = getActiveUserClearance();
+    const activeUserName = getActiveUserName();
 
     return (
       <div className="jumbotron text-center">
@@ -62,7 +63,7 @@ class Header extends React.Component {
           {activeUserClearance === 'admin' && (
             <>
               <div className="admin-logged-message">
-                Logged in as Admin
+                Logged in as {activeUserName}
             </div>
               <Link
                 to={{
@@ -76,7 +77,7 @@ class Header extends React.Component {
           {activeUserClearance === 'leader' && (
             <>
               <div className="admin-logged-message">
-                Logged in as Group Leader
+                Logged in as {activeUserName}
               </div>
               <Link
                 to={{
