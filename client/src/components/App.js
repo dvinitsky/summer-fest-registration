@@ -11,22 +11,11 @@ import GroupEdit from './GroupEdit';
 import CamperAdd from './CamperAdd';
 import CamperEdit from './CamperEdit';
 import Header from './Header';
-import { getActiveUserClearance } from '../helpers';
 
 class App extends Component {
   constructor() {
     super();
-    this.state = {
-      activeUserClearance: getActiveUserClearance()
-    };
-
-    this.refreshActiveUserClearance = this.refreshActiveUserClearance.bind(this);
-  }
-
-  refreshActiveUserClearance() {
-    this.setState({
-      activeUserClearance: getActiveUserClearance()
-    });
+    this.state = {};
   }
 
   render() {
@@ -39,7 +28,7 @@ class App extends Component {
             render={props => {
               return (
                 <>
-                  <Header activeUserClearance={this.state.activeUserClearance} />
+                  <Header />
                   <Login {...props} />
                 </>
               );
@@ -50,8 +39,8 @@ class App extends Component {
             render={props => {
               return (
                 <>
-                  <Header activeUserClearance={this.state.activeUserClearance} />
-                  <Signup {...props} refreshActiveUserClearance={this.refreshActiveUserClearance} />
+                  <Header />
+                  <Signup {...props} />
                 </>
               );
             }}
@@ -105,7 +94,7 @@ class App extends Component {
             render={props => {
               return (
                 <>
-                  <Header activeUserClearance={this.state.activeUserClearance} />
+                  <Header />
                   <GroupEdit {...props} />
                 </>
               );

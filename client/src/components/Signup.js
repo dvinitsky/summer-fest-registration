@@ -45,13 +45,12 @@ class Signup extends React.Component {
           incomplete: true
         });
       } else {
+        setActiveGroupId(response.group.id);
+        setActiveUserClearance(response.user.status);
+        setActiveUserName(response.user.username);
         this.setState({
           shouldRedirect: true
         });
-        setActiveGroupId(response.group.id);
-        setActiveUserClearance(response.user.status);
-        setActiveUserName(response.user.usename);
-        this.props.refreshActiveUserClearance();
       }
     });
   }

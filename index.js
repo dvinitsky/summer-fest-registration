@@ -156,12 +156,16 @@ con.connect(err => {
 
       con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.nextGroupId}', '', '')`, (err) => {
         if (err) throw err;
-        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.nextGroupId}')`, (err, user) => {
+        con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.nextGroupId}')`, (err) => {
           if (err) throw err;
           con.query('SELECT * FROM groups', (err, groups) => {
             con.query('SELECT * FROM campers', (err, campers) => {
               con.query('SELECT * FROM users', (err, users) => {
                 const group = groups.find(group => group.id === req.nextGroupId);
+                const user = {
+                  username: req.body.username,
+                  status: 'leader'
+                };
               res.status(200).send(JSON.stringify({ group, user, campers, groups, users }));
             });
           });
