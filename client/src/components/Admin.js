@@ -2,11 +2,13 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { setActiveGroupId, getActiveUserClearance } from '../helpers';
+import { getCsvFile } from '../helpers/download-helper';
 
 class Admin extends React.Component {
   constructor() {
     super();
     this.state = { data: {} }
+    this.handleDownloadClick = this.handleDownloadClick.bind(this);
   }
 
   componentDidMount() {
@@ -23,6 +25,19 @@ class Admin extends React.Component {
         console.log(error);
         return null;
       });
+  }
+
+  handleDownloadClick() {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(getCsvFile(this.state.data)));
+    element.setAttribute('download', 'registration-data.csv');
+    element.style.display = 'none';
+    if (typeof element.download != "undefined") {
+      //browser has support - process the download
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
   }
 
   render() {
@@ -105,6 +120,10 @@ class Admin extends React.Component {
             >
               View All Users
           </Link>
+          </h4>
+
+          <h4 className="add-delete-link">
+            <button onClick={this.handleDownloadClick}>Download All Data</button>
           </h4>
         </div>
       </>
