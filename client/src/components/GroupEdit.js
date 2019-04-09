@@ -69,13 +69,14 @@ class GroupEdit extends Component {
   };
 
   render() {
-    let groups, campers;
-    if (!this.state.data.groups || !this.state.data.campers) {
+    let groups, campers, users;
+    if (!this.state.data.groups || !this.state.data.campers || !this.state.data.users) {
       return null;
     }
     else {
       groups = this.state.data.groups;
       campers = this.state.data.campers;
+      users = this.state.data.users;
     }
 
     const activeGroupId = getActiveGroupId();
@@ -223,7 +224,9 @@ class GroupEdit extends Component {
 
           {this.state.showDeleteModal && (
             <div id="delete-group-modal">
-              <h1>Are you sure you want to delete {activeGroup.group_name} and all its campers?
+              <h1>Are you sure you want to PERMANENTLY delete {activeGroup.group_name} and all its campers
+              {users.find(user => user.group_id === activeGroup.id) && (<span>, along with the user {users.find(user => user.group_id === activeGroup.id).username}</span>)}
+                ?
               </h1>
               <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
               <button type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
