@@ -1,6 +1,6 @@
 import React from 'react';
 import { Redirect } from 'react-router-dom';
-import { toggleAdminRights } from '../services/user-service';
+import { makeAdmin } from '../services/user-service';
 import { getActiveUserClearance, getActiveUserName } from '../helpers';
 
 class Users extends React.Component {
@@ -27,8 +27,8 @@ class Users extends React.Component {
       });
   }
 
-  toggleAdminRights(user_id) {
-    toggleAdminRights(user_id).then(response => {
+  makeAdmin(user_id) {
+    makeAdmin(user_id).then(response => {
       if (response.error) {
         this.setState({
           error: true
@@ -36,6 +36,7 @@ class Users extends React.Component {
       } else {
         this.setState({
           data: {
+            ...this.state.data,
             users: response.users
           }
         });
@@ -77,30 +78,28 @@ class Users extends React.Component {
               <th className="header-place"></th>
             </tr>
 
-            {users.map(user => {
-              if (user.username !== activeUserName) {
-                return (
-                  <tr key={user.id} className="table-row">
-                    <td className="table-name">
-                      {user.username}
-                    </td>
-                    <td className="table-name">
-                      {groups.find(group => {
-                        return group.id === user.group_id
-                      }).group_name}
-                    </td>
-                    <td className="table-name">
-                      {user.status}
-                    </td>
-                    <td>
-                      <button className="table-name" onClick={() => this.toggleAdminRights(user.id)}>
-                        Toggle Admin Rights
-                      </button>
-                    </td>
-                  </tr>
-                );
-              }
-            })}
+            {users.map(user => user.username !== activeUserName && (
+              <tr key={user.id} className="table-row">
+                <td className="table-name">
+                  {user.username}
+                </td>
+                <td className="table-name">
+                  {groups.find(group => {
+                    return group.id === user.group_id
+                  }).group_name}
+                </td>
+                <td className="table-name">
+                  {user.status}
+                </td>
+                <td>
+                  {user.status === 'leader' && (
+                    <button className="table-name" onClick={() => this.makeAdmin(user.id)}>
+                      MAKE ADMIN
+                  </button>
+                  )}
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
         {this.state.error && <div>There's been an error. Please refresh and try again.</div>}

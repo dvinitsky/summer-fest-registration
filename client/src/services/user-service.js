@@ -65,7 +65,7 @@ export function signup(username, password) {
     });
 }
 
-export function toggleAdminRights(user_id) {
+export function makeAdmin(user_id) {
   const options = {
     method: 'POST',
     headers: {
@@ -76,7 +76,7 @@ export function toggleAdminRights(user_id) {
     })
   };
 
-  return fetch('/toggleAdmin', options)
+  return fetch('/makeAdmin', options)
     .then(response => {
       return response.json();
     })

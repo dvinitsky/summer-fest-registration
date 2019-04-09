@@ -144,7 +144,7 @@ con.connect(err => {
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
 
-      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.nextGroupId}', '', '')`, (err) => {
+      con.query(`INSERT INTO groups (leader_name, group_name) VALUES('', '')`, (err) => {
         if (err) throw err;
         con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.nextGroupId}')`, (err) => {
           if (err) throw err;
@@ -172,7 +172,7 @@ con.connect(err => {
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
 
-      const group_id = req.body.status === 'admin' ? '' : req.nextGroupId;
+      const group_id = req.body.status === 'admin' ? 0 : req.nextGroupId;
       con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}', '${group_id}')`, (err) => {
         if (err) throw err;
 
@@ -285,13 +285,8 @@ con.connect(err => {
       });
     });
   });
-  app.post('/toggleAdmin', (req, res) => {
-    const user = req.users.find(user => {
-      return user.id === req.body.user_id;
-    });
-    const newStatus = user.status === 'leader' ? 'admin' : 'leader';
-
-    con.query(`UPDATE users SET status ='${newStatus}' WHERE id = ${req.body.user_id}`, (err) => {
+  app.post('/makeAdmin', (req, res) => {
+    con.query(`UPDATE users SET status ='admin', group_id = 1 WHERE id = ${req.body.user_id}`, (err) => {
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
