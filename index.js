@@ -252,12 +252,7 @@ con.connect(err => {
 
     con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, room) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.room})`, (err) => {
       if (err) throw err;
-    });
 
-    const group = req.groups.find(group => String(group.id) === req.body.group_id);
-    var newSize = Number(group.size) + 1;
-
-    con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`, (err) => {
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
@@ -271,15 +266,10 @@ con.connect(err => {
     con.query(`DELETE FROM campers WHERE id = '${req.body.id}'`, (err) => {
       if (err) throw err;
 
-      const group = req.groups.find(group => group.id === req.body.group_id);
-
-      var newSize = Math.max(0, Number(group.size) - 1);
-      con.query(`UPDATE groups SET size ='${newSize}' WHERE id = ${req.body.group_id}`, (err) => {
-        con.query('SELECT * FROM groups', (err, groups) => {
-          con.query('SELECT * FROM campers', (err, campers) => {
-            con.query('SELECT * FROM users', (err, users) => {
-              res.status(200).send(JSON.stringify({ campers, groups, users }));
-            });
+      con.query('SELECT * FROM groups', (err, groups) => {
+        con.query('SELECT * FROM campers', (err, campers) => {
+          con.query('SELECT * FROM users', (err, users) => {
+            res.status(200).send(JSON.stringify({ campers, groups, users }));
           });
         });
       });

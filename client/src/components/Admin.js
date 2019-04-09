@@ -54,7 +54,6 @@ class Admin extends React.Component {
                 <th className="header-place"></th>
                 <th className="header-place">Group Name</th>
                 <th className="header-place">Leader</th>
-                <th className="header-name"># of Campers</th>
               </tr>
 
               {groups.map(group => {
@@ -77,9 +76,6 @@ class Admin extends React.Component {
                     </td>
                     <td className="table-score">
                       {group.leader_name}
-                    </td>
-                    <td className="table-score">
-                      {group.size}
                     </td>
                   </tr>
                 );
