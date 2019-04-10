@@ -144,7 +144,7 @@ con.connect(err => {
     } else {
       const hashedPassword = passwordHash.generate(req.body.password);
 
-      con.query(`INSERT INTO groups (leader_name, group_name) VALUES('', '')`, (err) => {
+      con.query(`INSERT INTO groups (id, leader_name, group_name) VALUES('${req.nextGroupId}', '', '')`, (err) => {
         if (err) throw err;
         con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', 'leader', '${req.nextGroupId}')`, (err) => {
           if (err) throw err;
@@ -173,14 +173,17 @@ con.connect(err => {
       const hashedPassword = passwordHash.generate(req.body.password);
 
       const group_id = req.body.status === 'admin' ? 0 : req.nextGroupId;
-      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', '${req.body.status}', '${group_id}')`, (err) => {
+      const status = req.body.status === 'admin' ? 'admin' : 'leader';
+      con.query(`INSERT INTO users (username, password, status, group_id) VALUES ('${req.body.username}', '${hashedPassword}', '${status}', '${group_id}')`, (err) => {
         if (err) throw err;
 
-        con.query('SELECT * FROM groups', (err, groups) => {
-          con.query('SELECT * FROM campers', (err, campers) => {
-            con.query('SELECT * FROM users', (err, users) => {
-              res.status(200).send(JSON.stringify({ campers, groups, users }));
-            });
+        con.query(`INSERT INTO groups (id, group_name, leader_name) VALUES ('${req.nextGroupId}', '', '${req.body.username}')`, (err) => {
+          con.query('SELECT * FROM groups', (err, groups) => {
+            con.query('SELECT * FROM campers', (err, campers) => {
+              con.query('SELECT * FROM users', (err, users) => {
+                res.status(200).send(JSON.stringify({ campers, groups, users }));
+              });
+            })
           });
         });
       });
