@@ -4,6 +4,17 @@ const PORT = process.env.PORT || 5000;
 const mysql = require('mysql');
 const bodyParser = require('body-parser');
 const passwordHash = require('password-hash');
+const nodemailer = require("nodemailer");
+
+const transporter = nodemailer.createTransport('smtp://waivers@summerfestivalcamp.com:hDy>T(Zz}hp&sN6@mail.summerfestivalcamp.com');
+
+transporter.verify(function (error, success) {
+  if (error) {
+    console.log(error);
+  } else {
+    console.log("Server is ready to take our messages");
+  }
+});
 
 const app = express();
 app.use(bodyParser.json());
@@ -63,7 +74,7 @@ con.connect(err => {
       }
     });
     return exists;
-  }
+  };
 
   const fillNulls = reqBody => {
     let body = {};
@@ -75,7 +86,39 @@ con.connect(err => {
       }
     });
     return body;
-  }
+  };
+
+  const checkEmail = async (camper) => {
+    console.log('in checkemail ');
+
+    if (camper.registration !== 'Online' || camper.signed_status !== 'Not Sent') {
+      console.log('returning')
+      return;
+    }
+
+    try {
+      console.log('in try block');
+      const info = await transporter.sendMail({
+        from: '"Summer Festival" <waiver@summerfestivalcamp.com>',
+        to: camper.parent_email,
+        subject: "Your Summer Festival Registration Waiver",
+        text: "",
+        html: ""
+      });
+
+      console.log('sent email. here is the info:');
+      console.log(info);
+    } catch (error) {
+      console.log('ERROR:');
+      console.log(error);
+    }
+
+    console.log('done')
+
+    con.query(`UPDATE campers SET signed_status = 'Emailed' WHERE id = ${camper.id}`, (err) => {
+      if (err) throw err;
+    });
+  };
 
   app.use((req, res, next) => {
     const oldFields = { ...req.body };
@@ -244,6 +287,7 @@ con.connect(err => {
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
+            checkEmail(campers.find(camper => camper.id === body.id))
             res.status(200).send(JSON.stringify({ campers, groups, users }));
           });
         });
@@ -253,12 +297,12 @@ con.connect(err => {
   app.post('/camperAdd', (req, res) => {
     const body = fillNulls(req.body);
 
-    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, room) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.room})`, (err) => {
+    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, room) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.room})`, (err, newCamper) => {
       if (err) throw err;
-
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
+            checkEmail(campers.find(camper => camper.id === newCamper.insertId))
             res.status(200).send(JSON.stringify({ campers, groups, users }));
           });
         });

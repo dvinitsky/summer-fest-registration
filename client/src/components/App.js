@@ -11,6 +11,7 @@ import GroupEdit from './GroupEdit';
 import CamperAdd from './CamperAdd';
 import CamperEdit from './CamperEdit';
 import Header from './Header';
+import Waiver from './Waiver';
 
 class App extends Component {
   constructor() {
@@ -118,6 +119,17 @@ class App extends Component {
                 <>
                   <Header />
                   <CamperEdit {...props} />
+                </>
+              );
+            }}
+          />
+          <Route
+            path='/waiver'
+            render={props => {
+              return (
+                <>
+                  <Header />
+                  <Waiver {...props} />
                 </>
               );
             }}
