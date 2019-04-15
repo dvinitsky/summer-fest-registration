@@ -40,24 +40,6 @@ class Header extends React.Component {
       <div className="header">
         <div className="container">
           <h1>Summer Festival Camp Registration</h1>
-
-          <Link
-            to={{
-              pathname: "/",
-            }}
-            className="header-link"
-          >
-            Click here to go home
-          </Link>
-          <Link
-            to={{
-              pathname: "/signup"
-            }}
-            className="header-link"
-          >
-            Click here to sign up
-          </Link>
-
           {activeUserClearance === 'admin' && (
             <>
               <div className="admin-logged-message">

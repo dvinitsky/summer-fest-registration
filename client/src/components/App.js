@@ -12,6 +12,7 @@ import CamperAdd from './CamperAdd';
 import CamperEdit from './CamperEdit';
 import Header from './Header';
 import Waiver from './Waiver';
+import Home from './Home';
 
 class App extends Component {
   constructor() {
@@ -26,6 +27,18 @@ class App extends Component {
           <Route
             exact
             path='/'
+            render={props => {
+              return (
+                <>
+                  <Header />
+                  <Home {...props} />
+                </>
+              );
+            }}
+          />
+          <Route
+            exact
+            path='/login'
             render={props => {
               return (
                 <>
