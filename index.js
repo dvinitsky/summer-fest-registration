@@ -6,7 +6,15 @@ const bodyParser = require('body-parser');
 const passwordHash = require('password-hash');
 const nodemailer = require("nodemailer");
 
-const transporter = nodemailer.createTransport('smtp://waivers@summerfestivalcamp.com:hDy>T(Zz}hp&sN6@mail.summerfestivalcamp.com');
+const transporter = nodemailer.createTransport({
+  host: 'box1014.bluehost.com',
+  port: 465,
+  secure: true,
+  auth: {
+    user: 'waivers@summerfestivalcamp.com',
+    pass: 'hDy>T(Zz}hp&sN6'
+  }
+});
 
 transporter.verify(function (error, success) {
   if (error) {
@@ -88,35 +96,24 @@ con.connect(err => {
     return body;
   };
 
-  const checkEmail = async (camper) => {
-    console.log('in checkemail ');
-
-    if (camper.registration !== 'Online' || camper.signed_status !== 'Not Sent') {
-      console.log('returning')
-      return;
+  const checkEmail = camper => {
+    if (camper.registration !== 'Online' || camper.signed_status !== 'Not Sent' || !camper.parent_email) {
+      console.log('returning nothing')
+      return Promise.resolve();
     }
 
-    try {
-      console.log('in try block');
-      const info = await transporter.sendMail({
-        from: '"Summer Festival" <waiver@summerfestivalcamp.com>',
-        to: camper.parent_email,
-        subject: "Your Summer Festival Registration Waiver",
-        text: "",
-        html: ""
+    return transporter.sendMail({
+      from: '"Summer Festival" <waivers@summerfestivalcamp.com>',
+      to: camper.parent_email,
+      subject: "Your Summer Festival Registration Waiver",
+      text: "",
+      html: "<p>Please sign the Summer Festival Waiver Form, <a href='https://youth-forum-registration.herokuapp.com/waiver'>linked here.</a></p><p>Thank you!</p><p>Tony Ducklow</p>"
+    }).then(x => {
+      con.query(`UPDATE campers SET signed_status = 'Emailed' WHERE id = ${camper.id}`, (err) => {
+        if (err) throw err;
       });
-
-      console.log('sent email. here is the info:');
-      console.log(info);
-    } catch (error) {
-      console.log('ERROR:');
+    }).catch(error => {
       console.log(error);
-    }
-
-    console.log('done')
-
-    con.query(`UPDATE campers SET signed_status = 'Emailed' WHERE id = ${camper.id}`, (err) => {
-      if (err) throw err;
     });
   };
 
@@ -287,8 +284,11 @@ con.connect(err => {
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
-            checkEmail(campers.find(camper => camper.id === body.id))
-            res.status(200).send(JSON.stringify({ campers, groups, users }));
+            checkEmail(campers.find(camper => `'${camper.id}'` === body.id)).then(x => {
+              con.query('SELECT * FROM campers', (err, campers) => {
+                res.status(200).send(JSON.stringify({ campers, groups, users }));
+              });
+            });
           });
         });
       });
@@ -302,8 +302,11 @@ con.connect(err => {
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {
           con.query('SELECT * FROM users', (err, users) => {
-            checkEmail(campers.find(camper => camper.id === newCamper.insertId))
-            res.status(200).send(JSON.stringify({ campers, groups, users }));
+            checkEmail(campers.find(camper => camper.id === newCamper.insertId)).then(x => {
+              con.query('SELECT * FROM campers', (err, campers) => {
+                res.status(200).send(JSON.stringify({ campers, groups, users }));
+              });
+            });
           });
         });
       });
