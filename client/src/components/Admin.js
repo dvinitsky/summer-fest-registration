@@ -73,28 +73,30 @@ class Admin extends React.Component {
               </tr>
 
               {groups.map(group => {
-                return (
-                  <tr key={group.id} className="table-row">
-                    <td className="table-edit">
-                      <Link
-                        to={{
-                          pathname: "/groupEdit",
-                        }}
-                        onClick={() => {
-                          setActiveGroupId(group.id)
-                        }}
-                      >
-                        Edit
+                if (group.id !== 1) {
+                  return (
+                    <tr key={group.id} className="table-row">
+                      <td className="table-edit">
+                        <Link
+                          to={{
+                            pathname: "/groupEdit",
+                          }}
+                          onClick={() => {
+                            setActiveGroupId(group.id)
+                          }}
+                        >
+                          Edit
                     </Link>
-                    </td>
-                    <td className="table-name">
-                      {group.group_name}
-                    </td>
-                    <td className="table-score">
-                      {group.leader_name}
-                    </td>
-                  </tr>
-                );
+                      </td>
+                      <td className="table-name">
+                        {group.group_name}
+                      </td>
+                      <td className="table-score">
+                        {group.leader_name}
+                      </td>
+                    </tr>
+                  );
+                }
               })}
             </tbody>
           </table>
