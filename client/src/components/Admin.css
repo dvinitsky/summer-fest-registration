@@ -17,7 +17,7 @@ table {
   background-color: rgb(226, 236, 132);
 }
 
-th, td {
+.admin th, .admin td {
   padding: 8px;
   font-size: 18px;
 }

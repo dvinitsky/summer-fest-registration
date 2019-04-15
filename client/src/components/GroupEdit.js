@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
 import { getActiveGroupId, getActiveUserClearance, setActiveCamperId } from '../helpers';
+import './GroupEdit.css';
 
 class GroupEdit extends Component {
   constructor() {
@@ -110,17 +111,57 @@ class GroupEdit extends Component {
     return (
       <>
         <div className="group-edit">
-          <h3>
-            Group Name:
-        </h3>
-          <input onChange={this.handleChange} defaultValue={activeGroup.group_name} name="group_name" />
-          <br />
-          Leader Name:
-        <input onChange={this.handleChange} defaultValue={activeGroup.leader_name} name="leader_name" />
-          <br />
-          Campers:
 
-        <table name="camperId">
+          <div className="info-container">
+            <div className="name-title">
+              Group Name:
+          </div>
+            <input onChange={this.handleChange} defaultValue={activeGroup.group_name} name="group_name" />
+            <div className="name-title">
+              Leader Name:
+          </div>
+            <input onChange={this.handleChange} defaultValue={activeGroup.leader_name} name="leader_name" />
+          </div>
+
+          {this.state.showDeleteModal && (
+            <div id="delete-group-modal">
+              <h1>Are you sure you want to PERMANENTLY delete {activeGroup.group_name} and all its campers
+              {users.find(user => user.group_id === activeGroup.id) && (<span>, along with the user {users.find(user => user.group_id === activeGroup.id).username}</span>)}
+                ?
+              </h1>
+              <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
+              <button type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
+            </div>
+          )}
+
+          {this.state.error && (
+            <div id="error">
+              There's been an error. Please try again.
+            </div>
+          )}
+
+          <div className="campers-table-title">
+            Campers
+          </div>
+          <button onClick={() => this.editGroup(
+            activeGroupId,
+            this.state.group.group_name,
+            this.state.group.leader_name
+          )} type="submit">Save</button>
+
+          <Link
+            to={{
+              pathname: "/camperAdd"
+            }}
+            className="add-camper-button"
+          >
+            Add a Camper
+          </Link>
+
+          {activeUserClearance === 'admin' && (
+            <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
+          )}
+          <table name="camperId">
             <tbody>
               <tr className="table-header-row">
                 <th className="header-place"></th>
@@ -204,40 +245,6 @@ class GroupEdit extends Component {
               })}
             </tbody>
           </table>
-
-          <button onClick={() => this.editGroup(
-            activeGroupId,
-            this.state.group.group_name,
-            this.state.group.leader_name
-          )} type="submit">Save</button>
-
-          <Link
-            to={{
-              pathname: "/camperAdd"
-            }}>
-            Add a Camper
-          </Link>
-
-          {activeUserClearance === 'admin' && (
-            <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
-          )}
-
-          {this.state.showDeleteModal && (
-            <div id="delete-group-modal">
-              <h1>Are you sure you want to PERMANENTLY delete {activeGroup.group_name} and all its campers
-              {users.find(user => user.group_id === activeGroup.id) && (<span>, along with the user {users.find(user => user.group_id === activeGroup.id).username}</span>)}
-                ?
-              </h1>
-              <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
-              <button type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
-            </div>
-          )}
-
-          {this.state.error && (
-            <div id="error">
-              There's been an error. Please try again.
-            </div>
-          )}
         </div>
       </>
     );

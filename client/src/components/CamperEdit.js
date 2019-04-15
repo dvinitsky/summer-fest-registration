@@ -130,7 +130,7 @@ class CamperEdit extends React.Component {
       <Error />
       : (
         <>
-          <div className="camper-edit">
+          <div className="camper-form">
             <h3>
               First Name:
           </h3>
@@ -230,7 +230,7 @@ class CamperEdit extends React.Component {
             <br />
             <br />
 
-            <button type="button" onClick={() => this.editCamper(
+            <button className="save-camper-button" type="button" onClick={() => this.editCamper(
               this.state.camper.id,
               this.state.camper.first_name,
               this.state.camper.last_name,
@@ -251,7 +251,7 @@ class CamperEdit extends React.Component {
             <br />
             <br />
 
-            <button type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
+            <button className="delete-camper-button" type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
 
             {this.state.showDeleteModal && (
               <div id="delete-camper-modal">

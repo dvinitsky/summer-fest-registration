@@ -94,7 +94,7 @@ class CamperAdd extends React.Component {
       <Error />
       : (
         <>
-          <div className="container">
+          <div className="camper-form">
             <h3>
               First Name:
           </h3>
@@ -191,7 +191,7 @@ class CamperAdd extends React.Component {
               </>
             )}
 
-            <button onClick={() => this.addCamper(
+            <button className="save-camper-button" onClick={() => this.addCamper(
               activeGroupId,
               this.state.camper.first_name,
               this.state.camper.last_name,

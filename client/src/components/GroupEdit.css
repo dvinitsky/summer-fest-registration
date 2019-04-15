@@ -1,9 +1,29 @@
-.home-table-container {
-  margin: 0 auto;
-  border: 2px solid black;
-  width: 50%;
-  font-size: 18px;
+.group-edit {
+  text-align: center;
 }
+
+.group-edit a {
+  color: rgb(55, 87, 156);
+  font-weight: 600;
+}
+
+.info-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 30px;
+}
+
+.name-title {
+  font-size: 16px;
+  margin: 0 10px;
+}
+
+.campers-table-title {
+  margin: 10px 0;
+  font-size: 26px;
+  text-decoration: underline;
+}
+
 .table-header-row {
   background-color: rgb(179, 173, 173);
 }
@@ -13,15 +33,13 @@
 
 th, td {
   padding: 8px;
+  font-size: 14px;
 }
 
-.add-delete-link {
-  text-align: center;
+.add-camper-button {
+  margin: 0 20px;
 }
 
-.admin-logged-message {
-  text-align: center;
-  font-size: 24px;
-  color: maroon;
+table {
+  margin-top: 20px;
 }
-
