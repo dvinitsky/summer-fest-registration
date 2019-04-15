@@ -1,0 +1,27 @@
+.admin {
+  display: flex;
+  flex-direction: column;
+}
+.admin a {
+  color: rgb(35, 61, 211)
+}
+
+table {
+  border: 2px solid black;
+  margin-bottom: 10px;
+}
+.table-header-row {
+  background-color: rgb(179, 173, 173);
+}
+.table-row:nth-of-type(odd){
+  background-color: rgb(226, 236, 132);
+}
+
+th, td {
+  padding: 8px;
+  font-size: 18px;
+}
+
+.add-delete-link {
+  text-align: center;
+}

@@ -3,9 +3,16 @@
   color: rgb(253, 255, 119);
   padding-bottom: 20px;
   font-family: 'Syncopate';
+  margin-bottom: 30px;
 }
 
 .header-link {
   margin: 0 10px;
   font-weight: 600;
+}
+
+.logged-in-as {
+  text-align: center;
+  font-size: 24px;
+  color: maroon;
 }

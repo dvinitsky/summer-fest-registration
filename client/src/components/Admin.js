@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Redirect } from 'react-router-dom';
 import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 import { getCsvFile } from '../helpers/download-helper';
+import './Admin.css';
 
 class Admin extends React.Component {
   constructor() {
@@ -62,7 +63,7 @@ class Admin extends React.Component {
 
     return (
       <>
-        <div>
+        <div className="admin">
           <table name="camperId">
             <tbody>
               <tr className="table-header-row">

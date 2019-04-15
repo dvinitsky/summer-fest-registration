@@ -3,6 +3,7 @@ import Error from './Error';
 import { Redirect } from 'react-router-dom';
 import { addCamper } from '../services/camper-service';
 import { getActiveGroupId, getActiveUserClearance } from '../helpers';
+import './CamperForm.css';
 
 class CamperAdd extends React.Component {
   constructor() {

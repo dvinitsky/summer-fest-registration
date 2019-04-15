@@ -1,0 +1,27 @@
+.home-table-container {
+  margin: 0 auto;
+  border: 2px solid black;
+  width: 50%;
+  font-size: 18px;
+}
+.table-header-row {
+  background-color: rgb(179, 173, 173);
+}
+.table-row:nth-of-type(odd){
+  background-color: rgb(212, 193, 193);
+}
+
+th, td {
+  padding: 8px;
+}
+
+.add-delete-link {
+  text-align: center;
+}
+
+.admin-logged-message {
+  text-align: center;
+  font-size: 24px;
+  color: maroon;
+}
+

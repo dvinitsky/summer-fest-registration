@@ -42,7 +42,7 @@ class Header extends React.Component {
           <h1>Summer Festival Camp Registration</h1>
           {activeUserClearance === 'admin' && (
             <>
-              <div className="admin-logged-message">
+              <div className="logged-in-as">
                 Logged in as {activeUserName}
               </div>
               <Link
@@ -57,7 +57,7 @@ class Header extends React.Component {
           )}
           {activeUserClearance === 'leader' && (
             <>
-              <div className="admin-logged-message">
+              <div className="logged-in-as">
                 Logged in as {activeUserName}
               </div>
               <Link
