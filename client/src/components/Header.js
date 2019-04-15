@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getActiveUserClearance, getActiveUserName } from '../helpers';
+import './Header.css';
 
 class Header extends React.Component {
   constructor() {
@@ -36,35 +37,32 @@ class Header extends React.Component {
     const activeUserName = getActiveUserName();
 
     return (
-      <div className="jumbotron text-center">
+      <div className="header">
         <div className="container">
-          <h1>Registration</h1>
+          <h1>Summer Festival Camp Registration</h1>
 
-          <p>
-            <Link
-              to={{
-                pathname: "/",
-              }}
-            >
-              Click here to go home
+          <Link
+            to={{
+              pathname: "/",
+            }}
+            className="header-link"
+          >
+            Click here to go home
           </Link>
-          </p>
-
-          <p>
-            <Link
-              to={{
-                pathname: "/signup"
-              }}
-            >
-              Click here to sign up
+          <Link
+            to={{
+              pathname: "/signup"
+            }}
+            className="header-link"
+          >
+            Click here to sign up
           </Link>
-          </p>
 
           {activeUserClearance === 'admin' && (
             <>
               <div className="admin-logged-message">
                 Logged in as {activeUserName}
-            </div>
+              </div>
               <Link
                 to={{
                   pathname: "/admin"
