@@ -102,12 +102,14 @@ con.connect(err => {
       return Promise.resolve();
     }
 
+    const id = camper.id * 73648;
+
     return transporter.sendMail({
       from: '"Summer Festival" <waivers@summerfestivalcamp.com>',
       to: camper.parent_email,
       subject: "Your Summer Festival Registration Waiver",
       text: "",
-      html: "<p>Please sign the Summer Festival Waiver Form, <a href='https://youth-forum-registration.herokuapp.com/waiver'>linked here.</a></p><p>Thank you!</p><p>Tony Ducklow</p>"
+      html: `<p>Please sign the Summer Festival Waiver Form, <a href='https://youth-forum-registration.herokuapp.com/waiver?id=${id}'>linked here.</a></p><p>Thank you!</p><p>Tony Ducklow</p>`
     }).then(x => {
       con.query(`UPDATE campers SET signed_status = 'Emailed' WHERE id = ${camper.id}`, (err) => {
         if (err) throw err;
@@ -334,6 +336,11 @@ con.connect(err => {
           });
         });
       });
+    });
+  });
+  app.post('/makeWaiverSigned', (req, res) => {
+    con.query(`UPDATE campers SET signed_status ='Signed' WHERE id = ${req.body.camperId}`, (err) => {
+      res.status(200).send();
     });
   });
 

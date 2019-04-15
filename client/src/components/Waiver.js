@@ -1,8 +1,37 @@
 import React from 'react';
+import queryString from 'query-string';
+import { submitWaiver } from '../services/camper-service';
 
 class Waiver extends React.Component {
+  constructor() {
+    super();
+    this.state = {};
+    this.submit = this.submit.bind(this);
+  }
+  componentDidMount() {
+    const waiverId = queryString.parse(this.props.location.search).id;
+    console.log(waiverId)
+    this.setState({ waiverId });
+  }
+
+  submit() {
+    submitWaiver(this.state.waiverId)
+      .then(response => {
+        if (response.ok) {
+          this.setState({ success: true });
+        }
+      }).catch(error => {
+        this.setState({ error });
+      });
+  }
 
   render() {
+    if (this.state.error) {
+      return <div>Sorry, there's been an error. Please refresh and try again.</div>;
+    }
+    if (this.state.success) {
+      return <div>Thank you!</div>;
+    }
     return (
       <div>
         <h2>Summer Festival Camp Waiver </h2>

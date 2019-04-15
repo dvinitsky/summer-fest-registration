@@ -136,3 +136,32 @@ export function addCamper(
       return { error };
     });
 }
+
+export const submitWaiver = (waiverId) => {
+  if (!waiverId) {
+    return Promise.reject({ message: 'There\'s been an error.' });
+  }
+  const camperId = waiverId / 73648;
+
+  const options = {
+    method: 'POST',
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      camperId
+    })
+  };
+
+  return fetch('/makeWaiverSigned', options)
+    .then(response => {
+      if (response.ok) {
+        return response;
+      }
+      else throw new Error();
+    })
+    .then(data => data)
+    .catch(error => {
+      return { error };
+    });
+};

@@ -22,7 +22,7 @@ class CamperAdd extends React.Component {
         roommate: null,
         notes: null,
         registration: null,
-        signed_status: null,
+        signed_status: 'Not Sent',
         room: null,
       }
     };
@@ -176,7 +176,6 @@ class CamperAdd extends React.Component {
               Waiver Signed Status:
           </h3>
             <select onChange={this.handleChange} className="camper-input" name="signed_status">
-              <option value="null">{null}</option>
               <option value="Not Sent">Not Sent</option>
               <option value="Emailed">Emailed</option>
               <option value="Signed">Signed</option>

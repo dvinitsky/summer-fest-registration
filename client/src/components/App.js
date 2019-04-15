@@ -128,7 +128,6 @@ class App extends Component {
             render={props => {
               return (
                 <>
-                  <Header />
                   <Waiver {...props} />
                 </>
               );
