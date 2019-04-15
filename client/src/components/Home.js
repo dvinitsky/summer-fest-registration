@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getActiveUserName } from '../helpers/index';
+import './Home.css';
 
 class Home extends React.Component {
   constructor() {
@@ -39,12 +40,12 @@ class Home extends React.Component {
     }
 
     return (
-      <div className="header">
+      <div className="home">
         <Link
           to={{
             pathname: "/login"
           }}
-          className="header-link"
+          className="home-link"
         >
           Click here to log in.
           </Link>
@@ -52,7 +53,7 @@ class Home extends React.Component {
           to={{
             pathname: "/signup"
           }}
-          className="header-link"
+          className="home-link"
         >
           New user? Click here.
           </Link>

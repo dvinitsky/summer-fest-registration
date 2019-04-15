@@ -49,6 +49,7 @@ class Header extends React.Component {
                 to={{
                   pathname: "/admin"
                 }}
+                className="header-link"
               >
                 View Admin Page
               </Link>
@@ -63,6 +64,7 @@ class Header extends React.Component {
                 to={{
                   pathname: "/groupEdit"
                 }}
+                className="header-link"
               >
                 View my group
               </Link>
@@ -74,6 +76,7 @@ class Header extends React.Component {
                 pathname: "/",
               }}
               onClick={this.logout}
+              className="header-link"
             >
               Log Out
             </Link>

@@ -1,0 +1,14 @@
+h3 {
+  text-align: center;
+}
+
+.login {
+  display: flex;
+  flex-direction: column;
+  margin: 0 150px;
+}
+
+.login-text {
+  color: white;
+  margin: 10px 0;
+}

@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { signup } from '../services/user-service';
 import { setActiveGroupId, setActiveUserName, setActiveUserClearance } from '../helpers';
+import './Signup.css';
 
 class Signup extends React.Component {
   constructor() {
@@ -68,15 +69,15 @@ class Signup extends React.Component {
 
     return (
       <>
-        <div>
-          <h4>
+        <div className="signup">
+          <h3 className="signup-text">
             Signup
-        </h4>
-          <div>Username:</div>
+         </h3>
+          <div className="signup-text">Username:</div>
           <input name="username" onChange={this.handleChange}></input>
-          <div>Password:</div>
+          <div className="signup-text">Password:</div>
           <input name="password" onChange={this.handleChange}></input>
-          <button onClick={() => this.signup(this.state.username, this.state.password)}>Submit</button>
+          <button className="signup-button" onClick={() => this.signup(this.state.username, this.state.password)}>Submit</button>
 
           {this.state.error && <div>{this.state.error}</div>}
 

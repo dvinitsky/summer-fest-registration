@@ -2,6 +2,10 @@ body {
   background: rgb(197, 87, 72);
 }
 
+.app {
+  margin: 0 10px;
+}
+
 /* HOME TABLE */
 .home-table-container {
   margin: 0 auto;

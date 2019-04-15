@@ -2,6 +2,7 @@ import React from 'react';
 import { Redirect } from 'react-router-dom';
 import { login } from '../services/user-service';
 import { setActiveGroupId, setActiveUserClearance, setActiveUserName } from '../helpers';
+import './Login.css';
 
 class Login extends React.Component {
   constructor() {
@@ -84,13 +85,13 @@ class Login extends React.Component {
     }
 
     return (
-      <div>
-        <h4>Login</h4>
-        <div>Username:</div>
+      <div className="login">
+        <h3 className="login-text">Login</h3>
+        <div className="login-text">Username:</div>
         <input id="username-input" name="username" onChange={this.handleChange} />
-        <div>Password:</div>
+        <div className="login-text">Password:</div>
         <input id="password-input" name="password" type="password" onChange={this.handleChange} />
-        <div>
+        <div className="login-text">
           <input type="checkbox" onClick={this.toggleShowPassword} />
           Show Password
         </div>
