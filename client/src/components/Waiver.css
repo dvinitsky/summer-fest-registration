@@ -30,3 +30,10 @@
 .signature-input {
   width: 400px;
 }
+
+.waiver-error, .waiver-thank-you {
+  text-align: center;
+  color: white;
+  font-size: 26px;
+  margin-top: 40px;
+}

@@ -137,19 +137,20 @@ export function addCamper(
     });
 }
 
-export const submitWaiver = (waiverId) => {
+export const submitWaiver = (waiverId, signerName) => {
   if (!waiverId) {
     return Promise.reject({ message: 'There\'s been an error.' });
   }
   const camperId = waiverId / 73648;
-
+console.log(signerName)
   const options = {
     method: 'POST',
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      camperId
+      camperId,
+      signerName
     })
   };
 

@@ -8,15 +8,21 @@ class Waiver extends React.Component {
     super();
     this.state = {};
     this.submit = this.submit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
   componentDidMount() {
     const waiverId = queryString.parse(this.props.location.search).id;
-    console.log(waiverId)
     this.setState({ waiverId });
   }
 
+  handleChange(e) {
+    const newState = { ...this.state }
+    newState[e.target.name] = e.target.value;
+    this.setState(newState);
+  }
+
   submit() {
-    submitWaiver(this.state.waiverId)
+    submitWaiver(this.state.waiverId, this.state.signature)
       .then(response => {
         if (response.ok) {
           this.setState({ success: true });
@@ -28,10 +34,10 @@ class Waiver extends React.Component {
 
   render() {
     if (this.state.error) {
-      return <div>Sorry, there's been an error. Please refresh and try again.</div>;
+      return <div className="waiver-error">Sorry, there's been an error. Please refresh and try again.</div>;
     }
     if (this.state.success) {
-      return <div>Thank you!</div>;
+      return <div className="waiver-thank-you">Thank you!</div>;
     }
     return (
       <div className="waiver-container">
@@ -54,7 +60,7 @@ class Waiver extends React.Component {
           <h4 className="parent-signature">
             Parent / Guardian Signature
           </h4>
-          <input className="signature-input" />
+          <input onChange={this.handleChange} name="signature" className="signature-input" />
         </div>
         <button className="submit-button" onClick={this.submit}>Submit</button>
       </div>

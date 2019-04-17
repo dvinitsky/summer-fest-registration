@@ -130,7 +130,9 @@ con.connect(err => {
       'parent_email',
       'emergency_name',
       'roommate',
-      'notes'
+      'notes',
+      'room',
+      'signed_by'
     ];
 
     const newFields = {};
@@ -339,7 +341,7 @@ con.connect(err => {
     });
   });
   app.post('/makeWaiverSigned', (req, res) => {
-    con.query(`UPDATE campers SET signed_status ='Signed' WHERE id = ${req.body.camperId}`, (err) => {
+    con.query(`UPDATE campers SET signed_status ='Signed', signed_by = '${req.body.signerName}' WHERE id = ${req.body.camperId}`, (err) => {
       res.status(200).send();
     });
   });
