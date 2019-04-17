@@ -30,7 +30,7 @@ class Admin extends React.Component {
 
   handleDownloadClick() {
     var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(getCsvFile(this.state.data)));
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(getCsvFile({...this.state.data, isAdmin:true})));
     element.setAttribute('download', 'registration-data.csv');
     element.style.display = 'none';
     if (typeof element.download != "undefined") {
