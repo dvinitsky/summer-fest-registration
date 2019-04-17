@@ -25,6 +25,7 @@ class CamperEdit extends React.Component {
         notes: null,
         registration: null,
         signed_status: null,
+        signed_by: null,
         room: null,
       }
     };
@@ -245,6 +246,7 @@ class CamperEdit extends React.Component {
               this.state.camper.notes,
               this.state.camper.registration,
               this.state.camper.signed_status,
+              this.state.camper.signed_by,
               this.state.camper.room
             )}>Save</button>
 

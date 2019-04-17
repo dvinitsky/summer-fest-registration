@@ -5,24 +5,27 @@ export function getCsvFile({ users, groups, campers }) {
 }
 
 function convertArrayOfObjectsToCSV(data) {
-  let keys = Object.keys(data[0]);
-  keys = keys.filter(key => key !== 'password');
+  if (data && data.length > 0) {
 
-  let result = '';
-  result += keys.join(',');
-  result += '\n';
+    let keys = Object.keys(data[0]);
+    keys = keys.filter(key => key !== 'password');
 
-  data.forEach(function (item) {
-    let counter = 0;
-    keys.forEach(function (key) {
-      if (counter > 0) {
-        result += ',';
-      }
-
-      result += item[key];
-      counter++;
-    });
+    let result = '';
+    result += keys.join(',');
     result += '\n';
-  });
-  return result;
+
+    data.forEach(function (item) {
+      let counter = 0;
+      keys.forEach(function (key) {
+        if (counter > 0) {
+          result += ',';
+        }
+
+        result += item[key];
+        counter++;
+      });
+      result += '\n';
+    });
+    return result;
+  }
 }

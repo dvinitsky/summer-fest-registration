@@ -5,6 +5,7 @@ import { Redirect } from 'react-router-dom';
 import { deleteGroup, editGroup } from '../services/group-service';
 import { getActiveGroupId, getActiveUserClearance, setActiveCamperId } from '../helpers';
 import './GroupEdit.css';
+import { getCsvFile } from '../helpers/download-helper';
 
 class GroupEdit extends Component {
   constructor() {
@@ -14,6 +15,7 @@ class GroupEdit extends Component {
       group: {}
     };
     this.handleChange = this.handleChange.bind(this);
+    this.handleDownloadClick = this.handleDownloadClick.bind(this);
   }
 
   componentDidMount() {
@@ -68,6 +70,20 @@ class GroupEdit extends Component {
       }
     });
   };
+  handleDownloadClick() {
+    var element = document.createElement('a');
+    const activeGroupId = getActiveGroupId();
+    const campersInThisGroup = this.state.data.campers.filter(camper => String(camper.group_id) === activeGroupId);
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(getCsvFile({ campers: campersInThisGroup })));
+    element.setAttribute('download', 'registration-data.csv');
+    element.style.display = 'none';
+    if (typeof element.download != "undefined") {
+      //browser has support - process the download
+      document.body.appendChild(element);
+      element.click();
+      document.body.removeChild(element);
+    }
+  }
 
   render() {
     let groups, campers, users;
@@ -178,6 +194,7 @@ class GroupEdit extends Component {
                 <th className="header-name">Notes</th>
                 <th className="header-name">Online or Paper Registration</th>
                 <th className="header-name">Waiver Signed Status</th>
+                <th className="header-name">Waiver Signed By</th>
                 {activeUserClearance === 'admin' && (
                   <th className="header-name">Room Assignment</th>
                 )}
@@ -235,6 +252,9 @@ class GroupEdit extends Component {
                     <td>
                       {camper.signed_status}
                     </td>
+                    <td>
+                      {camper.signed_by}
+                    </td>
                     {activeUserClearance === 'admin' && (
                       <td>
                         {camper.room}
@@ -245,6 +265,8 @@ class GroupEdit extends Component {
               })}
             </tbody>
           </table>
+
+          <button className="download-button" onClick={this.handleDownloadClick}>Click here to download an Excel file with all your campers</button>
         </div>
       </>
     );

@@ -39,6 +39,7 @@ export function editCamper(
   notes,
   registration,
   signed_status,
+  signed_by,
   room
 ) {
   const options = {
@@ -61,6 +62,7 @@ export function editCamper(
       notes,
       registration,
       signed_status,
+      signed_by,
       room
     })
   };
@@ -98,6 +100,7 @@ export function addCamper(
   notes,
   registration,
   signed_status,
+  signed_by,
   room
 ) {
   const options = {
@@ -120,6 +123,7 @@ export function addCamper(
       notes,
       registration,
       signed_status,
+      signed_by,
       room
     })
   };
