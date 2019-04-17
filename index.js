@@ -109,7 +109,7 @@ con.connect(err => {
       to: camper.parent_email,
       subject: "Your Summer Festival Registration Waiver",
       text: "",
-      html: `<p>Please sign the Summer Festival Waiver Form, <a href='https://youth-forum-registration.herokuapp.com/waiver?id=${id}'>linked here.</a></p><p>Thank you!</p><p>Tony Ducklow</p>`
+      html: `<p>Please sign the Summer Festival Waiver Form, <a href='https://summer-fest-registration.herokuapp.com/waiver?id=${id}'>linked here.</a></p><p>Thank you!</p><p>Tony Ducklow</p>`
     }).then(x => {
       con.query(`UPDATE campers SET signed_status = 'Emailed' WHERE id = ${camper.id}`, (err) => {
         if (err) throw err;

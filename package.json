@@ -2,7 +2,7 @@
   "name": "summer-fest",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://youth-forum-registration.herokuapp.com/",
+  "homepage": "https://summer-fest-registration.herokuapp.com/",
   "dependencies": {
     "body-parser": "1.18.3",
     "express": "4.16.4",
