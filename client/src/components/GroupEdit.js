@@ -198,6 +198,7 @@ class GroupEdit extends Component {
                 {activeUserClearance === 'admin' && (
                   <th className="header-name">Room Assignment</th>
                 )}
+                <th className="header-name">Is Adult Leader</th>
               </tr>
 
               {campersInThisGroup.map(camper => {
@@ -260,6 +261,9 @@ class GroupEdit extends Component {
                         {camper.room}
                       </td>
                     )}
+                    <td>
+                      {camper.adult_leader}
+                    </td>
                   </tr>
                 );
               })}

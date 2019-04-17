@@ -1,14 +1,18 @@
-export function getCsvFile({ users, groups, campers }) {
-  return convertArrayOfObjectsToCSV(users) +
-    convertArrayOfObjectsToCSV(groups) +
-    convertArrayOfObjectsToCSV(campers);
+export function getCsvFile({ users, groups, campers, isAdmin }) {
+  return convertArrayOfObjectsToCSV(users, isAdmin) +
+    convertArrayOfObjectsToCSV(groups, isAdmin) +
+    convertArrayOfObjectsToCSV(campers, isAdmin);
 }
 
-function convertArrayOfObjectsToCSV(data) {
+function convertArrayOfObjectsToCSV(data, isAdmin) {
   if (data && data.length > 0) {
 
     let keys = Object.keys(data[0]);
     keys = keys.filter(key => key !== 'password');
+    
+    if(!isAdmin) {
+      keys = keys.filter(key => key !== 'room');
+    }
 
     let result = '';
     result += keys.join(',');

@@ -27,6 +27,7 @@ class CamperEdit extends React.Component {
         signed_status: null,
         signed_by: null,
         room: null,
+        adult_leader: null
       }
     };
 
@@ -226,9 +227,16 @@ class CamperEdit extends React.Component {
                   Room Assignment:
               </h3>
                 <input onChange={this.handleChange} className="camper-input" defaultValue={camper.room} name="room" />
+                <br />
               </>
             )}
-            <br />
+            <h3>
+              Is this person an adult leader?
+          </h3>
+            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.adult_leader} name="adult_leader">
+              <option value="null">{null}</option>
+              <option value="Yes">Yes</option>
+            </select>            
             <br />
 
             <button className="save-camper-button" type="button" onClick={() => this.editCamper(
@@ -247,7 +255,8 @@ class CamperEdit extends React.Component {
               this.state.camper.registration,
               this.state.camper.signed_status,
               this.state.camper.signed_by,
-              this.state.camper.room
+              this.state.camper.room,
+              this.state.camper.adult_leader,
             )}>Save</button>
 
             <br />

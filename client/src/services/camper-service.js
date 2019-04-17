@@ -40,8 +40,15 @@ export function editCamper(
   registration,
   signed_status,
   signed_by,
-  room
+  room,
+  adult_leader
 ) {
+  if (adult_leader === 'on') {
+    adult_leader = 'Yes'
+  } else {
+    adult_leader = '';
+  }
+
   const options = {
     method: 'POST',
     headers: {
@@ -63,7 +70,8 @@ export function editCamper(
       registration,
       signed_status,
       signed_by,
-      room
+      room,
+      adult_leader
     })
   };
 
@@ -101,7 +109,8 @@ export function addCamper(
   registration,
   signed_status,
   signed_by,
-  room
+  room,
+  adult_leader
 ) {
   const options = {
     method: 'POST',
@@ -124,7 +133,8 @@ export function addCamper(
       registration,
       signed_status,
       signed_by,
-      room
+      room,
+      adult_leader
     })
   };
 
@@ -146,7 +156,7 @@ export const submitWaiver = (waiverId, signerName) => {
     return Promise.reject({ message: 'There\'s been an error.' });
   }
   const camperId = waiverId / 73648;
-console.log(signerName)
+  console.log(signerName)
   const options = {
     method: 'POST',
     headers: {

@@ -26,6 +26,7 @@ class CamperAdd extends React.Component {
         signed_status: 'Not Sent',
         signed_by: null,
         room: null,
+        adult_leader: null
       }
     };
     this.handleChange = this.handleChange.bind(this);
@@ -189,8 +190,16 @@ class CamperAdd extends React.Component {
                   Room Assignment:
               </h3>
                 <input onChange={this.handleChange} className="camper-input" name="room" />
+                <br />
               </>
             )}
+            <h3>
+              Is this person an adult leader?
+          </h3>
+            <select onChange={this.handleChange} className="camper-input" name="adult_leader">
+              <option value="null">{null}</option>
+              <option value="Yes">Yes</option>
+            </select>
 
             <button className="save-camper-button" onClick={() => this.addCamper(
               activeGroupId,
@@ -208,7 +217,8 @@ class CamperAdd extends React.Component {
               this.state.camper.registration,
               this.state.camper.signed_status,
               this.state.camper.signed_by,
-              this.state.camper.room
+              this.state.camper.room,
+              this.state.camper.adult_leader
             )} type="button">Save</button>
           </div>
           {this.state.error && (

@@ -47,7 +47,7 @@ class Home extends React.Component {
           }}
           className="home-link"
         >
-          Click here to log in.
+          Log In
           </Link>
         <Link
           to={{
@@ -55,7 +55,7 @@ class Home extends React.Component {
           }}
           className="home-link"
         >
-          New user? Click here.
+          New User?
           </Link>
       </div>
     );
