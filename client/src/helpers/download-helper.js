@@ -1,10 +1,10 @@
 export function getCsvFile({ users, groups, campers, isAdmin }) {
   return convertArrayOfObjectsToCSV(users, isAdmin) +
     convertArrayOfObjectsToCSV(groups, isAdmin) +
-    convertArrayOfObjectsToCSV(campers, isAdmin);
+    convertArrayOfObjectsToCSV(campers, isAdmin, groups);
 }
 
-function convertArrayOfObjectsToCSV(data, isAdmin) {
+function convertArrayOfObjectsToCSV(data, isAdmin, groups) {
   if (data && data.length > 0) {
 
     let keys = Object.keys(data[0]);
@@ -12,6 +12,10 @@ function convertArrayOfObjectsToCSV(data, isAdmin) {
     
     if(!isAdmin) {
       keys = keys.filter(key => key !== 'room');
+    }
+
+    if(groups) {
+      keys.push('group_name');
     }
 
     let result = '';
@@ -25,7 +29,11 @@ function convertArrayOfObjectsToCSV(data, isAdmin) {
           result += ',';
         }
 
-        result += item[key];
+        if (groups && key === 'group_name') {
+          result += groups.find(group => group.id === item.group_id).group_name;
+        } else {
+          result += item[key];
+        }
         counter++;
       });
       result += '\n';
