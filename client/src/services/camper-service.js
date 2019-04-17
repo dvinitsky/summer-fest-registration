@@ -43,12 +43,6 @@ export function editCamper(
   room,
   adult_leader
 ) {
-  if (adult_leader === 'on') {
-    adult_leader = 'Yes'
-  } else {
-    adult_leader = '';
-  }
-
   const options = {
     method: 'POST',
     headers: {
