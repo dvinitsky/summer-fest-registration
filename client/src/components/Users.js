@@ -100,7 +100,7 @@ class Users extends React.Component {
                 <td>
                   {user.status === 'leader' && (
                     <button className="table-name" onClick={() => this.makeAdmin(user.id)}>
-                      MAKE ADMIN
+                      MAKE ADMIN (cannot be undone)
                   </button>
                   )}
                 </td>
