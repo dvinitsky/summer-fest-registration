@@ -9,6 +9,7 @@ class Users extends React.Component {
     this.state = {
       data: {}
     };
+    this.getGroupName = this.getGroupName.bind(this);
   }
 
   componentDidMount() {
@@ -42,6 +43,13 @@ class Users extends React.Component {
         });
       }
     });
+  }
+
+  getGroupName (groups, user) {
+    const group = groups.find(group => {
+      return group.id === user.group_id
+    });
+    return group && group.group_name;
   }
 
   render() {
@@ -84,9 +92,7 @@ class Users extends React.Component {
                   {user.username}
                 </td>
                 <td className="table-name">
-                  {groups.find(group => {
-                    return group.id === user.group_id
-                  }).group_name}
+                  {this.getGroupName(groups, user)}
                 </td>
                 <td className="table-name">
                   {user.status}
