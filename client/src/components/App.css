@@ -6,6 +6,10 @@ body {
   margin: 0 30px;
 }
 
+.save-button, .add-button {
+  margin: 10px 0;
+}
+
 ///////////////////
 
 .error-message {

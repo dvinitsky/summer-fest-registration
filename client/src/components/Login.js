@@ -86,7 +86,7 @@ class Login extends React.Component {
 
     return (
       <div className="login">
-        <h3 className="login-text">Login</h3>
+        <h3 className="login-text login-header">Login</h3>
         <div className="login-text">Username:</div>
         <input id="username-input" name="username" onChange={this.handleChange} />
         <div className="login-text">Password:</div>

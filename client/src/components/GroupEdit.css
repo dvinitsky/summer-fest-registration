@@ -47,3 +47,9 @@ table {
 .download-button {
   margin: 20px 0;
 }
+
+.no-yes-button {
+  margin: 10px;
+  background-color: yellow;
+  color: black;
+}

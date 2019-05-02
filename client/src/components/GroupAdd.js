@@ -4,7 +4,7 @@ import { addGroup } from '../services/group-service';
 import { setActiveGroupId, getActiveUserClearance } from '../helpers';
 
 class GroupAdd extends React.Component {
-  constructor() {
+  constructor () {
     super();
     this.state = {
       group: {
@@ -16,13 +16,13 @@ class GroupAdd extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e) {
+  handleChange (e) {
     const newState = { ...this.state }
     newState.group[e.target.name] = e.target.value;
     this.setState(newState);
   }
 
-  addGroup(group_name, leader_name) {
+  addGroup (group_name, leader_name) {
     addGroup(group_name, leader_name).then(response => {
       if (response.error) {
         this.setState({ error: true });
@@ -35,7 +35,7 @@ class GroupAdd extends React.Component {
     });
   }
 
-  componentDidMount() {
+  componentDidMount () {
     fetch('/allData')
       .then(response => {
         if (response.ok) {
@@ -51,7 +51,7 @@ class GroupAdd extends React.Component {
       });
   }
 
-  render() {
+  render () {
     const activeUserClearance = getActiveUserClearance();
 
     if (this.state.shouldRedirect) {
@@ -81,13 +81,13 @@ class GroupAdd extends React.Component {
         </h3>
         <input onChange={this.handleChange} className="group-add-input" name="group_name" />
 
-        <div>
-          <br />
+        <h3>
           Leader Name:
-          <input onChange={this.handleChange} className="group-add-input" name="leader_name" />
-        </div>
+        </h3>
+        <input onChange={this.handleChange} className="group-add-input" name="leader_name" />
+        <br />
 
-        <button type="button" onClick={() => this.addGroup(this.state.group.group_name, this.state.group.leader_name)}>Save</button>
+        <button className="save-button" type="button" onClick={() => this.addGroup(this.state.group.group_name, this.state.group.leader_name)}>Save</button>
 
         {this.state.error && (
           <div id="error">

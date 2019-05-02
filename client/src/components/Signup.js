@@ -70,7 +70,7 @@ class Signup extends React.Component {
     return (
       <>
         <div className="signup">
-          <h3 className="signup-text">
+          <h3 className="signup-text signup-header">
             Signup
          </h3>
           <div className="signup-text">Username:</div>

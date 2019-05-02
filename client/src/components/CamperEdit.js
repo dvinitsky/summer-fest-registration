@@ -6,7 +6,7 @@ import { getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../
 import './CamperForm.css';
 
 class CamperEdit extends React.Component {
-  constructor() {
+  constructor () {
     super();
 
     this.state = {
@@ -34,7 +34,7 @@ class CamperEdit extends React.Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  componentDidMount() {
+  componentDidMount () {
     fetch('/allData')
       .then(response => {
         if (response.ok) {
@@ -54,12 +54,12 @@ class CamperEdit extends React.Component {
       });
   }
 
-  setShowDeleteModal(shouldShow) {
+  setShowDeleteModal (shouldShow) {
     this.setState({
       showDeleteModal: shouldShow
     })
   }
-  deleteCamper(id, group_id) {
+  deleteCamper (id, group_id) {
     deleteCamper(id, group_id).then(response => {
       if (response.error) {
         this.setState({ error: true });
@@ -70,7 +70,7 @@ class CamperEdit extends React.Component {
       }
     });
   }
-  editCamper(...args) {
+  editCamper (...args) {
     editCamper(...args).then(response => {
       if (response.error) {
         this.setState({ error: true })
@@ -85,13 +85,13 @@ class CamperEdit extends React.Component {
       }
     });
   }
-  handleChange(e) {
+  handleChange (e) {
     const newState = { ...this.state }
     newState.camper[e.target.name] = e.target.value;
     this.setState(newState);
   }
 
-  render() {
+  render () {
     let groups, campers;
     if (!this.state.data.groups || !this.state.data.campers) {
       return null;
@@ -236,8 +236,16 @@ class CamperEdit extends React.Component {
             <select onChange={this.handleChange} className="camper-input" defaultValue={camper.adult_leader} name="adult_leader">
               <option value="null">{null}</option>
               <option value="Yes">Yes</option>
-            </select>            
+            </select>
             <br />
+
+            {this.state.showDeleteModal && (
+              <div id="delete-camper-modal">
+                <h1>Are you sure you want to PERMANENTLY delete {camper.first_name} {camper.last_name}?</h1>
+                <button className="no-yes-button" type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
+                <button className="no-yes-button" type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
+              </div>
+            )}
 
             <button className="save-camper-button" type="button" onClick={() => this.editCamper(
               this.state.camper.id,
@@ -264,13 +272,6 @@ class CamperEdit extends React.Component {
 
             <button className="delete-camper-button" type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
 
-            {this.state.showDeleteModal && (
-              <div id="delete-camper-modal">
-                <h1>Are you sure you want to delete {camper.first_name} {camper.last_name}?</h1>
-                <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
-                <button type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
-              </div>
-            )}
 
             {this.state.error && (
               <div id="error">

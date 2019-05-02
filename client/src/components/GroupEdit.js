@@ -145,8 +145,8 @@ class GroupEdit extends Component {
               {users.find(user => user.group_id === activeGroup.id) && (<span>, along with the user {users.find(user => user.group_id === activeGroup.id).username}</span>)}
                 ?
               </h1>
-              <button type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
-              <button type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
+              <button className="no-yes-button" type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
+              <button className="no-yes-button" type="button" onClick={() => this.deleteGroup(activeGroupId)}>Yes</button>
             </div>
           )}
 
