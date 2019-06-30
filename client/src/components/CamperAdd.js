@@ -26,7 +26,9 @@ class CamperAdd extends React.Component {
         signed_status: 'Not Sent',
         signed_by: null,
         room: null,
-        adult_leader: null
+        adult_leader: null,
+        student_leadership_track: null,
+        camp_attending: null
       }
     };
     this.handleChange = this.handleChange.bind(this);
@@ -200,6 +202,23 @@ class CamperAdd extends React.Component {
               <option value="null">{null}</option>
               <option value="Yes">Yes</option>
             </select>
+            <br />
+            <h3>
+              Student Leadership Track?
+            </h3>
+            <select onChange={this.handleChange} className="camper-input" name="student_leadership_track">
+              <option value="null">{null}</option>
+              <option value="Yes">Yes</option>
+            </select>
+            <br />
+            <h3>
+              Camp Attending
+            </h3>
+            <select onChange={this.handleChange} className="camper-input" name="camp_attending">
+              <option value="null">{null}</option>
+              <option value="Middle School Camp">Middle School Camp</option>
+              <option value="High School Camp">High School Camp</option>
+            </select>
 
             <button className="save-camper-button" onClick={() => this.addCamper(
               activeGroupId,
@@ -218,7 +237,9 @@ class CamperAdd extends React.Component {
               this.state.camper.signed_status,
               this.state.camper.signed_by,
               this.state.camper.room,
-              this.state.camper.adult_leader
+              this.state.camper.adult_leader,
+              this.state.camper.student_leadership_track,
+              this.state.camper.camp_attending
             )} type="button">Save</button>
           </div>
           {this.state.error && (

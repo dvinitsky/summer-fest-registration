@@ -199,6 +199,8 @@ class GroupEdit extends Component {
                   <th className="header-name">Room Assignment</th>
                 )}
                 <th className="header-name">Is Adult Leader</th>
+                <th className="header-name">Student Leadership Track</th>
+                <th className="header-name">Camp Attending</th>
               </tr>
 
               {campersInThisGroup.map(camper => {
@@ -263,6 +265,12 @@ class GroupEdit extends Component {
                     )}
                     <td>
                       {camper.adult_leader}
+                    </td>
+                    <td>
+                      {camper.student_leadership_track}
+                    </td>
+                    <td>
+                      {camper.camp_attending}
                     </td>
                   </tr>
                 );

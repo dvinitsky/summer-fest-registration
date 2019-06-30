@@ -98,7 +98,6 @@ con.connect(err => {
 
   const checkEmail = camper => {
     if (camper.registration !== 'Online' || camper.signed_status !== 'Not Sent' || !camper.parent_email) {
-      console.log('returning nothing')
       return Promise.resolve();
     }
 
@@ -282,7 +281,7 @@ con.connect(err => {
   app.post('/camperEdit', (req, res) => {
     const body = fillNulls(req.body);
 
-    con.query(`UPDATE campers SET first_name = ${body.first_name}, last_name = ${body.last_name}, gender = ${body.gender}, birthday = ${body.birthday}, grade_completed = ${body.grade_completed}, allergies = ${body.allergies}, parent_email = ${body.parent_email}, emergency_name = ${body.emergency_name}, emergency_number = ${body.emergency_number}, roommate = ${body.roommate}, notes = ${body.notes}, registration = ${body.registration}, signed_status = ${body.signed_status}, signed_by = ${body.signed_by}, room = ${body.room}, adult_leader = ${body.adult_leader} WHERE id=${body.id}`, (err) => {
+    con.query(`UPDATE campers SET first_name = ${body.first_name}, last_name = ${body.last_name}, gender = ${body.gender}, birthday = ${body.birthday}, grade_completed = ${body.grade_completed}, allergies = ${body.allergies}, parent_email = ${body.parent_email}, emergency_name = ${body.emergency_name}, emergency_number = ${body.emergency_number}, roommate = ${body.roommate}, notes = ${body.notes}, registration = ${body.registration}, signed_status = ${body.signed_status}, signed_by = ${body.signed_by}, room = ${body.room}, adult_leader = ${body.adult_leader}, student_leadership_track = ${body.student_leadership_track}, camp_attending = ${body.camp_attending} WHERE id=${body.id}`, (err) => {
       if (err) throw err;
 
       con.query('SELECT * FROM groups', (err, groups) => {
@@ -301,7 +300,7 @@ con.connect(err => {
   app.post('/camperAdd', (req, res) => {
     const body = fillNulls(req.body);
 
-    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, signed_by, room, adult_leader) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.signed_by}, ${body.room}, ${body.adult_leader})`, (err, newCamper) => {
+    con.query(`INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, signed_by, room, adult_leader, student_leadership_track, camp_attending) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.signed_by}, ${body.room}, ${body.adult_leader}, ${body.student_leadership_track}, ${body.camp_attending})`, (err, newCamper) => {
       if (err) throw err;
       con.query('SELECT * FROM groups', (err, groups) => {
         con.query('SELECT * FROM campers', (err, campers) => {

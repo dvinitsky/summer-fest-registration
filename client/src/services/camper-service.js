@@ -41,7 +41,9 @@ export function editCamper(
   signed_status,
   signed_by,
   room,
-  adult_leader
+  adult_leader,
+  student_leadership_track,
+  camp_attending
 ) {
   const options = {
     method: 'POST',
@@ -65,7 +67,9 @@ export function editCamper(
       signed_status,
       signed_by,
       room,
-      adult_leader
+      adult_leader,
+      student_leadership_track,
+      camp_attending
     })
   };
 
@@ -104,7 +108,9 @@ export function addCamper(
   signed_status,
   signed_by,
   room,
-  adult_leader
+  adult_leader,
+  student_leadership_track,
+  camp_attending
 ) {
   const options = {
     method: 'POST',
@@ -128,7 +134,9 @@ export function addCamper(
       signed_status,
       signed_by,
       room,
-      adult_leader
+      adult_leader,
+      student_leadership_track,
+      camp_attending
     })
   };
 
