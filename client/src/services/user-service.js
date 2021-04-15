@@ -1,20 +1,20 @@
 export function login(username, password) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       username,
-      password
-    })
+      password,
+    }),
   };
 
-  return fetch('/login', options)
-    .then(response => {
+  return fetch("/login", options)
+    .then((response) => {
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       if (data.error) {
         throw new Error(data.error);
       }
@@ -24,9 +24,9 @@ export function login(username, password) {
         user: data.user,
       };
     })
-    .catch(error => {
+    .catch((error) => {
       return {
-        error
+        error,
       };
     });
 }
@@ -36,69 +36,68 @@ export function signup(username, password) {
     return { incomplete: true };
   }
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       username,
-      password
-    })
+      password,
+    }),
   };
 
-  return fetch('/signup', options)
-    .then(response => {
+  return fetch("/signup", options)
+    .then((response) => {
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       if (data.error) {
         throw new Error(data.error);
       } else {
         return {
           user: data.user,
-          group: data.group
+          group: data.group,
         };
       }
     })
-    .catch(error => {
+    .catch((error) => {
       return error;
     });
 }
 
 export function makeAdmin(user_id) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      user_id
-    })
+      user_id,
+    }),
   };
 
-  return fetch('/makeAdmin', options)
-    .then(response => {
+  return fetch("/makeAdmin", options)
+    .then((response) => {
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       if (data.error) {
         throw new Error(data.error);
       }
-      return ({
-        users: data.users
-      });
-    })
-    .catch(error => {
       return {
-        error
+        users: data.users,
+      };
+    })
+    .catch((error) => {
+      return {
+        error,
       };
     });
 }
 
 export function userAdd(username, password, status, group_name) {
-
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -106,25 +105,55 @@ export function userAdd(username, password, status, group_name) {
       username,
       password,
       status,
-      group_name
-    })
+      group_name,
+    }),
   };
 
-  return fetch('/userAdd', options)
-    .then(response => {
+  return fetch("/userAdd", options)
+    .then((response) => {
       return response.json();
     })
-    .then(data => {
+    .then((data) => {
       if (data.error) {
         throw new Error(data.error);
       }
       return {
-        shouldRedirect: true
+        shouldRedirect: true,
       };
     })
-    .catch(error => {
+    .catch((error) => {
       return {
-        error
+        error,
+      };
+    });
+}
+
+export function userDelete(user_id) {
+  const options = {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      user_id,
+    }),
+  };
+
+  return fetch("/userDelete", options)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      return {
+        users: data.users,
+      };
+    })
+    .catch((error) => {
+      return {
+        error,
       };
     });
 }
