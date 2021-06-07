@@ -1,27 +1,26 @@
 export function deleteCamper(id, group_id) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ id, group_id })
+    body: JSON.stringify({ id, group_id }),
   };
 
-  return fetch('/camperDelete', options)
-    .then(response => {
+  return fetch("/camperDelete", options)
+    .then((response) => {
       if (response.ok) {
         return response.json();
-      }
-      else throw new Error();
+      } else throw new Error();
     })
-    .then(data => {
+    .then((data) => {
       return {
         shouldRedirect: true,
       };
     })
-    .catch(error => {
-      return { error }
-    })
+    .catch((error) => {
+      return { error };
+    });
 }
 
 export function editCamper(
@@ -43,10 +42,13 @@ export function editCamper(
   room,
   adult_leader,
   student_leadership_track,
-  camp_attending
+  camp_attending,
+  covid_image_type,
+  covid_image,
+  covid_image_file_name
 ) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -69,25 +71,27 @@ export function editCamper(
       room,
       adult_leader,
       student_leadership_track,
-      camp_attending
-    })
+      camp_attending,
+      covid_image_type,
+      covid_image,
+      covid_image_file_name,
+    }),
   };
 
-  return fetch('/camperEdit', options)
-    .then(response => {
+  return fetch("/camperEdit", options)
+    .then((response) => {
       if (response.ok) {
         return response.json();
-      }
-      else throw new Error();
+      } else throw new Error();
     })
-    .then(data => {
+    .then((data) => {
       return {
         shouldRedirect: true,
-        campers: data.campers
+        campers: data.campers,
       };
     })
-    .catch(error => {
-      return { error }
+    .catch((error) => {
+      return { error };
     });
 }
 
@@ -110,10 +114,12 @@ export function addCamper(
   room,
   adult_leader,
   student_leadership_track,
-  camp_attending
+  camp_attending,
+  covid_image_type,
+  covid_image
 ) {
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
@@ -136,49 +142,72 @@ export function addCamper(
       room,
       adult_leader,
       student_leadership_track,
-      camp_attending
-    })
+      camp_attending,
+      covid_image_type,
+      covid_image,
+    }),
   };
 
-  return fetch('/camperAdd', options)
-    .then(response => {
+  return fetch("/camperAdd", options)
+    .then((response) => {
       if (response.ok) {
         return response.json();
-      }
-      else throw new Error();
+      } else throw new Error();
     })
-    .then(data => data)
-    .catch(error => {
+    .then((data) => data)
+    .catch((error) => {
       return { error };
     });
 }
 
 export const submitWaiver = (waiverId, signerName) => {
   if (!waiverId) {
-    return Promise.reject({ message: 'There\'s been an error.' });
+    return Promise.reject({ message: "There's been an error." });
   }
   const camperId = waiverId / 73648;
-  console.log(signerName)
+
   const options = {
-    method: 'POST',
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       camperId,
-      signerName
-    })
+      signerName,
+    }),
   };
 
-  return fetch('/makeWaiverSigned', options)
-    .then(response => {
+  return fetch("/makeWaiverSigned", options)
+    .then((response) => {
       if (response.ok) {
         return response;
-      }
-      else throw new Error();
+      } else throw new Error();
     })
-    .then(data => data)
-    .catch(error => {
+    .then((data) => data)
+    .catch((error) => {
+      return { error };
+    });
+};
+
+export const downloadCovidImage = (covidImageFileName) => {
+  const options = {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      covidImageFileName,
+    }),
+  };
+
+  return fetch("/downloadCovidImage", options)
+    .then((response) => {
+      if (response.ok) {
+        return response.json();
+      } else throw new Error();
+    })
+    .then((data) => data)
+    .catch((error) => {
       return { error };
     });
 };

@@ -4,6 +4,7 @@
   "private": true,
   "homepage": "https://summer-fest-registration.herokuapp.com/",
   "dependencies": {
+    "aws-sdk": "^2.922.0",
     "body-parser": "1.18.3",
     "express": "4.16.4",
     "mysql": "2.16.0",

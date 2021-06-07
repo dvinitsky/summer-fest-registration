@@ -5,6 +5,8 @@ const mysql = require("mysql");
 const bodyParser = require("body-parser");
 const passwordHash = require("password-hash");
 const nodemailer = require("nodemailer");
+const AWS = require("aws-sdk");
+const fs = require("fs");
 
 const transporter = nodemailer.createTransport({
   host: "box1014.bluehost.com",
@@ -24,8 +26,34 @@ transporter.verify(function (error, success) {
   }
 });
 
+const uploadToS3 = (fileContent, fileName) => {
+  const s3 = new AWS.S3({
+    accessKeyId: "AKIA2EOCDE6G7MOIE5NP",
+    secretAccessKey: "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",
+  });
+
+  const base64str = fileContent.split("data:image/jpeg;base64,")[1];
+  const bitmap = new Buffer.from(base64str, "base64");
+  fs.writeFileSync("covid_image.jpg", bitmap);
+
+  const file = fs.readFileSync("covid_image.jpg");
+  const params = {
+    Bucket: "summerfestcovidimages",
+    Key: fileName,
+    Body: file,
+  };
+
+  s3.upload(params, (err, data) => {
+    if (err) {
+      console.log(err);
+    }
+    console.log(`File uploaded successfully. ${data.Location}`);
+  });
+};
+
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(bodyParser.urlencoded({ limit: "50mb", extended: true }));
 
 // Serve static files from the React app
 app.use(express.static(path.join(__dirname, "client/build")));
@@ -351,8 +379,17 @@ con.connect((err) => {
   app.post("/camperEdit", (req, res) => {
     const body = fillNulls(req.body);
 
+    let covidFileName = req.body.covid_image_file_name || "";
+    if (req.body.covid_image) {
+      covidFileName = `covid_image_${req.body.first_name}_${
+        req.body.last_name
+      }_${Math.floor(Math.random() * 10000000000)}.jpg`;
+
+      uploadToS3(req.body.covid_image, covidFileName);
+    }
+
     con.query(
-      `UPDATE campers SET first_name = ${body.first_name}, last_name = ${body.last_name}, gender = ${body.gender}, birthday = ${body.birthday}, grade_completed = ${body.grade_completed}, allergies = ${body.allergies}, parent_email = ${body.parent_email}, emergency_name = ${body.emergency_name}, emergency_number = ${body.emergency_number}, roommate = ${body.roommate}, notes = ${body.notes}, registration = ${body.registration}, signed_status = ${body.signed_status}, signed_by = ${body.signed_by}, room = ${body.room}, adult_leader = ${body.adult_leader}, student_leadership_track = ${body.student_leadership_track}, camp_attending = ${body.camp_attending} WHERE id=${body.id}`,
+      `UPDATE campers SET first_name = ${body.first_name}, last_name = ${body.last_name}, gender = ${body.gender}, birthday = ${body.birthday}, grade_completed = ${body.grade_completed}, allergies = ${body.allergies}, parent_email = ${body.parent_email}, emergency_name = ${body.emergency_name}, emergency_number = ${body.emergency_number}, roommate = ${body.roommate}, notes = ${body.notes}, registration = ${body.registration}, signed_status = ${body.signed_status}, signed_by = ${body.signed_by}, room = ${body.room}, adult_leader = ${body.adult_leader}, student_leadership_track = ${body.student_leadership_track}, camp_attending = ${body.camp_attending}, covid_image_type = ${body.covid_image_type}, covid_image_file_name = '${covidFileName}' WHERE id=${body.id}`,
       (err) => {
         if (err) throw err;
 
@@ -377,8 +414,17 @@ con.connect((err) => {
   app.post("/camperAdd", (req, res) => {
     const body = fillNulls(req.body);
 
+    let covidFileName = "";
+    if (req.body.covid_image) {
+      covidFileName = `covid_image_${req.body.first_name}_${
+        req.body.last_name
+      }_${Math.floor(Math.random() * 10000000000)}.jpg`;
+
+      uploadToS3(req.body.covid_image, covidFileName);
+    }
+
     con.query(
-      `INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, signed_by, room, adult_leader, student_leadership_track, camp_attending) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.signed_by}, ${body.room}, ${body.adult_leader}, ${body.student_leadership_track}, ${body.camp_attending})`,
+      `INSERT INTO campers (group_id, first_name, last_name, gender, birthday, grade_completed, allergies, parent_email, emergency_name, emergency_number, roommate, notes, registration, signed_status, signed_by, room, adult_leader, student_leadership_track, camp_attending, covid_image_type, covid_image_file_name) VALUES (${body.group_id}, ${body.first_name}, ${body.last_name}, ${body.gender}, ${body.birthday}, ${body.grade_completed}, ${body.allergies}, ${body.parent_email}, ${body.emergency_name}, ${body.emergency_number}, ${body.roommate}, ${body.notes}, ${body.registration}, ${body.signed_status}, ${body.signed_by}, ${body.room}, ${body.adult_leader}, ${body.student_leadership_track}, ${body.camp_attending}, ${body.covid_image_type}, '${covidFileName}')`,
       (err, newCamper) => {
         if (err) throw err;
         con.query("SELECT * FROM groups", (err, groups) => {
@@ -433,6 +479,29 @@ con.connect((err) => {
         res.status(200).send();
       }
     );
+  });
+  app.post("/downloadCovidImage", (req, res) => {
+    const s3 = new AWS.S3({
+      accessKeyId: "AKIA2EOCDE6G7MOIE5NP",
+      secretAccessKey: "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",
+    });
+    const params = {
+      Bucket: "summerfestcovidimages",
+      Key: req.body.covidImageFileName,
+    };
+
+    s3.getObject(params, (err, data) => {
+      if (err) console.error(err);
+
+      fs.writeFileSync(req.body.covidImageFileName, data.Body);
+
+      const image = fs.readFileSync(req.body.covidImageFileName);
+      const encodedImage = image.toString("base64");
+      res.status(200).send(JSON.stringify({ encodedImage }));
+
+      // res.contentType("image/jpeg");
+      // res.status(200).sendFile(`${__dirname}/${req.body.covidImageFileName}`);
+    });
   });
 
   // The "catchall" handler: for any request that doesn't

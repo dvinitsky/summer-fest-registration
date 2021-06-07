@@ -1,15 +1,27 @@
-import React from 'react';
-import Error from './Error';
-import { Redirect } from 'react-router-dom';
-import { deleteCamper, editCamper } from '../services/camper-service';
-import { getActiveUserClearance, getActiveGroupId, getActiveCamperId } from '../helpers';
-import './CamperForm.css';
+import React from "react";
+import Error from "./Error";
+import { Redirect } from "react-router-dom";
+import {
+  deleteCamper,
+  downloadCovidImage,
+  editCamper,
+} from "../services/camper-service";
+import {
+  getActiveUserClearance,
+  getActiveGroupId,
+  getActiveCamperId,
+} from "../helpers";
+import "./CamperForm.css";
+import ImageViewer from "react-simple-image-viewer";
 
 class CamperEdit extends React.Component {
-  constructor () {
+  constructor() {
     super();
 
     this.state = {
+      showFileTypeError: false,
+      isViewerOpenCurrentPic: false,
+      isViewerOpenNewPic: false,
       data: {},
       camper: {
         first_name: null,
@@ -29,76 +41,110 @@ class CamperEdit extends React.Component {
         room: null,
         adult_leader: null,
         student_leadership_track: null,
-        camp_attending: null
-      }
+        camp_attending: null,
+        covid_image_type: null,
+        new_covid_image: null,
+        current_covid_image: null,
+        covid_image_file_name: null,
+      },
     };
 
     this.handleChange = this.handleChange.bind(this);
+    this.handleImageUpload = this.handleImageUpload.bind(this);
   }
 
-  componentDidMount () {
-    fetch('/allData')
-      .then(response => {
+  componentDidMount() {
+    fetch("/allData")
+      .then((response) => {
         if (response.ok) {
           return response.json();
         } else throw new Error();
       })
-      .then(data => {
-        const camper = data.campers.find(camper => String(camper.id) === getActiveCamperId());
-        this.setState({
-          data,
-          camper
-        });
+      .then((data) => {
+        const camper = data.campers.find(
+          (camper) => String(camper.id) === getActiveCamperId()
+        );
+
+        if (camper.covid_image_file_name) {
+          downloadCovidImage(camper.covid_image_file_name).then((res) => {
+            const current_covid_image = `data:image/jpeg;base64,${res.encodedImage}`;
+            this.setState({
+              data,
+              camper: { ...camper, current_covid_image },
+            });
+          });
+        } else {
+          this.setState({
+            data,
+            camper,
+          });
+        }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log(error);
         return null;
       });
   }
 
-  setShowDeleteModal (shouldShow) {
+  setShowDeleteModal(shouldShow) {
     this.setState({
-      showDeleteModal: shouldShow
-    })
+      showDeleteModal: shouldShow,
+    });
   }
-  deleteCamper (id, group_id) {
-    deleteCamper(id, group_id).then(response => {
+  deleteCamper(id, group_id) {
+    deleteCamper(id, group_id).then((response) => {
       if (response.error) {
         this.setState({ error: true });
       } else {
         this.setState({
-          shouldRedirect: response.shouldRedirect
+          shouldRedirect: response.shouldRedirect,
         });
       }
     });
   }
-  editCamper (...args) {
-    editCamper(...args).then(response => {
+  editCamper(...args) {
+    editCamper(...args).then((response) => {
       if (response.error) {
-        this.setState({ error: true })
+        this.setState({ error: true });
       } else if (this.state.data.groups) {
         this.setState({
           shouldRedirect: response.shouldRedirect,
           data: {
             campers: response.campers,
-            groups: this.state.data.groups
-          }
+            groups: this.state.data.groups,
+          },
         });
       }
     });
   }
-  handleChange (e) {
-    const newState = { ...this.state }
+  handleChange(e) {
+    const newState = { ...this.state };
     newState.camper[e.target.name] = e.target.value;
     this.setState(newState);
   }
 
-  render () {
+  handleImageUpload(e) {
+    if (e.target.files[0].type !== "image/jpeg") {
+      this.setState({ showFileTypeError: true });
+      return;
+    } else {
+      this.setState({ showFileTypeError: false });
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const newState = { ...this.state };
+      newState.camper.new_covid_image = reader.result;
+      this.setState(newState);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+  render() {
     let groups, campers;
     if (!this.state.data.groups || !this.state.data.campers) {
       return null;
-    }
-    else {
+    } else {
       groups = this.state.data.groups;
       campers = this.state.data.campers;
     }
@@ -107,14 +153,14 @@ class CamperEdit extends React.Component {
     const groupId = getActiveGroupId();
     const camperId = getActiveCamperId();
 
-    const group = groups.find(group => String(group.id) === groupId);
-    const camper = campers.find(camper => String(camper.id) === camperId);
+    const group = groups.find((group) => String(group.id) === groupId);
+    const camper = campers.find((camper) => String(camper.id) === camperId);
 
     if (this.state.shouldRedirect) {
       return (
         <Redirect
           to={{
-            pathname: '/groupEdit'
+            pathname: "/groupEdit",
           }}
         />
       );
@@ -124,183 +170,325 @@ class CamperEdit extends React.Component {
       return (
         <Redirect
           to={{
-            pathname: '/'
+            pathname: "/",
           }}
         />
       );
     }
 
-    return (!group || !camper) ?
+    return !group || !camper ? (
       <Error />
-      : (
-        <>
-          <div className="camper-form">
-            <h3>
-              First Name:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.first_name} name="first_name" />
-            <br />
-            <h3>
-              Last Name:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.last_name} name="last_name" />
-            <br />
-            <h3>
-              Gender:
-          </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.gender} name="gender">
-              <option value="null">{null}</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            <br />
-            <h3>
-              Birthday:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.birthday} name="birthday" />
-            <br />
-            <h3>
-              Grade just completed:
-          </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.grade_completed} name="grade_completed" >
-              <option value="null">{null}</option>
-              <option value="6">6</option>
-              <option value="7">7</option>
-              <option value="8">8</option>
-              <option value="9">9</option>
-              <option value="10">10</option>
-              <option value="11">11</option>
-              <option value="12">12</option>
-            </select>
-            <br />
-            <h3>
-              Food Allergies:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.allergies} name="allergies" />
-            <br />
-            <h3>
-              Parent or Guardian Email:
-          </h3>
-            <input type="email" onChange={this.handleChange} className="camper-input" defaultValue={camper.parent_email} name="parent_email" />
-            <br />
-            <h3>
-              Emergency Contact Name:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_name} name="emergency_name" />
-            <br />
-            <h3>
-              Emergency Contact Number:
-          </h3>
-            <input type="tel" onChange={this.handleChange} className="camper-input" defaultValue={camper.emergency_number} name="emergency_number" />
-            <br />
-            <h3>
-              Roommate:
-          </h3>
-            <input onChange={this.handleChange} className="camper-input" defaultValue={camper.roommate} name="roommate" />
-            <br />
-            <h3>
-              Notes:
-          </h3>
-            <textarea onChange={this.handleChange} className="camper-input" defaultValue={camper.notes} name="notes" />
-            <br />
-            <h3>
-              Online or Paper Registration:
-          </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.registration} name="registration">
-              <option value="null">{null}</option>
-              <option value="Online">Online</option>
-              <option value="Paper">Paper</option>
-            </select>
-            <br />
-            <h3>
-              Waiver Signed Status:
-          </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.signed_status} name="signed_status">
-              <option value="null">{null}</option>
-              <option value="Not Sent">Not Sent</option>
-              <option value="Emailed">Emailed</option>
-              <option value="Signed">Signed</option>
-            </select>
-            <br />
-            {activeUserClearance === 'admin' && (
-              <>
-                <h3>
-                  Room Assignment:
-              </h3>
-                <input onChange={this.handleChange} className="camper-input" defaultValue={camper.room} name="room" />
-                <br />
-              </>
-            )}
-            <h3>
-              Is this person an adult leader?
-          </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.adult_leader} name="adult_leader">
-              <option value="null">{null}</option>
-              <option value="Yes">Yes</option>
-            </select>
-            <br />
-            <h3>
-              Student Leadership Track?
-            </h3>
-            <select onChange={this.handleChange} className="camper-input" defaultValue={camper.student_leadership_track} name="student_leadership_track">
-              <option value="null">{null}</option>
-              <option value="Yes">Yes</option>
-            </select>
-            <h3>
-              Camp Attending
-            </h3>
-            <select onChange={this.handleChange} className="camper-input" name="camp_attending" defaultValue={camper.camp_attending}>
-              <option value="null">{null}</option>
-              <option value="Middle School Camp">Middle School Camp</option>
-              <option value="High School Camp">High School Camp</option>
-            </select>
-            <br />
+    ) : (
+      <>
+        <div className="camper-form">
+          <h3>First Name:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.first_name}
+            name="first_name"
+          />
+          <br />
+          <h3>Last Name:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.last_name}
+            name="last_name"
+          />
+          <br />
+          <h3>Gender:</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.gender}
+            name="gender"
+          >
+            <option value="null">{null}</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+          </select>
+          <br />
+          <h3>Birthday:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.birthday}
+            name="birthday"
+          />
+          <br />
+          <h3>Grade just completed:</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.grade_completed}
+            name="grade_completed"
+          >
+            <option value="null">{null}</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
+            <option value="12">12</option>
+          </select>
+          <br />
+          <h3>Food Allergies:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.allergies}
+            name="allergies"
+          />
+          <br />
+          <h3>Parent or Guardian Email:</h3>
+          <input
+            type="email"
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.parent_email}
+            name="parent_email"
+          />
+          <br />
+          <h3>Emergency Contact Name:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.emergency_name}
+            name="emergency_name"
+          />
+          <br />
+          <h3>Emergency Contact Number:</h3>
+          <input
+            type="tel"
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.emergency_number}
+            name="emergency_number"
+          />
+          <br />
+          <h3>Roommate:</h3>
+          <input
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.roommate}
+            name="roommate"
+          />
+          <br />
+          <h3>Notes:</h3>
+          <textarea
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.notes}
+            name="notes"
+          />
+          <br />
+          <h3>Online or Paper Registration:</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.registration}
+            name="registration"
+          >
+            <option value="null">{null}</option>
+            <option value="Online">Online</option>
+            <option value="Paper">Paper</option>
+          </select>
+          <br />
+          <h3>Waiver Signed Status:</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.signed_status}
+            name="signed_status"
+          >
+            <option value="null">{null}</option>
+            <option value="Not Sent">Not Sent</option>
+            <option value="Emailed">Emailed</option>
+            <option value="Signed">Signed</option>
+          </select>
+          <br />
+          {activeUserClearance === "admin" && (
+            <>
+              <h3>Room Assignment:</h3>
+              <input
+                onChange={this.handleChange}
+                className="camper-input"
+                defaultValue={camper.room}
+                name="room"
+              />
+              <br />
+            </>
+          )}
+          <h3>Is this person an adult leader?</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.adult_leader}
+            name="adult_leader"
+          >
+            <option value="null">{null}</option>
+            <option value="Yes">Yes</option>
+          </select>
+          <br />
+          <h3>Student Leadership Track?</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            defaultValue={camper.student_leadership_track}
+            name="student_leadership_track"
+          >
+            <option value="null">{null}</option>
+            <option value="Yes">Yes</option>
+          </select>
+          <h3>Camp Attending</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            name="camp_attending"
+            defaultValue={camper.camp_attending}
+          >
+            <option value="null">{null}</option>
+            <option value="Middle School Camp">Middle School Camp</option>
+            <option value="High School Camp">High School Camp</option>
+          </select>
+          <br />
+          <h3>COVID Image Type</h3>
+          <select
+            onChange={this.handleChange}
+            className="camper-input"
+            name="covid_image_type"
+          >
+            <option value="null">{null}</option>
+            <option value="Negative Test">Negative Test</option>
+            <option value="Proof of Vaccine">Proof of Vaccine</option>
+          </select>
+          <br />
+          <h3>COVID Image</h3>
+          <p>Current file: {camper.covid_image_file_name}</p>
+          <img
+            src={this.state.camper.current_covid_image}
+            onClick={() => this.setState({ isViewerOpenCurrentPic: true })}
+            width="300px"
+          />
+          {this.state.isViewerOpenCurrentPic && (
+            <ImageViewer
+              src={[this.state.camper.current_covid_image]}
+              currentIndex={0}
+              onClose={() => this.setState({ isViewerOpenCurrentPic: false })}
+              backgroundStyle={{
+                backgroundColor: "rgba(0,0,0,0.9)",
+              }}
+            />
+          )}
 
-            {this.state.showDeleteModal && (
-              <div id="delete-camper-modal">
-                <h1>Are you sure you want to PERMANENTLY delete {camper.first_name} {camper.last_name}?</h1>
-                <button className="no-yes-button" type="button" onClick={() => this.setShowDeleteModal(false)}>No</button>
-                <button className="no-yes-button" type="button" onClick={() => { this.deleteCamper(camper.id, camper.group_id) }}>Yes</button>
-              </div>
-            )}
+          <input
+            style={{ marginTop: "15px" }}
+            onChange={this.handleImageUpload}
+            type="file"
+            id="covid_file"
+            name="covid_file"
+            accept="image/jpeg"
+          />
+          {this.state.showFileTypeError && (
+            <p className="camper-input-error">
+              Only JPG image files are supported
+            </p>
+          )}
 
-            <button className="save-camper-button" type="button" onClick={() => this.editCamper(
-              this.state.camper.id,
-              this.state.camper.first_name,
-              this.state.camper.last_name,
-              this.state.camper.gender,
-              this.state.camper.birthday,
-              this.state.camper.grade_completed,
-              this.state.camper.allergies,
-              this.state.camper.parent_email,
-              this.state.camper.emergency_name,
-              this.state.camper.emergency_number,
-              this.state.camper.roommate,
-              this.state.camper.notes,
-              this.state.camper.registration,
-              this.state.camper.signed_status,
-              this.state.camper.signed_by,
-              this.state.camper.room,
-              this.state.camper.adult_leader,
-              this.state.camper.student_leadership_track,
-              this.state.camper.camp_attending
-            )}>Save</button>
+          <img
+            src={this.state.camper.new_covid_image}
+            onClick={() => this.setState({ isViewerOpenNewPic: true })}
+            width="300px"
+          />
+          {this.state.isViewerOpenNewPic && (
+            <ImageViewer
+              src={[this.state.camper.new_covid_image]}
+              currentIndex={0}
+              onClose={() => this.setState({ isViewerOpenNewPic: false })}
+              backgroundStyle={{
+                backgroundColor: "rgba(0,0,0,0.9)",
+              }}
+            />
+          )}
 
-            <br />
-            <br />
+          {this.state.showDeleteModal && (
+            <div id="delete-camper-modal">
+              <h1>
+                Are you sure you want to PERMANENTLY delete {camper.first_name}{" "}
+                {camper.last_name}?
+              </h1>
+              <button
+                className="no-yes-button"
+                type="button"
+                onClick={() => this.setShowDeleteModal(false)}
+              >
+                No
+              </button>
+              <button
+                className="no-yes-button"
+                type="button"
+                onClick={() => {
+                  this.deleteCamper(camper.id, camper.group_id);
+                }}
+              >
+                Yes
+              </button>
+            </div>
+          )}
 
-            <button className="delete-camper-button" type="button" onClick={() => this.setShowDeleteModal(true)}>Delete</button>
+          <button
+            className="save-camper-button"
+            type="button"
+            onClick={() =>
+              this.editCamper(
+                this.state.camper.id,
+                this.state.camper.first_name,
+                this.state.camper.last_name,
+                this.state.camper.gender,
+                this.state.camper.birthday,
+                this.state.camper.grade_completed,
+                this.state.camper.allergies,
+                this.state.camper.parent_email,
+                this.state.camper.emergency_name,
+                this.state.camper.emergency_number,
+                this.state.camper.roommate,
+                this.state.camper.notes,
+                this.state.camper.registration,
+                this.state.camper.signed_status,
+                this.state.camper.signed_by,
+                this.state.camper.room,
+                this.state.camper.adult_leader,
+                this.state.camper.student_leadership_track,
+                this.state.camper.camp_attending,
+                this.state.camper.covid_image_type,
+                this.state.camper.new_covid_image,
+                this.state.camper.covid_image_file_name
+              )
+            }
+          >
+            Save
+          </button>
 
+          <br />
+          <br />
 
-            {this.state.error && (
-              <div id="error">
-                There's been an error. Please try again.
-              </div>
-            )}
-          </div>
-        </>
-      );
+          <button
+            className="delete-camper-button"
+            type="button"
+            onClick={() => this.setShowDeleteModal(true)}
+          >
+            Delete
+          </button>
+
+          {this.state.error && (
+            <div id="error">There's been an error. Please try again.</div>
+          )}
+        </div>
+      </>
+    );
   }
 }
 
