@@ -8,6 +8,8 @@ const nodemailer = require("nodemailer");
 const AWS = require("aws-sdk");
 const fs = require("fs");
 
+require("dotenv").config();
+
 const transporter = nodemailer.createTransport({
   host: "box1014.bluehost.com",
   port: 465,
@@ -28,8 +30,8 @@ transporter.verify(function (error, success) {
 
 const uploadToS3 = (fileContent, fileName) => {
   const s3 = new AWS.S3({
-    accessKeyId: "AKIA2EOCDE6G7MOIE5NP",
-    secretAccessKey: "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",
+    accessKeyId: process.env.s3AccessKeyId,
+    secretAccessKey: process.env.s3SecretAccessKey,
   });
 
   const base64str = fileContent.split("data:image/jpeg;base64,")[1];
@@ -482,8 +484,8 @@ con.connect((err) => {
   });
   app.post("/downloadCovidImage", (req, res) => {
     const s3 = new AWS.S3({
-      accessKeyId: "AKIA2EOCDE6G7MOIE5NP",
-      secretAccessKey: "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",
+      accessKeyId: process.env.s3AccessKeyId,
+      secretAccessKey: process.env.s3SecretAccessKey,
     });
     const params = {
       Bucket: "summerfestcovidimages",
