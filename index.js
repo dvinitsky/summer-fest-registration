@@ -30,8 +30,8 @@ transporter.verify(function (error, success) {
 
 const uploadToS3 = (fileContent, fileName) => {
   const s3 = new AWS.S3({
-    accessKeyId: process.env.s3AccessKeyId,
-    secretAccessKey: process.env.s3SecretAccessKey,
+    accessKeyId: process.env.S3_ACESS_KEY_ID,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
   });
 
   const base64str = fileContent.split("data:image/jpeg;base64,")[1];
@@ -484,8 +484,8 @@ con.connect((err) => {
   });
   app.post("/downloadCovidImage", (req, res) => {
     const s3 = new AWS.S3({
-      accessKeyId: process.env.s3AccessKeyId,
-      secretAccessKey: process.env.s3SecretAccessKey,
+      accessKeyId: process.env.S3_ACESS_KEY_ID,
+      secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
     });
     const params = {
       Bucket: "summerfestcovidimages",
